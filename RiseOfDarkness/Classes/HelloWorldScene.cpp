@@ -52,6 +52,10 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	auto map1 = TMXTiledMap::create("res/tiledMaps/map1/map_lv1.tmx");
+	map1->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+	map1->setAnchorPoint(Point(0.5, 0.5));
+	addChild(map1, 0, 99);
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
@@ -113,7 +117,7 @@ bool HelloWorld::init()
         sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
         // add the sprite as a child to this layer
-        this->addChild(sprite, 0);
+        //this->addChild(sprite, 0);
     }
     return true;
 }
