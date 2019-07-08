@@ -6,7 +6,7 @@
 
 using namespace cocos2d;
 
-class MainCharacter : public Scene
+class MainCharacter
 {
 private:
 	int healthPoint;

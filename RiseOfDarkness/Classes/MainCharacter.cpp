@@ -1,13 +1,11 @@
 #include "MainCharacter.h"
 
-USING_NS_CC;
-
 MainCharacter::MainCharacter() {};
 
 MainCharacter::MainCharacter(Scene* scene)
 {
 	Init();
-	scene->addChild(mainCharacter);
+	scene->addChild(mainCharacter, 2);
 }
 
 MainCharacter::~MainCharacter() {};
@@ -23,6 +21,7 @@ void MainCharacter::Init()
 	fireResistance = 0;
 	poisonousResistance = 0;
 	mainCharacter = Sprite::create("res/sprites/mainCharacter.png");
+	mainCharacter->setScale(2);
 }
 
 void MainCharacter::Update(float deltaTime)
