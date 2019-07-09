@@ -1,10 +1,10 @@
 #include "PlayScene.h"
-
+#include "ui\CocosGUI.h"
 using namespace std;
-USING_NS_CC;
-Size visibleSize;
 
-Scene* PlayScene::createScene()
+USING_NS_CC;
+
+Scene* PlayScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
@@ -22,7 +22,7 @@ bool PlayScene::init()
 		return false;
 	}
 
-	visibleSize = Director::getInstance()->getVisibleSize();
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 
 	CreateMap();
 	
@@ -33,7 +33,7 @@ bool PlayScene::init()
 	auto spawnPoint = playerGroup->getObject("mc");
 	int x = spawnPoint["x"].asInt();
 	int y = spawnPoint["y"].asInt();
-	//log("%d, %d", x, y);
+	log("%d, %d", x, y);
 	player->setPosition(Vec2(x + mTileMap->getTileSize().width/2,y + mTileMap->getTileSize().height/2));
 	player->setScale(1.7f);
 	player->setAnchorPoint(Vec2(0.5, 0));

@@ -30,7 +30,7 @@
 class PlayScene : public cocos2d::Layer
 {
 public:
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene* CreateScene();
 
     virtual bool init();
 
