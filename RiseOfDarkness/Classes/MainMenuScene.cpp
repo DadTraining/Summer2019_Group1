@@ -1,21 +1,15 @@
 #include "MainMenuScene.h"
-#include "SimpleAudioEngine.h"
 #include "ui/CocosGUI.h"
-#include "HelloWorldScene.h"
 #include "SelectScene.h"
+
 USING_NS_CC;
 using namespace ui;
 
 
 Scene* MainMenuScene::CreateScene()
 {
-	auto scene = Scene::create();
-	auto layer = MainMenuScene::create();
-	scene->addChild(layer);
-	return scene;
+	return MainMenuScene::create();
 }
-
-
 
 bool MainMenuScene::init()
 {

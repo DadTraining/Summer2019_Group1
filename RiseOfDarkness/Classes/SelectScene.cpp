@@ -1,21 +1,13 @@
 #include "SelectScene.h"
-#include "SimpleAudioEngine.h"
 #include "ui/CocosGUI.h"
-#include "HelloWorldScene.h"
 
 USING_NS_CC;
 using namespace ui;
 
-
 Scene* SelectScene::CreateScene()
 {
-	auto scene = Scene::create();
-	auto layer = SelectScene::create();
-	scene->addChild(layer);
-	return scene;
+	return SelectScene::create();
 }
-
-
 
 bool SelectScene::init()
 {
