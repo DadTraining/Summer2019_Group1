@@ -23,9 +23,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\MainCharacter.cpp" />
     <ClCompile Include="..\Classes\HomeScene.cpp" />
-    <ClCompile Include="..\Classes\PlayScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -39,9 +36,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\MainCharacter.h" />
     <ClInclude Include="..\Classes\HomeScene.h" />
-    <ClInclude Include="..\Classes\PlayScene.h">
-      <Filter>src</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
