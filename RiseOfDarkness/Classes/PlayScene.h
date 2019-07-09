@@ -48,6 +48,7 @@ private:
 	cocos2d::TMXTiledMap *mTileMap;
 	cocos2d::Sprite* player;
 	cocos2d::TMXLayer *meta;
+	cocos2d::TMXLayer *collectMap;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

@@ -61,6 +61,8 @@ void PlayScene::CreateMap()
 	addChild(mTileMap,0,99);
 	meta = mTileMap->getLayer("ob");
 	meta->setVisible(false);
+	collectMap = mTileMap->getLayer("collectItem");
+
 }
 
 void PlayScene::update(float deltaTime)
@@ -100,6 +102,21 @@ void PlayScene::setPlayerPosition(cocos2d::Point position)
 			if ("True"==collision)
 			{
 				log("opps!\n");
+				return;
+			}
+		}
+	}
+	tileGid = collectMap->getTileGIDAt(tileCoord);
+	if (tileGid)
+	{
+		auto properties = mTileMap->getPropertiesForGID(tileGid).asValueMap();
+		if (properties.size()>0)
+		{
+			auto collision = properties["Collectable"].asString();
+			if ("True" == collision)
+			{
+				log("collected");
+				collectMap->removeTileAt(tileCoord);
 				return;
 			}
 		}
