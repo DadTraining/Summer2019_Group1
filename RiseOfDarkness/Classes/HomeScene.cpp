@@ -4,31 +4,51 @@ USING_NS_CC;
 
 Size visibleSize;
 Size tileMapSize;
+Vec2 cameraDistance, buttonDistance;
+float xMin, xMax, yMin, yMax;
+bool a, b, c, d;
 
 Scene* HomeScene::CreateScene()
 {
-	return HomeScene::create();
+	auto scene = Scene::createWithPhysics();
+	//->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+
+	auto layer = HomeScene::create();
+
+	scene->addChild(layer);
+
+	return scene;
 }
 
 bool HomeScene::init()
 {
-	if (!Scene::create())
+	if (!Layer::init())
 	{
 		return false;
 	}
-
+	mainCharacter = new MainCharacter(this);
 	visibleSize = Director::getInstance()->getVisibleSize();
 
+	a = b = c = d = false;
 	tileMap = TMXTiledMap::create("res/tiledMaps/home/home.tmx");
+	tileMap->setPosition(Vec2(0, 0));
 	tileMapSize = tileMap->getContentSize();
 	addChild(tileMap, 0);
-
-	mainCharacter = new MainCharacter(this);
-	mainCharacter->GetSprite()->setPosition(visibleSize / 2);
-
-	auto frameButton = Sprite::create("res/buttons/frameButton.png");
+	body = PhysicsBody::createBox(mainCharacter->GetSprite()->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+	body->setDynamic(true);
+	body->setGravityEnable(false);
+	auto ob = tileMap->objectGroupNamed("mainCharacter");
+	float xx = ob->getObject("mc")["x"].asFloat();
+	float yy = ob->getObject("mc")["y"].asFloat();
+	log("%f,%f", tileMapSize.height, yy);
+	mainCharacter->GetSprite()->setPosition(xx,yy);
+	mainCharacter->GetSprite()->setPhysicsBody(body);
+	camera = Camera::create();
+	camera->setPosition(mainCharacter->GetSprite()->getPosition());
+	addChild(camera);
+	frameButton = Sprite::create("res/buttons/frameButton.png");
 	auto frameButtonSize = frameButton->getBoundingBox().size;
-	frameButton->setPosition(Vec2(frameButtonSize.width, frameButtonSize.height));
+	frameButton->setPosition(Vec2(frameButtonSize.width, frameButtonSize.height)+camera->getPosition()-visibleSize/2);
 	auto frameButtonPosition = frameButton->getPosition();
 	frameButton->setVisible(false);
 	addChild(frameButton, 3);
@@ -53,7 +73,36 @@ bool HomeScene::init()
 	rightButton->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
 	addChild(rightButton, 7);
 
+	body->setRotationEnable(false);
+
+
+	cameraDistance = camera->getPosition() - mainCharacter->GetSprite()->getPosition();
+	buttonDistance = frameButton->getPosition() - camera->getPosition();
+	auto contactListener = EventListenerPhysicsContact::create();
+	
 	AddListener();
+
+
+
+	auto s = tileMap->getLayer("obstacles");
+	Size layerSize = s->getLayerSize();
+	for (int i = 0; i < layerSize.width; i++)
+	{
+		for (int j = 0; j < layerSize.height; j++)
+		{
+			auto tileSet = s->getTileAt(Vec2(i, j));
+			if (tileSet != NULL)
+			{
+				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
+				physics->setDynamic(false);
+				
+				tileSet->setPhysicsBody(physics);
+			}
+		}
+	}
+
+
+
 
 	scheduleUpdate();
 
@@ -62,7 +111,12 @@ bool HomeScene::init()
 
 void HomeScene::update(float deltaTime)
 {
-	OnButtonHold(deltaTime);
+	if (a || b || c || d)
+	{
+		OnButtonHold(deltaTime);
+
+	}
+	SetPositionButton();
 }
 
 void HomeScene::AddListener()
@@ -91,33 +145,29 @@ bool HomeScene::OnTouchEnded(Touch* touch, Event* event)
 
 void HomeScene::OnTouchMoved(Touch* touch, Event* event)
 {
-	Vec2 newPosition = touch->getLocation() - touch->getPreviousLocation() + tileMap->getPosition();
-	if (newPosition.x <= 0 && newPosition.x >= visibleSize.width - tileMapSize.width
-		&&newPosition.y <= 0 && newPosition.y >= visibleSize.height - tileMapSize.height)
-	{
-		tileMap->setPosition(newPosition);
-	}
+	Vec2 newPosition = touch->getPreviousLocation()- touch->getLocation() + camera->getPosition();
+	SetCamera(newPosition);
 }
 
 void HomeScene::OnButtonHold(float deltaTime)
 {
 	if (std::find(heldButtons.begin(), heldButtons.end(), 1) != heldButtons.end())
 	{
-		mainCharacter->GetSprite()->setPositionY(mainCharacter->GetSprite()->getPositionY() + 1);
+		body->setVelocity(Vec2(0, 100));
 	}
 	if (std::find(heldButtons.begin(), heldButtons.end(), 2) != heldButtons.end())
 	{
-		mainCharacter->GetSprite()->setPositionY(mainCharacter->GetSprite()->getPositionY() - 1);
+		body->setVelocity(Vec2(0, -100));
 	}
 	if (std::find(heldButtons.begin(), heldButtons.end(), 3) != heldButtons.end())
 	{
-		mainCharacter->GetSprite()->setPositionX(mainCharacter->GetSprite()->getPositionX() - 1);
+		body->setVelocity(Vec2(-100, 0));
 	}
 	if (std::find(heldButtons.begin(), heldButtons.end(), 4) != heldButtons.end())
 	{
-		mainCharacter->GetSprite()->setPositionX(mainCharacter->GetSprite()->getPositionX() + 1);
+		body->setVelocity(Vec2(100, 0));
 	}
-
+	SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 }
 
 void HomeScene::UpButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
@@ -125,10 +175,13 @@ void HomeScene::UpButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
 		heldButtons.push_back(1);
+		a = true;
 	}
 	if (type == ui::Widget::TouchEventType::ENDED)
 	{
 		heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 1), heldButtons.end());
+		body->setVelocity(Vec2(0, 0));
+		a = false;
 	}
 }
 
@@ -137,10 +190,14 @@ void HomeScene::DownButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
 		heldButtons.push_back(2);
+		b = true;
 	}
 	if (type == ui::Widget::TouchEventType::ENDED)
 	{
 		heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 2), heldButtons.end());
+		body->setVelocity(Vec2(0, 0));
+		b = false;
+
 	}
 }
 
@@ -149,10 +206,14 @@ void HomeScene::LeftButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
 		heldButtons.push_back(3);
+		c = true;
 	}
 	if (type == ui::Widget::TouchEventType::ENDED)
 	{
 		heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 3), heldButtons.end());
+		body->setVelocity(Vec2(0, 0));
+		c = false;
+
 	}
 }
 
@@ -161,10 +222,40 @@ void HomeScene::RightButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
 		heldButtons.push_back(4);
+		d = true;
 	}
 	if (type == ui::Widget::TouchEventType::ENDED)
 	{
 		heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 4), heldButtons.end());
+		body->setVelocity(Vec2(0, 0));
+		d = false;
+	}
+}
+
+void HomeScene::CreateFixturesLayer(TMXLayer* layer)
+{
+	Size layerSize = layer->getLayerSize();
+	
+}
+
+void HomeScene::SetPositionButton()
+{
+	auto frameButtonSize = frameButton->getBoundingBox().size;
+	auto frameButtonPosition = frameButton->getPosition();
+	upButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
+	downButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
+	leftButton->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
+	rightButton->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
+}
+
+void HomeScene::SetCamera(Vec2 pos)
+{
+	log("%f", pos.x);
+	if (pos.x >= visibleSize.width / 2 && pos.x <= tileMapSize.width-visibleSize.width/2&&pos.y >= visibleSize.height / 2 && pos.y <= tileMapSize.height-visibleSize.height/2)
+	{
+		camera->setPosition(pos);
+		frameButton->setPosition(pos + buttonDistance);
+
 	}
 }
 

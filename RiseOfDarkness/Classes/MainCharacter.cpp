@@ -2,10 +2,10 @@
 
 MainCharacter::MainCharacter() {};
 
-MainCharacter::MainCharacter(Scene* scene)
+MainCharacter::MainCharacter(Layer* layer)
 {
 	Init();
-	scene->addChild(mainCharacter, 2);
+	layer->addChild(mainCharacter, 2);
 }
 
 MainCharacter::~MainCharacter() {};

@@ -20,7 +20,7 @@ private:
 	Sprite* mainCharacter;
 public:
 	MainCharacter();
-	MainCharacter(Scene* scene);
+	MainCharacter(Layer* layer);
 	~MainCharacter();
 	void Init();
 	Sprite* GetSprite();
