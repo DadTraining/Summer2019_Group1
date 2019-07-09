@@ -1,15 +1,19 @@
-#pragma once
+#ifndef SELECT_SCENE_H
+#define SELECT_SCENE_H
 
 #include "cocos2d.h"
 
-class SelectScene : public cocos2d::Scene
+using namespace cocos2d;
+
+class SelectScene : public Scene
 {
 public:
-	static cocos2d::Scene* CreateScene();
+	static Scene* CreateScene();
 
 	virtual bool init();
 
-
 	CREATE_FUNC(SelectScene);
 };
+
+#endif
 

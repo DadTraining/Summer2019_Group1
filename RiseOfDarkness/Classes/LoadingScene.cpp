@@ -1,8 +1,5 @@
 
-//#include "MainMenuScene.h"
-#include "SimpleAudioEngine.h"
 #include "LoadingScene.h"
-#include "HelloWorldScene.h"
 #include "ui/CocosGUI.h"
 #include "MainMenuScene.h"
 
@@ -10,15 +7,11 @@ USING_NS_CC;
 
 Scene* LoadingScene::CreateScene()
 {
-	auto scene = Scene::create();
-	auto layer = LoadingScene::create();
-	scene->addChild(layer);
-	return scene;
+	return LoadingScene::create();
 }
 
 bool LoadingScene::init()
 {
-
 	if (!Scene::init())
 	{
 		return false;
