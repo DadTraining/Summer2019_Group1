@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="34" height="44" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="4">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="34" height="44" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="5">
  <tileset firstgid="1" source="map_rpg_maker_vx_ace_by_pakodar_d5xt5jy.tsx"/>
  <tileset firstgid="1541" source="ob.tsx"/>
  <tileset firstgid="1542" source="tileb.tsx"/>
@@ -148,7 +148,7 @@
 </data>
  </layer>
  <objectgroup id="8" name="Player">
-  <object id="3" name="mc" x="639" y="559">
+  <object id="4" name="mc" x="765" y="86">
    <point/>
   </object>
  </objectgroup>
