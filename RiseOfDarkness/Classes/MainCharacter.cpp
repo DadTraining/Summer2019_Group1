@@ -40,7 +40,7 @@ Sprite* MainCharacter::GetSprite()
 
 void MainCharacter::run()
 {
-	mainCharacter->runAction(maction[0]);
+	mainCharacter->runAction(maction[0]->clone());
 }
 
 Animate* MainCharacter::GetAnimation(const char *dir, const char *format, int count)

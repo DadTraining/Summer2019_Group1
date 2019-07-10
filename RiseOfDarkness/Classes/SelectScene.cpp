@@ -1,6 +1,8 @@
 #include "SelectScene.h"
 #include "ui/CocosGUI.h"
+#include "MapScene.h"
 #include "HomeScene.h"
+
 
 USING_NS_CC;
 using namespace ui;
@@ -33,6 +35,7 @@ bool SelectScene::init()
 	auto buttonnewgame = Button::create("/res/buttons/newgame .png"); 
 	buttonnewgame->setPosition(Vec2(visibleSize.width / 4 + origin.x, visibleSize.height / 1.3 + origin.y));
 	buttonnewgame->setScale(0.65);
+	buttonnewgame->addClickEventListener(CC_CALLBACK_1(SelectScene::GoToMapScene, this));
 	this->addChild(buttonnewgame,1);
 	buttonnewgame->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type)
 	{
@@ -105,6 +108,11 @@ bool SelectScene::init()
 	text->setScaleY(0.4);
 	this->addChild(text);
 	return true;
+}
+
+void SelectScene::GoToMapScene(cocos2d::Ref *pSender)
+{
+	Director::getInstance()->replaceScene(MapScene::CreateScene());
 }
 
 
