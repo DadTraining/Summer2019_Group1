@@ -125,6 +125,7 @@ void HomeScene::update(float deltaTime)
 
 	}
 	SetPositionButton();
+	SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 }
 
 void HomeScene::AddListener()
@@ -186,7 +187,8 @@ void HomeScene::UpButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 		//heldButtons.push_back(1);
 		body->setVelocity(Vec2(0, 100));
 		//mainCharacter->run();
-		SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
+		//mainCharacter->run();
+		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 
 	}
 	if (type == ui::Widget::TouchEventType::ENDED)
@@ -205,7 +207,7 @@ void HomeScene::DownButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 		//heldButtons.push_back(2);
 		body->setVelocity(Vec2(0, -100));
 		//mainCharacter->run();
-		SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
+		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 
 	}
 	if (type == ui::Widget::TouchEventType::ENDED)
@@ -225,7 +227,7 @@ void HomeScene::LeftButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 		//heldButtons.push_back(3);
 		body->setVelocity(Vec2(-100, 0));
 		//mainCharacter->run();
-		SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
+		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 
 		//c = true;
 	}
@@ -248,7 +250,7 @@ void HomeScene::RightButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 		///heldButtons.push_back(4);
 		body->setVelocity(Vec2(100, 0));
 		//mainCharacter->run();
-		SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
+		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 
 		//d = true;
 	}
