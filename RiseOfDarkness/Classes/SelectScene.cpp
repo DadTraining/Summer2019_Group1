@@ -2,6 +2,7 @@
 #include "SimpleAudioEngine.h"
 #include "ui/CocosGUI.h"
 #include "HelloWorldScene.h"
+#include "InputNameScene.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -40,6 +41,17 @@ bool SelectScene::init()
 	auto buttonnewgame = Button::create("/res/buttons/newgame .png"); 
 	buttonnewgame->setPosition(Vec2(visibleSize.width / 4 + origin.x, visibleSize.height / 1.3 + origin.y));
 	buttonnewgame->setScale(0.65);
+	buttonnewgame->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			auto gotoNext = CallFunc::create([]() {
+				Director::getInstance()->replaceScene(InputNameScene::create());
+			});
+			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
+			runAction(sequence);
+		}
+	});
 	this->addChild(buttonnewgame,1);
 
 	auto btcont = Button::create("/res/buttons/continue.png");
@@ -56,6 +68,19 @@ bool SelectScene::init()
 	auto buttonnewgame2 = Button::create("/res/buttons/newgame .png");
 	buttonnewgame2->setPosition(Vec2(visibleSize.width / 4.35 + button2->getContentSize().width + origin.x, visibleSize.height / 1.3 + origin.y));
 	buttonnewgame2->setScale(0.65);
+	
+	buttonnewgame2->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			auto gotoNext = CallFunc::create([]() {
+				Director::getInstance()->replaceScene(InputNameScene::create());
+			});
+			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
+			runAction(sequence);
+		}
+	});
+	
 	this->addChild(buttonnewgame2, 1);
 
 	auto btcont2 = Button::create("/res/buttons/continue.png");
@@ -73,6 +98,18 @@ bool SelectScene::init()
 	auto buttonnewgame3 = Button::create("/res/buttons/newgame .png");
 	buttonnewgame3->setPosition(Vec2(visibleSize.width / 5 + button2->getContentSize().width * 2 + origin.x, visibleSize.height / 1.3 + origin.y));
 	buttonnewgame3->setScale(0.65);
+	buttonnewgame3->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			auto gotoNext = CallFunc::create([]() {
+				Director::getInstance()->replaceScene(InputNameScene::create());
+			});
+			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
+			runAction(sequence);
+		}
+	});
+
 	this->addChild(buttonnewgame3, 1);
 
 	auto btcont3 = Button::create("/res/buttons/continue.png");
