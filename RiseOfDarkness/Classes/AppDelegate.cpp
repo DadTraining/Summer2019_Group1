@@ -1,7 +1,7 @@
 
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
-#include "PlayScene.h"
+#include "Level1Scene.h"
 #include "MapScene.h"
 #include "LoadingScene.h"
 #include "SelectScene.h"
@@ -81,7 +81,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
 
-    auto scene = MapScene::CreateScene();
+    auto scene = LoadingScene::CreateScene();
     //auto scene = LoadingScene::CreateScene();
 
     // run

@@ -9,7 +9,7 @@ public:
 
 	virtual bool init();
 
-
+	void GoToMapScene(cocos2d::Ref*);
 	CREATE_FUNC(SelectScene);
 };
 
