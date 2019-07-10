@@ -6,7 +6,7 @@
 using namespace std;
 USING_NS_CC;
 
-int lv = 1;
+int lv = 11;
 vector<ui::Button*> buttonList;
 Scene* MapScene::CreateScene()
 {
