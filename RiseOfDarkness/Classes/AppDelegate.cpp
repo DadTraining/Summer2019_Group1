@@ -26,6 +26,7 @@
 #include "HelloWorldScene.h"
 #include "LoadingScene.h"
 #include "SelectScene.h"
+#include "InputNameScene.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
