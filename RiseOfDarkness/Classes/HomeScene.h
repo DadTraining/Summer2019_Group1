@@ -3,6 +3,9 @@
 
 #include "MainCharacter.h"
 #include "ui/CocosGUI.h"
+#include "cocos2d.h"
+
+using namespace cocos2d;
 
 class HomeScene : public Layer
 {
@@ -29,9 +32,7 @@ public:
 	void OnButtonHold(float interval);
 	void CreateFixturesLayer(TMXLayer* layer);
 	void SetPositionButton();
-	void SetCamera(Vec2 pos);
-
-	
+	void SetCamera(Vec2 pos);	
 	CREATE_FUNC(HomeScene);
 };
 

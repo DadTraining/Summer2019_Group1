@@ -11,7 +11,7 @@ bool a, b, c, d;
 Scene* HomeScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	auto layer = HomeScene::create();
 
@@ -100,8 +100,6 @@ bool HomeScene::init()
 			}
 		}
 	}
-
-
 
 
 	scheduleUpdate();
@@ -258,4 +256,5 @@ void HomeScene::SetCamera(Vec2 pos)
 
 	}
 }
+
 
