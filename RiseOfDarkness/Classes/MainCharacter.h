@@ -18,6 +18,7 @@ private:
 	float fireResistance;
 	float poisonousResistance;
 	Sprite* mainCharacter;
+	Action* maction[10];
 public:
 	MainCharacter();
 	MainCharacter(Layer* layer);
@@ -25,6 +26,9 @@ public:
 	void Init();
 	Sprite* GetSprite();
 	void Update(float deltaTime);
+	void run();
+	Animate* GetAnimation(const char * dir, const char *format, int count);
+
 };
 
 #endif
