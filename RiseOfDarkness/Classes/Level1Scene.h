@@ -22,32 +22,32 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __PLAYSCENE_SCENE_H__
-#define __PLAYSCENE_SCENE_H__
+#ifndef __LEVEL1SCENE_SCENE_H__
+#define __LEVEL1SCENE_SCENE_H__
 
 #include "cocos2d.h"
 
-class PlayScene : public cocos2d::Layer
+class Level1Scene : public cocos2d::Layer
 {
 public:
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene* CreateScene();
 
     virtual bool init();
 
 	void CreateMap();
 
 	void update(float deltaTime);
-	void initObstacles();
 	void setViewPointCenter(cocos2d::Point position);
 	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
 	void setPlayerPosition(cocos2d::Point position);
 	cocos2d::Point tileCoordForPosition(cocos2d::Point);
 	
-    CREATE_FUNC(PlayScene);
+    CREATE_FUNC(Level1Scene);
 private:
 	cocos2d::TMXTiledMap *mTileMap;
 	cocos2d::Sprite* player;
 	cocos2d::TMXLayer *meta;
+	cocos2d::TMXLayer *collectMap;
 };
 
-#endif // __HELLOWORLD_SCENE_H__
+#endif
