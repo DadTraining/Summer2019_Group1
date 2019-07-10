@@ -1,4 +1,4 @@
-#include "SelectScene.h"
+#include "MapScene.h"
 #include "ui/CocosGUI.h"
 #include "PlayScene.h"
 
@@ -8,18 +8,18 @@ USING_NS_CC;
 
 int lv = 1;
 vector<ui::Button*> buttonList;
-Scene* SelectScene::CreateScene()
+Scene* MapScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
-	auto layer = SelectScene::create();
+	auto layer = MapScene::create();
 
 	scene->addChild(layer);
 
 	return scene;
 }
-bool SelectScene::init()
+bool MapScene::init()
 {
 	if (!Layer::init())
 	{
@@ -44,12 +44,12 @@ bool SelectScene::init()
 		auto btnPos = btnGroup->getObject("btnLv"+to_string(i+1));
 		int x = btnPos["x"].asInt();
 		int y = btnPos["y"].asInt();
-		auto btn = ui::Button::create("res/tiledMaps/SelectScene/x.png", "res/tiledMaps/SelectScene/x_disabled.png");
+		auto btn = ui::Button::create("res/tiledMaps/SelectScene/x.png");
 		btn->setPosition(Point(x, y));
 		btn->setScale(0.5);
 		btn->setVisible(false);
 		addChild(btn, 1);
-		btn->addClickEventListener(CC_CALLBACK_1(SelectScene::LoadLevel, this, i+1));
+		btn->addClickEventListener(CC_CALLBACK_1(MapScene::LoadLevel, this, i+1));
 		buttonList.push_back(btn);
 	}
 
@@ -65,7 +65,7 @@ bool SelectScene::init()
 	return true;
 }
 
-void SelectScene::LoadLevel(Ref *pSender,int level)
+void MapScene::LoadLevel(Ref *pSender,int level)
 {
 	switch (level)
 	{
@@ -76,11 +76,11 @@ void SelectScene::LoadLevel(Ref *pSender,int level)
 	}
 }
 
-void SelectScene::CreateMap()
+void MapScene::CreateMap()
 {
 
 }
 
-void SelectScene::onTouchEnded(Touch *touch, Event *unused_event)
+void MapScene::onTouchEnded(Touch *touch, Event *unused_event)
 {
 }
