@@ -1,7 +1,7 @@
 #include "MapScene.h"
 #include "ui/CocosGUI.h"
-#include "PlayScene.h"
-
+#include "Level1Scene.h"
+#include "SelectScene.h"
 
 using namespace std;
 USING_NS_CC;
@@ -37,6 +37,12 @@ bool MapScene::init()
 	background->setAnchorPoint(Vec2(0.5, 0.5));
 	background->setPosition(Point(visibleSize/2));
 	
+	auto btnBack = ui::Button::create("res/tiledMaps/SelectScene/btnBack.png");
+	btnBack->setAnchorPoint(Point(1, 1));
+	btnBack->setScale(0.12);
+	btnBack->setPosition(Vec2(visibleSize.width, visibleSize.height));
+	addChild(btnBack, 1);
+	btnBack->addClickEventListener(CC_CALLBACK_1(MapScene::btnBackCallback, this));
 	TMXObjectGroup *btnGroup = btnMap->objectGroupNamed("ObjButton");
 
 	for (int i = 0; i < 11; i++)
@@ -59,7 +65,10 @@ bool MapScene::init()
 		{
 			break;
 		}
-		buttonList[i]->setVisible(true);
+		if (!buttonList[i]->isVisible())
+		{
+			buttonList[i]->setVisible(true);
+		}
 	}
 
 	return true;
@@ -70,7 +79,9 @@ void MapScene::LoadLevel(Ref *pSender,int level)
 	switch (level)
 	{
 	case 1:
-		Director::getInstance()->replaceScene(PlayScene::CreateScene());
+		
+		Director::getInstance()->replaceScene(Level1Scene::CreateScene());
+		
 	default:
 		break;
 	}
@@ -79,6 +90,12 @@ void MapScene::LoadLevel(Ref *pSender,int level)
 void MapScene::CreateMap()
 {
 
+}
+
+void MapScene::btnBackCallback(cocos2d::Ref * pSender)
+{
+	buttonList.clear();
+	Director::getInstance()->replaceScene(SelectScene::CreateScene());
 }
 
 void MapScene::onTouchEnded(Touch *touch, Event *unused_event)
