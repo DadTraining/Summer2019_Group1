@@ -24,7 +24,7 @@
     <ClCompile Include="..\Classes\PlayScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SelectScene.cpp">
+    <ClCompile Include="..\Classes\MapScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClInclude Include="..\Classes\PlayScene.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SelectScene.h">
+    <ClInclude Include="..\Classes\MapScene.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "PlayScene.h"
-#include "SelectScene.h"
+#include "MapScene.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -78,7 +78,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = SelectScene::CreateScene();
+    auto scene = MapScene::CreateScene();
 
     // run
     director->runWithScene(scene);
