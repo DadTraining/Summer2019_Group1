@@ -1,21 +1,21 @@
-#include "PlayScene.h"
+#include "Level1Scene.h"
 #include "ui\CocosGUI.h"
 using namespace std;
 
 USING_NS_CC;
 
-Scene* PlayScene::CreateScene()
+Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
-	auto layer = PlayScene::create();
+	auto layer = Level1Scene::create();
 
 	scene->addChild(layer);
 
 	return scene;
 }
-bool PlayScene::init()
+bool Level1Scene::init()
 {
 	if (!Layer::init())
 	{
@@ -45,14 +45,14 @@ bool PlayScene::init()
 	
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [&](Touch *touch, Event *unused_event)->bool {return true;};
-	listener->onTouchEnded = CC_CALLBACK_2(PlayScene::onTouchEnded, this);
+	listener->onTouchEnded = CC_CALLBACK_2(Level1Scene::onTouchEnded, this);
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	this->setTouchEnabled(true);
 	return true;
 }
 
-void PlayScene::CreateMap()
+void Level1Scene::CreateMap()
 {
 	//tile map
 	mTileMap = TMXTiledMap::create("res/tiledMaps/map1/map_lv1.tmx");
@@ -65,12 +65,11 @@ void PlayScene::CreateMap()
 
 }
 
-void PlayScene::update(float deltaTime)
+void Level1Scene::update(float deltaTime)
 {
 }
 
-
-void PlayScene::setViewPointCenter(cocos2d::Point position)
+void Level1Scene::setViewPointCenter(cocos2d::Point position)
 {
 	auto winSize = Director::getInstance()->getWinSize();
 
@@ -85,7 +84,7 @@ void PlayScene::setViewPointCenter(cocos2d::Point position)
 	this->setPosition(viewPoint);
 }
 
-void PlayScene::setPlayerPosition(cocos2d::Point position)
+void Level1Scene::setPlayerPosition(cocos2d::Point position)
 {
 	log("move->");
 	Point tileCoord = this->tileCoordForPosition(position);
@@ -121,7 +120,7 @@ void PlayScene::setPlayerPosition(cocos2d::Point position)
 	player->setPosition(position);
 }
 
-cocos2d::Point PlayScene::tileCoordForPosition(cocos2d::Point position)
+cocos2d::Point Level1Scene::tileCoordForPosition(cocos2d::Point position)
 {
 	int x = position.x / mTileMap->getTileSize().width;
 	int y = ((mTileMap->getMapSize().height*mTileMap->getTileSize().height) - position.y)
@@ -129,7 +128,7 @@ cocos2d::Point PlayScene::tileCoordForPosition(cocos2d::Point position)
 	return cocos2d::Point(x,y);
 }
 
-void PlayScene::onTouchEnded(Touch *touch, Event *unused_event)
+void Level1Scene::onTouchEnded(Touch *touch, Event *unused_event)
 {
 	
 	auto touchLocation = touch->getLocationInView();
