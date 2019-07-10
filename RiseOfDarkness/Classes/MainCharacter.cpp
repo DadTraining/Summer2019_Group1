@@ -4,10 +4,11 @@ MainCharacter::MainCharacter() {};
 
 MainCharacter::MainCharacter(Layer* layer)
 {
+	a = 0;
 	Init();
 	layer->addChild(mainCharacter, 2);
-	maction[0] = Repeat::create(GetAnimation("res/animates/mainCharacter/goUp/goUp.plist", "%02d.png", 10), 1);
-	maction[0]->retain();
+	maction[0] = RepeatForever::create(GetAnimation("res/animates/mainCharacter/goUp/goUp.plist", "%02d.png", 10));
+	CC_SAFE_RETAIN(maction[0]);
 }
 
 MainCharacter::~MainCharacter() {};
@@ -53,6 +54,11 @@ Animate* MainCharacter::GetAnimation(const char *dir, const char *format, int co
 		sprintf(str, format, i);
 		animFrames.pushBack(spritecache->getSpriteFrameByName(str));
 	}
-	auto animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+	auto animation = Animation::createWithSpriteFrames(animFrames, 0.2f);
 	return Animate::create(animation);
+}
+
+void MainCharacter::stop()
+{
+	mainCharacter->stopAction(maction[0]);
 }

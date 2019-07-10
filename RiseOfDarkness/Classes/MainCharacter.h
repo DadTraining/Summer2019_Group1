@@ -9,6 +9,7 @@ using namespace cocos2d;
 class MainCharacter
 {
 private:
+	float a;
 	int healthPoint;
 	int stamina;
 	int defend;
@@ -27,6 +28,7 @@ public:
 	Sprite* GetSprite();
 	void Update(float deltaTime);
 	void run();
+	void stop();
 	Animate* GetAnimation(const char * dir, const char *format, int count);
 
 };

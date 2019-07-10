@@ -32,7 +32,7 @@ public:
 	void OnButtonHold(float interval);
 	void CreateFixturesLayer(TMXLayer* layer);
 	void SetPositionButton();
-	void SetCamera(Vec2 pos);	
+	void SetCamera(Vec2 pos);
 	CREATE_FUNC(HomeScene);
 };
 
