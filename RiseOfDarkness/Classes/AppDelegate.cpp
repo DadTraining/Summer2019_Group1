@@ -1,7 +1,7 @@
 
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
-
+#include "ResourceManager.h"
 #include "LoadingScene.h"
 #include "HomeScene.h"
 
@@ -78,6 +78,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
 
     register_all_packages();
+
+	ResourceManager::GetInstance()->Init("data.bin");
 
     // create a scene. it's an autorelease object
     auto scene = HomeScene::CreateScene();

@@ -1,5 +1,5 @@
 #include "MainCharacter.h"
-
+#include "ResourceManager.h"
 MainCharacter::MainCharacter() {};
 
 MainCharacter::MainCharacter(Layer* layer)
@@ -7,8 +7,7 @@ MainCharacter::MainCharacter(Layer* layer)
 	a = 0;
 	Init();
 	layer->addChild(mainCharacter, 2);
-	maction[0] = RepeatForever::create(GetAnimation("res/animates/mainCharacter/goUp/goUp.plist", "%02d.png", 10));
-	CC_SAFE_RETAIN(maction[0]);
+	maction[0] = ResourceManager::GetInstance()->GetAnimateById(0);
 }
 
 MainCharacter::~MainCharacter() {};
@@ -23,7 +22,7 @@ void MainCharacter::Init()
 	iceResistance = 0;
 	fireResistance = 0;
 	poisonousResistance = 0;
-	mainCharacter = Sprite::create("res/sprites/mainCharacter.png");
+	mainCharacter = ResourceManager::GetInstance()->GetSpriteById(7);//Sprite::create("res/sprites/mainCharacter.png");
 	mainCharacter->setScale(2);
 
 }
