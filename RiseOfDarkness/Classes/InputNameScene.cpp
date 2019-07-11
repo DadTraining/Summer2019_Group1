@@ -4,6 +4,7 @@
 #include <iostream>
 #include "HomeScene.h"
 #include "ResourceManager.h"
+#include "MainCharacter.h"
 USING_NS_CC;
 
 Scene* InputNameScene::CreateScene()

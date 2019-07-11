@@ -80,7 +80,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	ResourceManager::GetInstance()->Init("data.bin");
 
     // create a scene. it's an autorelease object
-    auto scene = LoadingScene::CreateScene();
+    auto scene = HomeScene::CreateScene();
 
     // run
     director->runWithScene(scene);

@@ -1,4 +1,3 @@
-
 #include "LoadingScene.h"
 #include "ui/CocosGUI.h"
 #include "MainMenuScene.h"

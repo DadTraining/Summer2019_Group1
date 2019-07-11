@@ -1,5 +1,6 @@
 #include "HomeScene.h"
 #include "ResourceManager.h"
+#include "MainCharacter.h"
 
 USING_NS_CC;
 
@@ -27,7 +28,9 @@ bool HomeScene::init()
 	{
 		return false;
 	}
-	mainCharacter = new MainCharacter(this);
+	MainCharacter::GetInstance()->Init();
+	mainCharacter = MainCharacter::GetInstance()->GetSprite();
+	addChild(mainCharacter,1);
 	visibleSize = Director::getInstance()->getVisibleSize();
 
 	a = b = c = d = false;
@@ -43,19 +46,13 @@ bool HomeScene::init()
 	tileMapSize = tileMap1->getContentSize();
 	addChild(tileMap1, 3);
 
-
-
-	body = PhysicsBody::createBox(mainCharacter->GetSprite()->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
-	body->setDynamic(true);
-	body->setGravityEnable(false);
 	auto ob = tileMap->objectGroupNamed("mainCharacter");
 	float xx = ob->getObject("mc")["x"].asFloat();
 	float yy = ob->getObject("mc")["y"].asFloat();
 	log("%f,%f", tileMapSize.height, yy);
-	mainCharacter->GetSprite()->setPosition(xx,yy);
-	mainCharacter->GetSprite()->setPhysicsBody(body);
+	mainCharacter->setPosition(xx, yy);
 	camera = Camera::create();
-	camera->setPosition(mainCharacter->GetSprite()->getPosition());
+	camera->setPosition(mainCharacter->getPosition());
 	addChild(camera);
 	frameButton = ResourceManager::GetInstance()->GetSpriteById(10);//Sprite::create("res/buttons/frameButton.png");
 	frameButton->removeFromParent();
@@ -89,10 +86,9 @@ bool HomeScene::init()
 	rightButton->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
 	addChild(rightButton, 7);
 
-	body->setRotationEnable(false);
+	body = MainCharacter::GetInstance()->GetPhysicsBody();
 
-
-	cameraDistance = camera->getPosition() - mainCharacter->GetSprite()->getPosition();
+	cameraDistance = camera->getPosition() - mainCharacter->getPosition();
 	buttonDistance = frameButton->getPosition() - camera->getPosition();
 	auto contactListener = EventListenerPhysicsContact::create();
 	
@@ -133,7 +129,7 @@ void HomeScene::update(float deltaTime)
 
 	}
 	SetPositionButton();
-	SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
+	SetCamera(mainCharacter->getPosition() + cameraDistance);
 }
 
 void HomeScene::AddListener()
@@ -194,6 +190,7 @@ void HomeScene::UpButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		//heldButtons.push_back(1);
 		body->setVelocity(Vec2(0, 100));
+		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->GO_UP);
 		//mainCharacter->run();
 		//mainCharacter->run();
 		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
@@ -204,6 +201,8 @@ void HomeScene::UpButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 		//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 1), heldButtons.end());
 		body->setVelocity(Vec2(0, 0));
 		//mainCharacter->stop();
+		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->BACK_IDLE);
+
 	}
 
 }
@@ -214,6 +213,8 @@ void HomeScene::DownButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		//heldButtons.push_back(2);
 		body->setVelocity(Vec2(0, -100));
+		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->GO_DOWN);
+
 		//mainCharacter->run();
 		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 
@@ -222,6 +223,8 @@ void HomeScene::DownButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 2), heldButtons.end());
 		body->setVelocity(Vec2(0, 0));
+		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->FRONT_IDLE);
+
 		//mainCharacter->stop();
 
 	}
@@ -234,6 +237,8 @@ void HomeScene::LeftButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		//heldButtons.push_back(3);
 		body->setVelocity(Vec2(-100, 0));
+		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->GO_LEFT);
+
 		//mainCharacter->run();
 		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
 
@@ -243,6 +248,8 @@ void HomeScene::LeftButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 3), heldButtons.end());
 		body->setVelocity(Vec2(0, 0));
+		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->LEFT_IDLE);
+
 		//mainCharacter->stop();
 
 		//c = false;
