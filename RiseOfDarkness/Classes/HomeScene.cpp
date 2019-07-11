@@ -32,11 +32,13 @@ bool HomeScene::init()
 
 	a = b = c = d = false;
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(0);//TMXTiledMap::create("res/tiledMaps/home/home.tmx");
+	tileMap->removeFromParent();
 	tileMap->setPosition(Vec2(0, 0));
 	tileMapSize = tileMap->getContentSize();
 	addChild(tileMap, 0);
 
 	auto tileMap1 = ResourceManager::GetInstance()->GetTileMapById(1);//TMXTiledMap::create("res/tiledMaps/home/upperHome.tmx");
+	tileMap1->removeFromParent();
 	tileMap1->setPosition(Vec2(0, 0));
 	tileMapSize = tileMap1->getContentSize();
 	addChild(tileMap1, 3);
@@ -56,6 +58,7 @@ bool HomeScene::init()
 	camera->setPosition(mainCharacter->GetSprite()->getPosition());
 	addChild(camera);
 	frameButton = ResourceManager::GetInstance()->GetSpriteById(10);//Sprite::create("res/buttons/frameButton.png");
+	frameButton->removeFromParent();
 	auto frameButtonSize = frameButton->getBoundingBox().size;
 	frameButton->setPosition(Vec2(frameButtonSize.width, frameButtonSize.height)+camera->getPosition()-visibleSize/2);
 	auto frameButtonPosition = frameButton->getPosition();
@@ -63,21 +66,25 @@ bool HomeScene::init()
 	addChild(frameButton, 8);
 
 	upButton = ResourceManager::GetInstance()->GetButtonById(11);//ui::Button::create("res/buttons/upButtonNormal.png", "res/buttons/upButtonPressed.png");
+	upButton->removeFromParent();
 	upButton->setAnchorPoint(Vec2(0.5, 1));
 	upButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
 	addChild(upButton, 4);
 
 	downButton = ResourceManager::GetInstance()->GetButtonById(12);//ui::Button::create("res/buttons/downButtonNormal.png", "res/buttons/downButtonPressed.png");
+	downButton->removeFromParent();
 	downButton->setAnchorPoint(Vec2(0.5, 0));
 	downButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
 	addChild(downButton, 5);
 
 	leftButton = ResourceManager::GetInstance()->GetButtonById(13);//ui::Button::create("res/buttons/leftButtonNormal.png", "res/buttons/leftButtonPressed.png");
+	leftButton->removeFromParent();
 	leftButton->setAnchorPoint(Vec2(0, 0.5));
 	leftButton->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
 	addChild(leftButton, 6);
 
 	rightButton = ResourceManager::GetInstance()->GetButtonById(14);//ui::Button::create("res/buttons/rightButtonNormal.png", "res/buttons/rightButtonPressed.png");
+	rightButton->removeFromParent();
 	rightButton->setAnchorPoint(Vec2(1, 0.5));
 	rightButton->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
 	addChild(rightButton, 7);

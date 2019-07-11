@@ -35,7 +35,6 @@ bool SelectScene::init()
 	auto buttonnewgame = ResourceManager::GetInstance()->GetButtonById(6)->clone();//Button::create("/res/buttons/newgame .png"); 
 	buttonnewgame->setPosition(Vec2(visibleSize.width / 4 + origin.x, visibleSize.height / 1.3 + origin.y));
 	buttonnewgame->setScale(0.65);
-	buttonnewgame->addClickEventListener(CC_CALLBACK_1(SelectScene::GoToMapScene, this));
 	this->addChild(buttonnewgame,1);
 	buttonnewgame->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type)
 	{
@@ -110,9 +109,5 @@ bool SelectScene::init()
 	return true;
 }
 
-void SelectScene::GoToMapScene(cocos2d::Ref *pSender)
-{
-	Director::getInstance()->replaceScene(HomeScene::CreateScene());
-}
 
 
