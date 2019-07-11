@@ -47,8 +47,7 @@ bool MainMenuScene::init()
 			auto gotoNext = CallFunc::create([]() {
 				Director::getInstance()->replaceScene(SelectScene::create());
 			});
-			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
-			runAction(sequence);
+			runAction(gotoNext);
 		}
 	});
 
@@ -71,10 +70,9 @@ bool MainMenuScene::init()
 			auto gotoNext = CallFunc::create([]() {
 				Director::getInstance()->end();
 			});
-			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
-			runAction(sequence);
+			runAction(gotoNext);
 		}
-	});
+	});	
 
 	this->addChild(button3);
 

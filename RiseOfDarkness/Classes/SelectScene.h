@@ -12,7 +12,6 @@ public:
 
 	virtual bool init();
 
-	void GoToMapScene(Ref*);
 	CREATE_FUNC(SelectScene);
 };
 

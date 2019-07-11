@@ -55,8 +55,7 @@ bool LoadingScene::init()
 	auto gotoNext = CallFunc::create([]() {
 		Director::getInstance()->replaceScene(MainMenuScene::create());
 	});
-	auto sequence = Sequence::create(DelayTime::create(3), gotoNext, nullptr);
-	runAction(sequence);
+	runAction(gotoNext);
 
 	return true;
 }

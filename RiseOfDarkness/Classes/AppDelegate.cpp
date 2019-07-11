@@ -1,6 +1,5 @@
 
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
 #include "ResourceManager.h"
 #include "LoadingScene.h"
 #include "HomeScene.h"
@@ -82,7 +81,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	ResourceManager::GetInstance()->Init("data.bin");
 
     // create a scene. it's an autorelease object
-    auto scene = HomeScene::CreateScene();
+    auto scene = LoadingScene::CreateScene();
 
     // run
     director->runWithScene(scene);
