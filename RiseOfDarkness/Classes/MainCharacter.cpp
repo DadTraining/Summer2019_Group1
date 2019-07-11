@@ -1,35 +1,75 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
-MainCharacter::MainCharacter() {};
 
-MainCharacter::MainCharacter(Layer* layer)
+MainCharacter* MainCharacter::m_instance = nullptr;
+
+MainCharacter::MainCharacter() {}
+
+MainCharacter* MainCharacter::GetInstance()
 {
-	a = 0;
-	Init();
-	layer->addChild(mainCharacter, 2);
-	maction[0] = ResourceManager::GetInstance()->GetAnimateById(0);
+	if (m_instance == nullptr)
+	{
+		m_instance = new MainCharacter();
+	}
+	return m_instance;
 }
 
-MainCharacter::~MainCharacter() {};
+MainCharacter::~MainCharacter() {}
 
 void MainCharacter::Init()
 {
-	healthPoint = 500;
-	stamina = 100;
-	defend = 20;
-	heartContainers = 0;
-	speed = 1;
-	iceResistance = 0;
-	fireResistance = 0;
-	poisonousResistance = 0;
-	mainCharacter = ResourceManager::GetInstance()->GetSpriteById(7);//Sprite::create("res/sprites/mainCharacter.png");
-	mainCharacter->setScale(2);
-
+	CreateMainCharacter();
+	currentState = FRONT_IDLE;
+	previousState = FRONT_IDLE;
+	SetState(FRONT_IDLE);
+	stageLevel = 1;
+	CreatePhysicsBody();
 }
 
-void MainCharacter::Update(float deltaTime)
+void MainCharacter::CreateMainCharacter()
 {
+	mainCharacter = ResourceManager::GetInstance()->GetSpriteById(7);
+	mainCharacter->setScale(2.0);
+	mAction[FRONT_IDLE] = ResourceManager::GetInstance()->GetActionById(3);
+	mAction[BACK_IDLE] = ResourceManager::GetInstance()->GetActionById(4);
+	mAction[LEFT_IDLE] = ResourceManager::GetInstance()->GetActionById(5);
+	mAction[GO_DOWN] = ResourceManager::GetInstance()->GetActionById(1);
+	mAction[GO_UP] = ResourceManager::GetInstance()->GetActionById(0);
+	mAction[GO_LEFT] = ResourceManager::GetInstance()->GetActionById(2);
+	mAction[ROLL_FRONT] = ResourceManager::GetInstance()->GetActionById(15);
+	mAction[ROLL_BACK] = ResourceManager::GetInstance()->GetActionById(16);
+	mAction[ROLL_LEFT] = ResourceManager::GetInstance()->GetActionById(17);
+	mAction[FRONT_SLASH] = ResourceManager::GetInstance()->GetActionById(6);
+	mAction[BACK_SLASH] = ResourceManager::GetInstance()->GetActionById(7);
+	mAction[LEFT_SLASH] = ResourceManager::GetInstance()->GetActionById(8);
+	mAction[FRONT_ARCHERY] = ResourceManager::GetInstance()->GetActionById(9);
+	mAction[BACK_ARCHERY] = ResourceManager::GetInstance()->GetActionById(10);
+	mAction[LEFT_ARCHERY] = ResourceManager::GetInstance()->GetActionById(11);
+	mAction[FRONT_SHIELD] = ResourceManager::GetInstance()->GetActionById(12);
+	mAction[BACK_SHIELD] = ResourceManager::GetInstance()->GetActionById(13);
+	mAction[LEFT_SHIELD] = ResourceManager::GetInstance()->GetActionById(14);
+}
 
+void MainCharacter::CreatePhysicsBody()
+{
+	mPhysicsBody = PhysicsBody::createBox(mainCharacter->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+	mPhysicsBody->setDynamic(true);
+	mPhysicsBody->setGravityEnable(false);
+	mPhysicsBody->setRotationEnable(false);
+	mainCharacter->setPhysicsBody(mPhysicsBody);
+}
+
+void MainCharacter::AddToScene(Layer* layer)
+{
+	
+	mainCharacter->removeFromParent();
+	layer->addChild(mainCharacter,1);
+}
+
+void MainCharacter::DoAction()
+{
+	mainCharacter->stopAction(mAction[previousState]);
+	mainCharacter->runAction(mAction[currentState]);
 }
 
 Sprite* MainCharacter::GetSprite()
@@ -37,27 +77,24 @@ Sprite* MainCharacter::GetSprite()
 	return mainCharacter;
 }
 
-void MainCharacter::run()
+void MainCharacter::SetState(int state)
 {
-	mainCharacter->runAction(maction[0]->clone());
+	previousState = currentState;
+	currentState = state;
+	DoAction();
 }
 
-Animate* MainCharacter::GetAnimation(const char *dir, const char *format, int count)
+int MainCharacter::GetCurrentState()
 {
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(dir);
-	auto spritecache = SpriteFrameCache::getInstance();
-	Vector<SpriteFrame*> animFrames;
-	char str[100];
-	for (int i = 1; i <= count; i++)
-	{
-		sprintf(str, format, i);
-		animFrames.pushBack(spritecache->getSpriteFrameByName(str));
-	}
-	auto animation = Animation::createWithSpriteFrames(animFrames, 0.2f);
-	return Animate::create(animation);
+	return currentState;
 }
 
-void MainCharacter::stop()
+void MainCharacter::Update(float deltaTime)
 {
-	mainCharacter->stopAction(maction[0]);
+
+}
+
+PhysicsBody* MainCharacter::GetPhysicsBody()
+{
+	return mPhysicsBody;
 }

@@ -10,7 +10,7 @@ using namespace cocos2d;
 class HomeScene : public Layer
 {
 private:
-	MainCharacter* mainCharacter;
+	Sprite* mainCharacter;
 	Sprite* frameButton;
 	TMXTiledMap* tileMap;
 	ui::Button *upButton, *downButton, *rightButton, *leftButton;

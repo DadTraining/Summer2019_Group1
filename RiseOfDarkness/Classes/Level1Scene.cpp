@@ -1,5 +1,6 @@
 #include "Level1Scene.h"
 #include "ui\CocosGUI.h"
+#include "ResourceManager.h"
 using namespace std;
 
 USING_NS_CC;
@@ -28,7 +29,8 @@ bool Level1Scene::init()
 	
 	//AddListener();
 
-	player = Sprite::create("res/sprites/link-5_65.png");
+	player = ResourceManager::GetInstance()->GetSpriteById(7);//Sprite::create("res/sprites/link-5_65.png");
+	player->removeFromParent();
 	TMXObjectGroup *playerGroup = mTileMap->objectGroupNamed("Player");
 	auto spawnPoint = playerGroup->getObject("mc");
 	int x = spawnPoint["x"].asInt();
@@ -55,7 +57,8 @@ bool Level1Scene::init()
 void Level1Scene::CreateMap()
 {
 	//tile map
-	mTileMap = TMXTiledMap::create("res/tiledMaps/map1/map_lv1.tmx");
+	mTileMap = ResourceManager::GetInstance()->GetTileMapById(3);//TMXTiledMap::create("res/tiledMaps/map1/map_lv1.tmx");
+	mTileMap->removeFromParent();
 	mTileMap->setAnchorPoint(Vec2(0,0));
 	mTileMap->setPosition(Point(0, 0));
 	addChild(mTileMap,0,99);

@@ -32,7 +32,7 @@ ResourceManager::~ResourceManager()
 		m_sprites[i]->autorelease();
 	}
 
-	for (int i = 0; i < m_animates.size(); i++)
+	for (int i = 0; i < m_actions.size(); i++)
 	{
 		m_sprites[i]->autorelease();
 	}
@@ -78,8 +78,8 @@ void ResourceManager::Init(const std::string &path)
 			count = std::stoi(tempStr1);
 			istr >> tempStr1;
 			istr >> tempStr2;
-			m_animates.insert(std::pair<int, Animate*>(i, GetAnimate(tempStr2, tempStr1, count)));
-			m_animates[i]->retain();
+			m_actions.insert(std::pair<int, Action*>(i, RepeatForever::create(GetAnimate(tempStr2, tempStr1, count))));
+			CC_SAFE_RETAIN(m_actions[i]);
 		}
 
 		// Tile Map
@@ -119,9 +119,9 @@ Label* ResourceManager::GetLabelById(int id)
 	return m_labels[id];
 }
 
-Animate* ResourceManager::GetAnimateById(int id)
+Action* ResourceManager::GetActionById(int id)
 {
-	return m_animates[id];
+	return m_actions[id];
 }
 
 TMXTiledMap* ResourceManager::GetTileMapById(int id)

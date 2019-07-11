@@ -15,7 +15,7 @@ private:
 	std::map<int, Sprite*> m_sprites;
 	std::map<int, ui::Button*>m_buttons;
 	std::map<int, Label*>m_labels;
-	std::map<int, Animate*> m_animates;
+	std::map<int, Action*> m_actions;
 	std::map<int, TMXTiledMap*> m_tileMap;
 	ResourceManager();
 	~ResourceManager();
@@ -25,7 +25,7 @@ public:
 	Sprite* GetSpriteById(int id);
 	ui::Button* GetButtonById(int id);
 	Label* GetLabelById(int id);
-	Animate* GetAnimateById(int id);
+	Action* GetActionById(int id);
 	TMXTiledMap* GetTileMapById(int id);
 	Sprite* DuplicateSprite(Sprite* sprite);
 	Animate* GetAnimate(std::string &dir, std::string &format, int count);

@@ -42,8 +42,7 @@ bool SelectScene::init()
 			auto gotoNext = CallFunc::create([]() {
 				Director::getInstance()->replaceScene(InputNameScene::create());
 			});
-			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
-			runAction(sequence);
+			runAction(gotoNext);
 		}
 	});
 	this->addChild(buttonnewgame,1);
@@ -80,8 +79,7 @@ bool SelectScene::init()
 			auto gotoNext = CallFunc::create([]() {
 				Director::getInstance()->replaceScene(InputNameScene::create());
 			});
-			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
-			runAction(sequence);
+			runAction(gotoNext);
 		}
 	});
 	
@@ -109,8 +107,7 @@ bool SelectScene::init()
 			auto gotoNext = CallFunc::create([]() {
 				Director::getInstance()->replaceScene(InputNameScene::create());
 			});
-			auto sequence = Sequence::create(DelayTime::create(1), gotoNext, nullptr);
-			runAction(sequence);
+			runAction(gotoNext);
 		}
 	});
 
