@@ -32,6 +32,9 @@
     <ClCompile Include="..\Classes\SelectScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\InputNameScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\MainCharacter.h" />
@@ -43,16 +46,7 @@
     <ClInclude Include="..\Classes\SelectScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="..\Classes\ResourceManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Classes\AppDelegate.h" />
-    <ClInclude Include="..\Classes\HelloWorldScene.h" />
-    <ClInclude Include="..\Classes\MapScene.h" />
-    <ClInclude Include="..\Classes\LoadingScene.h" />
-    <ClInclude Include="..\Classes\MainMenuScene.h" />
-    <ClInclude Include="..\Classes\SelectScene.h" />
-    <ClInclude Include="main.h" />
-    <ClInclude Include="..\Classes\Level1Scene.h" />
+    <ClInclude Include="..\Classes\InputNameScene.h">
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />

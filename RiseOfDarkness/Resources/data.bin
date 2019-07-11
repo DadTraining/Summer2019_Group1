@@ -1,4 +1,4 @@
-11
+12
 0
 res/sprites/bg.png
 1
@@ -21,7 +21,9 @@ res/sprites/selectbg.jpg
 res/sprites/text.png
 10
 res/sprites/frameButton.png
-19
+11
+res/sprites/inputname.png
+20
 0
 res/buttons/MainMenuScene/ex.png
 res/buttons/MainMenuScene/ex.png
@@ -79,6 +81,9 @@ res/buttons/GamePlay/archeryButtonPressed.png
 18
 res/buttons/GamePlay/defendButtonNormal.png
 res/buttons/GamePlay/defendButtonPressed.png
+19
+res/buttons/InputSceneName/finish.png
+res/buttons/InputSceneName/finish.png
 18
 0
 10
@@ -159,6 +164,8 @@ res/tiledMaps/home/home.tmx
 res/tiledMaps/home/upperHome.tmx
 2
 res/tiledMaps/mapScene/selectMap.tmx
-1
+2
 0
+res/labels/MarkerFelt.ttf
+1
 res/labels/MarkerFelt.ttf
