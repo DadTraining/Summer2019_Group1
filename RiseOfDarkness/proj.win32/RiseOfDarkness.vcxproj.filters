@@ -10,31 +10,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\Classes\Level1Scene.cpp" />
     <ClCompile Include="..\Classes\ResourceManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\AppDelegate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\MainCharacter.cpp" />
-    <ClCompile Include="..\Classes\HomeScene.cpp" />
-    <ClCompile Include="..\Classes\LoadingScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\MainMenuScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SelectScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\InputNameScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClCompile Include="..\Classes\HomeScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\MainCharacter.h" />
@@ -49,7 +26,6 @@
     <ClInclude Include="..\Classes\InputNameScene.h">
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="game.rc" />
     <ResourceCompile Include="game.rc" />
   </ItemGroup>
 </Project>
