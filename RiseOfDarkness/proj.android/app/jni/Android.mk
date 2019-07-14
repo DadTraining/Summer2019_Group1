@@ -13,7 +13,17 @@ LOCAL_MODULE_FILENAME := libMyGame
 
 LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppDelegate.cpp \
-                   $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp
+                   $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/GamePlay.cpp \
+                   $(LOCAL_PATH)/../../../Classes/HomeScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/InputNameScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Level1Scene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/LoadingScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/MainCharacter.cpp \
+                   $(LOCAL_PATH)/../../../Classes/MainMenuScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/MapScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/ResourceManager.cpp \
+                   $(LOCAL_PATH)/../../../Classes/SelectScene.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 
