@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>1.png</key>
+            <key>01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>2.png</key>
+            <key>02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>3.png</key>
+            <key>03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>4.png</key>
+            <key>04.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>5.png</key>
+            <key>05.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -93,7 +93,7 @@
             <key>size</key>
             <string>{103,22}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:b84e2f5ea4065f811e68959ac5636482:ded8a01ea7fb0981181458e25d659395:ac21bd13d7cf94d915480e9b974d70db$</string>
+            <string>$TexturePacker:SmartUpdate:5f8098e23b6e82471e731385bcd493c4:ded8a01ea7fb0981181458e25d659395:ac21bd13d7cf94d915480e9b974d70db$</string>
             <key>textureFileName</key>
             <string>leftShield.png</string>
         </dict>

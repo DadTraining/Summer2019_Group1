@@ -2,13 +2,46 @@
 #define GAME_PLAY_H
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 
 using namespace cocos2d;
 
 class GamePlay
 {
-public:
+protected:
+	Sprite* mainCharacter;
+	TMXTiledMap* tileMap, *upperTileMap;
+	Camera* camera;
+	PhysicsBody* body;
+	std::vector<ui::Button*> m_buttons;
+	std::vector<Sprite*> m_sprites;
+	ui::Widget::TouchEventType mCurrentTouchState;
+	Point mCurrentTouchPoint;
+	Point mNextTouchPoint;
+	Size distance;
+	Label* mName;
+	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
 
+public:
+	GamePlay();
+	virtual ~GamePlay();
+
+	virtual void update(float deltaTime) = 0;
+	/*virtual bool OnTouchBeganSP(Touch* touch, Event* event);
+	virtual bool OnTouchEndedSP(Touch* touch, Event* event);
+	virtual void OnTouchMovedSP(Touch* touch, Event* event);
+	virtual void NormalAttackSP(Ref* sender, ui::Widget::TouchEventType type);
+	virtual void SpecialAttackSP(Ref* sender, ui::Widget::TouchEventType type);
+	virtual void EvadeSP(Ref* sender, ui::Widget::TouchEventType type);
+	virtual void DefendSP(Ref* sender, ui::Widget::TouchEventType type);*/
+	virtual void EnablePressed();
+	virtual void DisablePressed();
+
+	virtual void CreateAllButton(Layer* layer);
+	virtual void CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* layer);
+	virtual void SetCamera(Vec2 pos);
+	virtual void AddListener() = 0;
+	virtual void UpdateController();
 };
 
 #endif

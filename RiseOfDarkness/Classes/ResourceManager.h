@@ -17,6 +17,7 @@ private:
 	std::map<int, Label*>m_labels;
 	std::map<int, Action*> m_actions;
 	std::map<int, TMXTiledMap*> m_tileMap;
+	std::map<int, ui::LoadingBar*> m_loadingbar;
 	ResourceManager();
 	~ResourceManager();
 public:
@@ -27,8 +28,9 @@ public:
 	Label* GetLabelById(int id);
 	Action* GetActionById(int id);
 	TMXTiledMap* GetTileMapById(int id);
+	ui::LoadingBar* GetLoadingbar(int id);
 	Sprite* DuplicateSprite(Sprite* sprite);
-	Animate* GetAnimate(std::string &dir, std::string &format, int count);
+	Action* GetAction(std::string &dir, int count, float deltaTime);
 };
 
 #endif

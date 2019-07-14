@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>1.png</key>
+            <key>01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>2.png</key>
+            <key>02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>3.png</key>
+            <key>03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>4.png</key>
+            <key>04.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>5.png</key>
+            <key>05.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>6.png</key>
+            <key>06.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>7.png</key>
+            <key>07.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -123,7 +123,7 @@
             <key>size</key>
             <string>{103,55}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:74a797465949700f219fce03d0a46c32:598e2463cf597f541e5387155e14fd00:31cdd753c82f63c6bf759948b149fdf6$</string>
+            <string>$TexturePacker:SmartUpdate:3faa3bc794ae9ff778010835f5da4e3a:598e2463cf597f541e5387155e14fd00:31cdd753c82f63c6bf759948b149fdf6$</string>
             <key>textureFileName</key>
             <string>leftSlash.png</string>
         </dict>

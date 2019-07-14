@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>1.png</key>
+            <key>01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -33,7 +33,7 @@
             <key>size</key>
             <string>{18,21}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:650f37a01609ea6a845ff4a1ea243fb6:c22b8e1ff6f0b899b42dfe4c4e7fb23f:6073a2b195cfe2b64a7059fd2cb91880$</string>
+            <string>$TexturePacker:SmartUpdate:3251db0e532f4eab7c7681e0b5949c35:c22b8e1ff6f0b899b42dfe4c4e7fb23f:6073a2b195cfe2b64a7059fd2cb91880$</string>
             <key>textureFileName</key>
             <string>backIdle.png</string>
         </dict>

@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>1.png</key>
+            <key>01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>2.png</key>
+            <key>02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>3.png</key>
+            <key>03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>4.png</key>
+            <key>04.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>5.png</key>
+            <key>05.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>6.png</key>
+            <key>06.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -108,7 +108,7 @@
             <key>size</key>
             <string>{61,47}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:f7d137c2f974fe5c243a7eed0c755df9:d990d915c13a5909edf07b653a070f6e:4a9b07ceb263b4e001ace3cd18bd4c21$</string>
+            <string>$TexturePacker:SmartUpdate:335578de7368c9f97c65159cd82d1736:d990d915c13a5909edf07b653a070f6e:4a9b07ceb263b4e001ace3cd18bd4c21$</string>
             <key>textureFileName</key>
             <string>frontArchery.png</string>
         </dict>

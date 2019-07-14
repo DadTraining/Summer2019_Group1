@@ -1,5 +1,4 @@
 #include "InputNameScene.h"
-#include "UI/CocosGUI.h"
 #include <String.h>
 #include <iostream>
 #include "HomeScene.h"
@@ -26,13 +25,13 @@ bool InputNameScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto bg = ResourceManager::GetInstance()->GetSpriteById(8);//Sprite::create("/res/sprites/selectbg.jpg");
+	auto bg = ResourceManager::GetInstance()->GetSpriteById(7);//Sprite::create("/res/sprites/selectbg.jpg");
 	bg->removeFromParent();
 	bg->setScale(visibleSize.width / bg->getContentSize().width, visibleSize.height / bg->getContentSize().height);
 	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(bg, -1);
 
-	auto text = ResourceManager::GetInstance()->GetSpriteById(11);//Sprite::create("/res/sprites/inputname.png");
+	auto text = ResourceManager::GetInstance()->GetSpriteById(8);//Sprite::create("/res/sprites/inputname.png");
 	text->removeFromParent();
 	text->setAnchorPoint(Vec2(0, 0));
 	text->setPosition(Vec2(visibleSize.width / 4 + origin.x, visibleSize.height / 6 + origin.y));
@@ -47,7 +46,7 @@ bool InputNameScene::init()
 	label->enableOutline(Color4B::RED, 1);
 	this->addChild(label, 1);
 	
-	auto textField = ui::TextField::create("enter here.. ", "fonts/Marker Felt.ttf", 30);
+	textField = ui::TextField::create("enter here.. ", "fonts/Marker Felt.ttf", 30);
 	
 	textField->setPasswordEnabled(false);
 	textField->setMaxLength(50);
@@ -58,12 +57,12 @@ bool InputNameScene::init()
 	});*/
 	
     textField->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
-		std::cout << "editing a TextField" << std::endl;
+		log("ok");
 	});
 	
 	this->addChild(textField,2);
 
-	auto buttonfinish = ResourceManager::GetInstance()->GetButtonById(19);//ui::Button::create("/res/buttons/finish.png");
+	auto buttonfinish = ResourceManager::GetInstance()->GetButtonById(9);//ui::Button::create("/res/buttons/finish.png");
 	buttonfinish->removeFromParent();
 	buttonfinish->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 3 + origin.y));
 	//buttonfinish->setScaleX(2);
@@ -72,13 +71,22 @@ bool InputNameScene::init()
 	{
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			auto gotoNext = CallFunc::create([]() {
-				Director::getInstance()->replaceScene(HomeScene::CreateScene());
-			});
-			runAction(gotoNext);
+			MainCharacter::GetInstance()->Init(GetTextField()->getString());
+			if (MainCharacter::GetInstance()->GetName() != "")
+			{
+				auto gotoNext = CallFunc::create([]() {
+					Director::getInstance()->replaceScene(HomeScene::CreateScene());
+				});
+				runAction(gotoNext);
+			}
 		}
 	});
 
 	this->addChild(buttonfinish);
 	return true;
+}
+
+ui::TextField* InputNameScene::GetTextField()
+{
+	return textField;
 }
