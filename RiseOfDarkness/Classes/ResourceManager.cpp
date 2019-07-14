@@ -34,7 +34,17 @@ ResourceManager::~ResourceManager()
 
 	for (int i = 0; i < m_actions.size(); i++)
 	{
-		m_sprites[i]->autorelease();
+		m_actions[i]->autorelease();
+	}
+
+	for (int i = 0; i < m_tileMap.size(); i++)
+	{
+		m_tileMap[i]->autorelease();
+	}
+
+	for (int i = 0; i < m_loadingbar.size(); i++)
+	{
+		m_loadingbar[i]->autorelease();
 	}
 }
 
@@ -45,11 +55,12 @@ void ResourceManager::Init(const std::string &path)
 		std::string data, tempStr1, tempStr2;
 		int amount;
 		int count;
+		float deltaTime;
 		data = FileUtils::getInstance()->getStringFromFile(path);
 		std::istringstream istr(data);
 
 		// Sprite
-		istr >> tempStr1;
+		istr >> tempStr1 >> tempStr1;
 		amount = std::stoi(tempStr1);
 		for (int i = 0; i < amount; i++)
 		{
@@ -59,7 +70,7 @@ void ResourceManager::Init(const std::string &path)
 		}
 
 		// Button
-		istr >> tempStr1;
+		istr >> tempStr1 >> tempStr1;
 		amount = std::stoi(tempStr1);
 		for (int i = 0; i < amount; i++)
 		{
@@ -70,20 +81,21 @@ void ResourceManager::Init(const std::string &path)
 		}
 
 		// Animate
-		istr >> tempStr1;
+		istr >> tempStr1 >> tempStr1;
 		amount = std::stoi(tempStr1);
 		for (int i = 0; i < amount; i++)
 		{
 			istr >> tempStr1 >> tempStr1;
+			deltaTime = std::stof(tempStr1);
+			istr >> tempStr1;
 			count = std::stoi(tempStr1);
 			istr >> tempStr1;
-			istr >> tempStr2;
-			m_actions.insert(std::pair<int, Action*>(i, RepeatForever::create(GetAnimate(tempStr2, tempStr1, count))));
+			m_actions.insert(std::pair<int, Action* >(i, GetAction(tempStr1, count, deltaTime)));
 			CC_SAFE_RETAIN(m_actions[i]);
 		}
 
 		// Tile Map
-		istr >> tempStr1;
+		istr >> tempStr1 >> tempStr1;
 		amount = std::stoi(tempStr1);
 		for (int i = 0; i < amount; i++)
 		{
@@ -93,7 +105,7 @@ void ResourceManager::Init(const std::string &path)
 		}
 
 		// Label
-		istr >> tempStr1;
+		istr >> tempStr1 >> tempStr1;
 		amount = std::stoi(tempStr1);
 		for (int i = 0; i < amount; i++)
 		{
@@ -101,7 +113,34 @@ void ResourceManager::Init(const std::string &path)
 			m_labels.insert(std::pair<int, Label*>(i, Label::createWithTTF("", tempStr1, 30)));
 			m_labels[i]->retain();
 		}
+
+		// Loadingbar
+		istr >> tempStr1 >> tempStr1;
+		amount = std::stoi(tempStr1);
+		for (int i = 0; i < amount; i++)
+		{
+			istr >> tempStr1 >> tempStr1;
+			m_loadingbar.insert(std::pair<int, ui::LoadingBar*>(i, ui::LoadingBar::create(tempStr1)));
+			m_loadingbar[i]->retain();
+		}
 	}
+	auto mainCharacterFace = m_sprites[19];
+	mainCharacterFace->setScale((Director::getInstance()->getVisibleSize().width / mainCharacterFace->getBoundingBox().size.width) / 20);
+
+	auto infoBar = m_sprites[20];
+	infoBar->setScale((Director::getInstance()->getVisibleSize().width / infoBar->getBoundingBox().size.width) / 5);
+
+	auto hpBar = m_sprites[21];
+	hpBar->setScale((Director::getInstance()->getVisibleSize().width / hpBar->getBoundingBox().size.width) / 8);
+
+	auto mpBar = m_sprites[22];
+	mpBar->setScale((Director::getInstance()->getVisibleSize().width / mpBar->getBoundingBox().size.width) / 8);
+
+	auto hpLoadingBar = m_loadingbar[1];
+	hpLoadingBar->setScale((Director::getInstance()->getVisibleSize().width / hpLoadingBar->getBoundingBox().size.width) / 8);
+
+	auto mpLoadingBar = m_loadingbar[2];
+	mpLoadingBar->setScale((Director::getInstance()->getVisibleSize().width / mpLoadingBar->getBoundingBox().size.width) / 8);
 }
 
 Sprite* ResourceManager::GetSpriteById(int id)
@@ -129,6 +168,11 @@ TMXTiledMap* ResourceManager::GetTileMapById(int id)
 	return m_tileMap[id];
 }
 
+ui::LoadingBar* ResourceManager::GetLoadingbar(int id)
+{
+	return m_loadingbar[id];
+}
+
 Sprite* ResourceManager::DuplicateSprite(Sprite* sprite)
 {
 	Sprite* pRet = Sprite::createWithTexture(sprite->getTexture());
@@ -148,22 +192,17 @@ Sprite* ResourceManager::DuplicateSprite(Sprite* sprite)
 	return pRet;
 }
 
-Animate* ResourceManager::GetAnimate(std::string &dir, std::string &format, int count)
+Action* ResourceManager::GetAction(std::string &dir, int count, float deltaTime)
 {
-	int n = format.length();
-
-	char *c = new char[n + 1];
-	strcpy(c, format.c_str());
-
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(dir);
 	auto spritecache = SpriteFrameCache::getInstance();
+	spritecache->addSpriteFramesWithFile(dir);
 	Vector<SpriteFrame*> animFrames;
 	char str[100];
 	for (int i = 1; i <= count; i++)
 	{
-		sprintf(str, c, i);
+		sprintf(str, "%02d.png", i);
 		animFrames.pushBack(spritecache->getSpriteFrameByName(str));
 	}
-	auto animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
-	return Animate::create(animation);
+	spritecache->destroyInstance();
+	return Repeat::create(Animate::create(Animation::createWithSpriteFrames(animFrames, deltaTime)), 1);
 }

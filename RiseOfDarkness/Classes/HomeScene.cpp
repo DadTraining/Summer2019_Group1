@@ -1,14 +1,9 @@
 #include "HomeScene.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
+#include "MapScene.h"
 
 USING_NS_CC;
-
-Size visibleSize;
-Size tileMapSize;
-Vec2 cameraDistance, buttonDistance;
-float xMin, xMax, yMin, yMax;
-bool a, b, c, d;
 
 Scene* HomeScene::CreateScene()
 {
@@ -28,92 +23,20 @@ bool HomeScene::init()
 	{
 		return false;
 	}
-	MainCharacter::GetInstance()->Init();
-	mainCharacter = MainCharacter::GetInstance()->GetSprite();
-	addChild(mainCharacter,1);
-	visibleSize = Director::getInstance()->getVisibleSize();
+	
+	MainCharacter::GetInstance()->Refresh();
 
-	a = b = c = d = false;
-	tileMap = ResourceManager::GetInstance()->GetTileMapById(0);//TMXTiledMap::create("res/tiledMaps/home/home.tmx");
-	tileMap->removeFromParent();
-	tileMap->setPosition(Vec2(0, 0));
-	tileMapSize = tileMap->getContentSize();
-	addChild(tileMap, 0);
+	tileMap = ResourceManager::GetInstance()->GetTileMapById(0);
+	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(1);
+	
+	CreatePhysicsWorld("obstacles", "mc", this);
 
-	auto tileMap1 = ResourceManager::GetInstance()->GetTileMapById(1);//TMXTiledMap::create("res/tiledMaps/home/upperHome.tmx");
-	tileMap1->removeFromParent();
-	tileMap1->setPosition(Vec2(0, 0));
-	tileMapSize = tileMap1->getContentSize();
-	addChild(tileMap1, 3);
-
-	auto ob = tileMap->objectGroupNamed("mainCharacter");
-	float xx = ob->getObject("mc")["x"].asFloat();
-	float yy = ob->getObject("mc")["y"].asFloat();
-	log("%f,%f", tileMapSize.height, yy);
-	mainCharacter->setPosition(xx, yy);
-	camera = Camera::create();
-	camera->setPosition(mainCharacter->getPosition());
-	addChild(camera);
-	frameButton = ResourceManager::GetInstance()->GetSpriteById(10);//Sprite::create("res/buttons/frameButton.png");
-	frameButton->removeFromParent();
-	auto frameButtonSize = frameButton->getBoundingBox().size;
-	frameButton->setPosition(Vec2(frameButtonSize.width, frameButtonSize.height)+camera->getPosition()-visibleSize/2);
-	auto frameButtonPosition = frameButton->getPosition();
-	frameButton->setVisible(false);
-	addChild(frameButton, 8);
-
-	upButton = ResourceManager::GetInstance()->GetButtonById(11);//ui::Button::create("res/buttons/upButtonNormal.png", "res/buttons/upButtonPressed.png");
-	upButton->removeFromParent();
-	upButton->setAnchorPoint(Vec2(0.5, 1));
-	upButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
-	addChild(upButton, 4);
-
-	downButton = ResourceManager::GetInstance()->GetButtonById(12);//ui::Button::create("res/buttons/downButtonNormal.png", "res/buttons/downButtonPressed.png");
-	downButton->removeFromParent();
-	downButton->setAnchorPoint(Vec2(0.5, 0));
-	downButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
-	addChild(downButton, 5);
-
-	leftButton = ResourceManager::GetInstance()->GetButtonById(13);//ui::Button::create("res/buttons/leftButtonNormal.png", "res/buttons/leftButtonPressed.png");
-	leftButton->removeFromParent();
-	leftButton->setAnchorPoint(Vec2(0, 0.5));
-	leftButton->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
-	addChild(leftButton, 6);
-
-	rightButton = ResourceManager::GetInstance()->GetButtonById(14);//ui::Button::create("res/buttons/rightButtonNormal.png", "res/buttons/rightButtonPressed.png");
-	rightButton->removeFromParent();
-	rightButton->setAnchorPoint(Vec2(1, 0.5));
-	rightButton->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
-	addChild(rightButton, 7);
-
-	body = MainCharacter::GetInstance()->GetPhysicsBody();
-
-	cameraDistance = camera->getPosition() - mainCharacter->getPosition();
-	buttonDistance = frameButton->getPosition() - camera->getPosition();
-	auto contactListener = EventListenerPhysicsContact::create();
+	CreateAllButton(this);
 	
 	AddListener();
 
 
-
-	auto s = tileMap->getLayer("obstacles");
-	s->setVisible(false);
-	Size layerSize = s->getLayerSize();
-	for (int i = 0; i < layerSize.width; i++)
-	{
-		for (int j = 0; j < layerSize.height; j++)
-		{
-			auto tileSet = s->getTileAt(Vec2(i, j));
-			if (tileSet != NULL)
-			{
-				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
-				physics->setDynamic(false);
-				
-				tileSet->setPhysicsBody(physics);
-			}
-		}
-	}
-
+	
 	
 
 	scheduleUpdate();
@@ -123,13 +46,10 @@ bool HomeScene::init()
 
 void HomeScene::update(float deltaTime)
 {
-	if (a || b || c || d)
-	{
-		//OnButtonHold(deltaTime);
+	UpdateController();
 
-	}
-	SetPositionButton();
-	SetCamera(mainCharacter->getPosition() + cameraDistance);
+	MainCharacter::GetInstance()->Update(deltaTime);
+
 }
 
 void HomeScene::AddListener()
@@ -140,164 +60,239 @@ void HomeScene::AddListener()
 	touchListener->onTouchMoved = CC_CALLBACK_2(HomeScene::OnTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-	upButton->addTouchEventListener(CC_CALLBACK_2(HomeScene::UpButtonTouched, this));
-	downButton->addTouchEventListener(CC_CALLBACK_2(HomeScene::DownButtonTouched, this));
-	leftButton->addTouchEventListener(CC_CALLBACK_2(HomeScene::LeftButtonTouched, this));
-	rightButton->addTouchEventListener(CC_CALLBACK_2(HomeScene::RightButtonTouched, this));
+	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(HomeScene::SpecialAttack, this));
+	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(HomeScene::Evade, this));
+	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(HomeScene::NormalAttack, this));
+	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(HomeScene::Defend, this));
 
+	m_buttons[4]->addClickEventListener([&](Ref* event) {
+		auto gotoMapScene = CallFunc::create([] {
+			Director::getInstance()->replaceScene(MapScene::CreateScene());
+		});
+		runAction(gotoMapScene);
+	});
 }
 
 bool HomeScene::OnTouchBegan(Touch* touch, Event* event)
 {
+	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
+	mCurrentTouchPoint = touch->getLocation();
+	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
+	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
+	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 	return true;
 }
 
 bool HomeScene::OnTouchEnded(Touch* touch, Event* event)
 {
+	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
+	mCurrentTouchPoint = Point(-1, -1);
 	return true;
 }
 
 void HomeScene::OnTouchMoved(Touch* touch, Event* event)
 {
-	Vec2 newPosition = touch->getPreviousLocation()- touch->getLocation() + camera->getPosition();
-	SetCamera(newPosition);
+	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
+	mCurrentTouchPoint = touch->getLocation();
+	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
+	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
+	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 }
 
-//void HomeScene::OnButtonHold(float deltaTime)
-//{
-//	if (std::find(heldButtons.begin(), heldButtons.end(), 1) != heldButtons.end())
-//	{
-//		body->setVelocity(Vec2(0, 100));
-//	}
-//	if (std::find(heldButtons.begin(), heldButtons.end(), 2) != heldButtons.end())
-//	{
-//		body->setVelocity(Vec2(0, -100));
-//	}
-//	if (std::find(heldButtons.begin(), heldButtons.end(), 3) != heldButtons.end())
-//	{
-//		body->setVelocity(Vec2(-100, 0));
-//	}
-//	if (std::find(heldButtons.begin(), heldButtons.end(), 4) != heldButtons.end())
-//	{
-//		body->setVelocity(Vec2(100, 0));
-//	}
-//	SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
-//}
-
-void HomeScene::UpButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
+void HomeScene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		//heldButtons.push_back(1);
-		body->setVelocity(Vec2(0, 100));
-		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->GO_UP);
-		//mainCharacter->run();
-		//mainCharacter->run();
-		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
-
+		MainCharacter::GetInstance()->SpecialAttack();
 	}
-	if (type == ui::Widget::TouchEventType::ENDED)
-	{
-		//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 1), heldButtons.end());
-		body->setVelocity(Vec2(0, 0));
-		//mainCharacter->stop();
-		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->BACK_IDLE);
-
-	}
-
 }
 
-void HomeScene::DownButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
+void HomeScene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		//heldButtons.push_back(2);
-		body->setVelocity(Vec2(0, -100));
-		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->GO_DOWN);
-
-		//mainCharacter->run();
-		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
-
+		MainCharacter::GetInstance()->NormalAttack();
 	}
-	if (type == ui::Widget::TouchEventType::ENDED)
-	{
-		//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 2), heldButtons.end());
-		body->setVelocity(Vec2(0, 0));
-		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->FRONT_IDLE);
-
-		//mainCharacter->stop();
-
-	}
-
 }
 
-void HomeScene::LeftButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
+void HomeScene::Evade(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		//heldButtons.push_back(3);
-		body->setVelocity(Vec2(-100, 0));
-		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->GO_LEFT);
-
-		//mainCharacter->run();
-		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
-
-		//c = true;
+		MainCharacter::GetInstance()->Evade();
 	}
-	if (type == ui::Widget::TouchEventType::ENDED)
-	{
-		//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 3), heldButtons.end());
-		body->setVelocity(Vec2(0, 0));
-		MainCharacter::GetInstance()->SetState(MainCharacter::GetInstance()->LEFT_IDLE);
-
-		//mainCharacter->stop();
-
-		//c = false;
-
-	}
-
 }
 
-void HomeScene::RightButtonTouched(Ref* sender, ui::Widget::TouchEventType type)
+void HomeScene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		///heldButtons.push_back(4);
-		body->setVelocity(Vec2(100, 0));
-		//mainCharacter->run();
-		//SetCamera(mainCharacter->GetSprite()->getPosition() + cameraDistance);
-
-		//d = true;
+		MainCharacter::GetInstance()->Defend();
 	}
 	if (type == ui::Widget::TouchEventType::ENDED)
 	{
-		//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), 4), heldButtons.end());
-		body->setVelocity(Vec2(0, 0));
-		//mainCharacter->stop();
-
-		//d = false;
+		MainCharacter::GetInstance()->StopDefend();
 	}
-
 }
 
-void HomeScene::CreateFixturesLayer(TMXLayer* layer)
+void HomeScene::CreateAllButton(Layer* layer)
 {
-	Size layerSize = layer->getLayerSize();
-	
-}
+	auto get = ResourceManager::GetInstance();
 
-void HomeScene::SetPositionButton()
-{
-	auto frameButtonSize = frameButton->getBoundingBox().size;
-	auto frameButtonPosition = frameButton->getPosition();
-	upButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
-	downButton->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
-	leftButton->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
-	rightButton->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
+	// SPRITE ID 0
+	auto frameButton = get->GetSpriteById(18);
+	frameButton->removeFromParent();
+	frameButton->setVisible(false);
+	layer->addChild(frameButton, 5);
+	m_sprites.push_back(frameButton);
+
+	// GO UP SPRITE ID 1
+	auto upButton = get->GetSpriteById(10);
+	upButton->removeFromParent();
+	upButton->setAnchorPoint(Vec2(0.5, 1));
+	layer->addChild(upButton, 6);
+	m_sprites.push_back(upButton);
+
+	//SPRITE ID 2
+	auto upButtonPressed = get->GetSpriteById(11);
+	upButtonPressed->removeFromParent();
+	upButtonPressed->setAnchorPoint(Vec2(0.5, 1));
+	layer->addChild(upButtonPressed, 7);
+	upButtonPressed->setVisible(false);
+	m_sprites.push_back(upButtonPressed);
+
+	// GO DOWN SPRITE ID 3
+	auto downButton = get->GetSpriteById(12);
+	downButton->removeFromParent();
+	downButton->setAnchorPoint(Vec2(0.5, 0));
+	layer->addChild(downButton, 6);
+	m_sprites.push_back(downButton);
+
+	//SPRITE ID 4
+	auto downButtonPressed = get->GetSpriteById(13);
+	downButtonPressed->removeFromParent();
+	downButtonPressed->setAnchorPoint(Vec2(0.5, 0));
+	layer->addChild(downButtonPressed, 7);
+	downButtonPressed->setVisible(false);
+	m_sprites.push_back(downButtonPressed);
+
+	// GO LEFT SPRITE ID 5
+	auto leftButton = get->GetSpriteById(14);
+	leftButton->removeFromParent();
+	leftButton->setAnchorPoint(Vec2(0, 0.5));
+	layer->addChild(leftButton, 6);
+	m_sprites.push_back(leftButton);
+
+	// SPRITE ID 6
+	auto leftButtonPressed = get->GetSpriteById(15);
+	leftButtonPressed->removeFromParent();
+	leftButtonPressed->setAnchorPoint(Vec2(0, 0.5));
+	layer->addChild(leftButtonPressed, 7);
+	leftButtonPressed->setVisible(false);
+	m_sprites.push_back(leftButtonPressed);
+
+	// GO RIGHT SPRITE ID 7
+	auto rightButton = get->GetSpriteById(16);
+	rightButton->removeFromParent();
+	rightButton->setAnchorPoint(Vec2(1, 0.5));
+	layer->addChild(rightButton, 6);
+	m_sprites.push_back(rightButton);
+
+	// SPRITE ID 8
+	auto rightButtonPressed = get->GetSpriteById(17);
+	rightButtonPressed->removeFromParent();
+	rightButtonPressed->setAnchorPoint(Vec2(1, 0.5));
+	layer->addChild(rightButtonPressed, 7);
+	rightButtonPressed->setVisible(false);
+	m_sprites.push_back(rightButtonPressed);
+
+	// SPRITE ID 9
+	auto frameSkillButton = get->DuplicateSprite(get->GetSpriteById(18));
+	frameSkillButton->removeFromParent();
+	frameSkillButton->setVisible(false);
+	layer->addChild(frameSkillButton, 5);
+	m_sprites.push_back(frameSkillButton);
+
+	// SPECIAL ATTACK BUTTON ID 0
+	auto specialAttack = get->GetButtonById(10);
+	specialAttack->removeFromParent();
+	specialAttack->setAnchorPoint(Vec2(0.5, 1));
+	layer->addChild(specialAttack, 6);
+	m_buttons.push_back(specialAttack);
+
+	// EVDAE BUTTON ID 1
+	auto evade = get->GetButtonById(11);
+	evade->removeFromParent();
+	evade->setAnchorPoint(Vec2(0.5, 0));
+	layer->addChild(evade, 6);
+	m_buttons.push_back(evade);
+
+	// NORMAL ATTACK BUTTON ID 2
+	auto normalAttack = get->GetButtonById(12);
+	normalAttack->removeFromParent();
+	normalAttack->setAnchorPoint(Vec2(0, 0.5));
+	layer->addChild(normalAttack, 6);
+	m_buttons.push_back(normalAttack);
+
+	// DEFEND BUTTON ID 3
+	auto defend = get->GetButtonById(13);
+	defend->removeFromParent();
+	defend->setAnchorPoint(Vec2(1, 0.5));
+	layer->addChild(defend, 6);
+	m_buttons.push_back(defend);
+
+	// GO TO MAP BUTTON
+	auto map = get->GetButtonById(14);
+	map->removeFromParent();
+	map->setAnchorPoint(Vec2(0.5, 0));
+	layer->addChild(map, 7);
+	m_buttons.push_back(map);
+
+	mName = get->GetLabelById(0);
+	mName->setString(MainCharacter::GetInstance()->GetName());
+	mName->removeFromParent();
+	mName->setAnchorPoint(Vec2(0, 1));
+	layer->addChild(mName, 8);
+
+	auto mainCharacterFace = get->GetSpriteById(19);
+	mainCharacterFace->setAnchorPoint(Vec2(0, 1));
+	mainCharacterFace->removeFromParent();
+	layer->addChild(mainCharacterFace, 8);
+	m_sprites.push_back(mainCharacterFace);
+
+	auto infoBar = get->GetSpriteById(20);
+	infoBar->setAnchorPoint(Vec2(0, 1));
+	infoBar->removeFromParent();
+	layer->addChild(infoBar, 8);
+	m_sprites.push_back(infoBar);
+
+	auto hpBar = get->GetSpriteById(21);
+	hpBar->removeFromParent();
+	layer->addChild(hpBar, 9);
+	m_sprites.push_back(hpBar);
+
+	auto mpBar = get->GetSpriteById(22);
+	mpBar->removeFromParent();
+	layer->addChild(mpBar, 9);
+	m_sprites.push_back(mpBar);
+
+	hpLoadingBar = get->GetLoadingbar(1);
+	hpLoadingBar->removeFromParent();
+	hpLoadingBar->setPercent(50);
+	layer->addChild(hpLoadingBar, 10);
+
+	mpLoadingBar = get->GetLoadingbar(2);
+	mpLoadingBar->removeFromParent();
+	mpLoadingBar->setPercent(50);
+	layer->addChild(mpLoadingBar, 10);
+
+	SetCamera(mainCharacter->getPosition());
 }
 
 void HomeScene::SetCamera(Vec2 pos)
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto tileMapSize = tileMap->getBoundingBox().size;
 	float xMin = visibleSize.width / 2, xMax = tileMapSize.width - xMin, yMin = visibleSize.height / 2, yMax = tileMapSize.height - yMin;
 	if (pos.x < xMin)
 	{
@@ -316,6 +311,40 @@ void HomeScene::SetCamera(Vec2 pos)
 		pos.y = yMax;
 	}
 	camera->setPosition(Vec2(pos.x, pos.y));
-	frameButton->setPosition(pos + buttonDistance);
-}
 
+	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
+	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
+	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
+
+	m_sprites[0]->setPosition(Vec2(pos.x - visibleSize.width / 3, pos.y - visibleSize.height / 5));
+	auto frameButtonPosition = m_sprites[0]->getPosition();
+	auto frameButtonSize = m_sprites[0]->getBoundingBox().size;
+	m_sprites[1]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 1.5));
+	m_sprites[2]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 1.5));
+	m_sprites[3]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 1.5));
+	m_sprites[4]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 1.5));
+	m_sprites[5]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 1.5, frameButtonPosition.y));
+	m_sprites[6]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 1.5, frameButtonPosition.y));
+	m_sprites[7]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 1.5, frameButtonPosition.y));
+	m_sprites[8]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 1.5, frameButtonPosition.y));
+
+	m_sprites[9]->setPosition(Vec2(pos.x + visibleSize.width / 3, pos.y - visibleSize.height / 5));
+	auto frameSkillButtonPosition = m_sprites[9]->getPosition();
+	auto frameSkillButtonSize = m_sprites[9]->getBoundingBox().size;
+	m_buttons[0]->setPosition(Vec2(frameSkillButtonPosition.x, frameSkillButtonPosition.y + frameSkillButtonSize.height / 1.5));
+	m_buttons[1]->setPosition(Vec2(frameSkillButtonPosition.x, frameSkillButtonPosition.y - frameSkillButtonSize.height / 1.5));
+	m_buttons[2]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
+	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
+
+	m_buttons[4]->setPosition(Vec2(pos.x, pos.y - visibleSize.height / 2));
+
+	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2);
+	mName->setPosition(pos.x - visibleSize.width / 2 + m_sprites[10]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_sprites[10]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
+	m_sprites[11]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_sprites[10]->getBoundingBox().size.height);
+	auto infoBarPosition = m_sprites[11]->getPosition();
+	auto infoBarSize = m_sprites[11]->getBoundingBox().size;
+	m_sprites[12]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 2.8);
+	m_sprites[13]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
+	hpLoadingBar->setPosition(m_sprites[12]->getPosition());
+	mpLoadingBar->setPosition(m_sprites[13]->getPosition());
+}

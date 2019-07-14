@@ -1,12 +1,22 @@
-#pragma once
-#include "cocos2d.h"
+#ifndef INPUT_NAME_SCENE_H
+#define INPUT_NAME_SCENE_H
 
-class InputNameScene : public cocos2d::Scene
+#include "cocos2d.h"
+#include "UI/CocosGUI.h"
+
+using namespace cocos2d;
+
+class InputNameScene : public Scene
 {
+private:
+	ui::TextField* textField;
 public:
-	static cocos2d::Scene* CreateScene();
+	static Scene* CreateScene();
 
 	virtual bool init();
+	ui::TextField* GetTextField();
 
 	CREATE_FUNC(InputNameScene);
 };
+
+#endif

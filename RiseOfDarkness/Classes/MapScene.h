@@ -20,6 +20,7 @@ private:
 	cocos2d::Sprite* player;
 	cocos2d::TMXLayer *meta;
 	cocos2d::TMXLayer *collectMap;
+	int lv;
 };
 
 #endif

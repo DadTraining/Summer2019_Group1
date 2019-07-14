@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>1.png</key>
+            <key>01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>2.png</key>
+            <key>02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>3.png</key>
+            <key>03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>4.png</key>
+            <key>04.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>5.png</key>
+            <key>05.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -79,7 +79,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>6.png</key>
+            <key>06.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -94,7 +94,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>7.png</key>
+            <key>07.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -109,7 +109,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>8.png</key>
+            <key>08.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -124,7 +124,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>9.png</key>
+            <key>09.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -153,7 +153,7 @@
             <key>size</key>
             <string>{55,63}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:394943fefb8ddb1a2858f3d34c2b7c05:7d09c536e514de2f7b8931e80f4cc2a1:971494a0ac256f04ba9d85d408f4e94d$</string>
+            <string>$TexturePacker:SmartUpdate:f4392520ec183a832855be02e258928a:7d09c536e514de2f7b8931e80f4cc2a1:971494a0ac256f04ba9d85d408f4e94d$</string>
             <key>textureFileName</key>
             <string>rollFront.png</string>
         </dict>

@@ -28,29 +28,46 @@ public:
 	static const int BACK_SHIELD = 16;
 	static const int LEFT_SHIELD = 17;
 
-private:
-	static MainCharacter* m_instance;
-	Sprite* mainCharacter;
-	Action* mAction[18];
-	PhysicsBody* mPhysicsBody;
-	int stageLevel;
-	int currentState;
-	int previousState;
-	MainCharacter();
-	~MainCharacter();
-	void CreateMainCharacter();
-	void DoAction();
-	void CreatePhysicsBody();
-
 public:
 	static MainCharacter* GetInstance();
-	void Init();
+	void Init(std::string name);
+	void Refresh();
 	void AddToScene(Layer* layer);
 	Sprite* GetSprite();
 	PhysicsBody* GetPhysicsBody();
 	int GetCurrentState();
 	void Update(float deltaTime);
-	void SetState(int state);
+	void SetState(int nextStage);
+	int GetSpeed();
+	std::string GetName();
+	int GetStageLevel();
+	int GetDirection();
+	void SetDirection(int direction);
+	void Idle();
+	void NormalAttack();
+	void SpecialAttack();
+	void Defend();
+	void Evade();
+	void Run();
+	void StopRun();
+	void StopDefend();
+private:
+	static MainCharacter* m_instance;
+	Sprite* mSprite;
+	Action* mAction[18];
+	PhysicsBody* mPhysicsBody;
+	int stageLevel;
+	int currentState;
+	int direction;
+	int speed;
+	int preventRun;
+	int maxHP, currentHP;
+	int maxMP, currentMP;
+	float countingTime;
+	std::string mName;
+	MainCharacter();
+	~MainCharacter();
+	void CreateMainCharacter();
 };
 
 #endif

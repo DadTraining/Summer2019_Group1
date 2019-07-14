@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>1.png</key>
+            <key>01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>2.png</key>
+            <key>02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>3.png</key>
+            <key>03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -49,7 +49,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>4.png</key>
+            <key>04.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -64,7 +64,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>5.png</key>
+            <key>05.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -93,7 +93,7 @@
             <key>size</key>
             <string>{93,21}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:5f529eaa5b9572f54c2410529e9140f4:404cbfcc27d71d441125d685416e06a4:21d86ac7a4ab60df909fd10da8f16f5f$</string>
+            <string>$TexturePacker:SmartUpdate:2f9e8e127a7397c5a1f7408ca24f73d3:404cbfcc27d71d441125d685416e06a4:21d86ac7a4ab60df909fd10da8f16f5f$</string>
             <key>textureFileName</key>
             <string>backShield.png</string>
         </dict>

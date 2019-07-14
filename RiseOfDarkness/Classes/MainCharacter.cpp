@@ -16,20 +16,21 @@ MainCharacter* MainCharacter::GetInstance()
 
 MainCharacter::~MainCharacter() {}
 
-void MainCharacter::Init()
+void MainCharacter::Init(std::string name)
 {
+	mName = name;
 	CreateMainCharacter();
-	currentState = FRONT_IDLE;
-	previousState = FRONT_IDLE;
-	SetState(FRONT_IDLE);
-	stageLevel = 1;
-	CreatePhysicsBody();
 }
 
 void MainCharacter::CreateMainCharacter()
 {
-	mainCharacter = ResourceManager::GetInstance()->GetSpriteById(7);
-	mainCharacter->setScale(2.0);
+	auto get = ResourceManager::GetInstance();
+
+	// CREATE SPRITE
+	mSprite = get->GetSpriteById(0);
+	mSprite->setScale(2.0);
+
+	// CREATE ACTION
 	mAction[FRONT_IDLE] = ResourceManager::GetInstance()->GetActionById(3);
 	mAction[BACK_IDLE] = ResourceManager::GetInstance()->GetActionById(4);
 	mAction[LEFT_IDLE] = ResourceManager::GetInstance()->GetActionById(5);
@@ -48,40 +49,263 @@ void MainCharacter::CreateMainCharacter()
 	mAction[FRONT_SHIELD] = ResourceManager::GetInstance()->GetActionById(12);
 	mAction[BACK_SHIELD] = ResourceManager::GetInstance()->GetActionById(13);
 	mAction[LEFT_SHIELD] = ResourceManager::GetInstance()->GetActionById(14);
-}
 
-void MainCharacter::CreatePhysicsBody()
-{
-	mPhysicsBody = PhysicsBody::createBox(mainCharacter->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
-	mPhysicsBody->setDynamic(true);
+	// CREATE PHYSICS BODY 
+	Size box;
+	box.width = mSprite->getContentSize().width / 1.5;
+	box.height = mSprite->getContentSize().height / 3;
+	mPhysicsBody = PhysicsBody::createBox(box, PHYSICSBODY_MATERIAL_DEFAULT, Vec2(0, -box.height));
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setRotationEnable(false);
-	mainCharacter->setPhysicsBody(mPhysicsBody);
+	mSprite->setPhysicsBody(mPhysicsBody);
+
+	// CREATE ALL STATUS
+	stageLevel = 1;
+	direction = 2;
+	currentState = FRONT_IDLE;
+	speed = 1;
+	countingTime = 0;
+	maxHP = 200;
+	maxMP = 100;
+	currentHP = 200;
+	currentMP = 100;
 }
 
-void MainCharacter::AddToScene(Layer* layer)
+void MainCharacter::Refresh()
 {
-	
-	mainCharacter->removeFromParent();
-	layer->addChild(mainCharacter,1);
+	direction = 2;
+	currentState = FRONT_IDLE;
+	speed = 1;
+	countingTime = 0;
+	maxHP = 200;
+	maxMP = 100;
+	currentHP = 200;
+	currentMP = 100;
 }
 
-void MainCharacter::DoAction()
+void MainCharacter::SetState(int nextState)
 {
-	mainCharacter->stopAction(mAction[previousState]);
-	mainCharacter->runAction(mAction[currentState]);
+	if (currentState == nextState && mSprite->getNumberOfRunningActions() == 0)
+	{
+		mSprite->runAction(mAction[nextState]);
+	}
+	else if (currentState == nextState)
+	{
+		return;
+	}
+	else
+	{
+		switch (nextState)
+		{
+		case BACK_IDLE:		
+		case FRONT_IDLE:			
+		case LEFT_IDLE:
+			if (currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE || mSprite->getNumberOfRunningActions() == 0)
+			{
+				mSprite->stopAllActions();
+				mSprite->runAction(mAction[nextState]);
+				currentState = nextState;
+			}
+			break;
+		case GO_UP:		
+		case GO_DOWN:
+		case GO_LEFT:
+			if ((currentState == FRONT_IDLE || currentState == BACK_IDLE || currentState == LEFT_IDLE))
+			{
+				mSprite->stopAllActions();
+				mSprite->runAction(mAction[nextState]);
+				currentState = nextState;
+			}
+			break;
+		case FRONT_SLASH:
+		case BACK_SLASH:
+		case LEFT_SLASH:
+			currentState = nextState;
+			mSprite->stopAllActions();
+			mSprite->runAction(mAction[nextState]);
+			break;
+		case ROLL_BACK:
+		case ROLL_FRONT:
+		case ROLL_LEFT:
+			currentState = nextState;
+			mSprite->stopAllActions();
+			mSprite->runAction(mAction[nextState]);
+			break;
+		case FRONT_SHIELD:
+		case BACK_SHIELD:
+		case LEFT_SHIELD:
+			currentState = nextState;
+			mSprite->stopAllActions();
+			mSprite->runAction(mAction[nextState]);
+			break;
+		case FRONT_ARCHERY:
+		case BACK_ARCHERY:
+		case LEFT_ARCHERY:
+			currentState = nextState;
+			mSprite->stopAllActions();
+			mSprite->runAction(mAction[nextState]);
+		}
+	}
 }
 
-Sprite* MainCharacter::GetSprite()
+
+void MainCharacter::Update(float deltaTime)
 {
-	return mainCharacter;
+	Idle();
 }
 
-void MainCharacter::SetState(int state)
+void MainCharacter::Idle()
 {
-	previousState = currentState;
-	currentState = state;
-	DoAction();
+	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD)
+	{
+		switch (direction)
+		{
+		case 1:
+			SetState(BACK_IDLE);
+			break;
+		case 2:
+			SetState(FRONT_IDLE);
+			break;
+		default:
+			SetState(LEFT_IDLE);
+		}
+	}
+}
+
+void MainCharacter::Defend()
+{
+	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	{
+		switch (direction)
+		{
+		case 1:
+			SetState(BACK_SHIELD);
+			break;
+		case 2:
+			SetState(FRONT_SHIELD);
+			break;
+		default:
+			SetState(LEFT_SHIELD);
+		}
+	}
+}
+
+void MainCharacter::StopDefend()
+{
+	switch (direction)
+	{
+	case 1:
+		SetState(BACK_IDLE);
+		break;
+	case 2:
+		SetState(FRONT_IDLE);
+		break;
+	default:
+		SetState(LEFT_IDLE);
+	}
+}
+
+void MainCharacter::SpecialAttack()
+{
+	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	{
+		switch (direction)
+		{
+		case 1:
+			SetState(BACK_ARCHERY);
+			break;
+		case 2:
+			SetState(FRONT_ARCHERY);
+			break;
+		default:
+			SetState(LEFT_ARCHERY);
+		}
+	}
+}
+
+void MainCharacter::NormalAttack()
+{
+	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	{
+		switch (direction)
+		{
+		case 1:
+			SetState(BACK_SLASH);
+			break;
+		case 2:
+			SetState(FRONT_SLASH);
+			break;
+		default:
+			SetState(LEFT_SLASH);
+		}
+	}
+}
+
+void MainCharacter::Evade()
+{
+	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	{
+		switch (direction)
+		{
+		case 1:
+			SetState(ROLL_BACK);
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, Director::getInstance()->getVisibleSize().width / 8)));
+			break;
+		case 2:
+			SetState(ROLL_FRONT);
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -Director::getInstance()->getVisibleSize().width / 8)));
+			break;
+		case 3:
+			SetState(ROLL_LEFT);
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(-Director::getInstance()->getVisibleSize().width / 8, 0)));
+			break;
+		case 4:
+			SetState(ROLL_LEFT);
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(Director::getInstance()->getVisibleSize().width / 8, 0)));
+		}
+	}
+}
+
+void MainCharacter::Run()
+{
+	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD)
+	{
+		switch (direction)
+		{
+		case 1:
+			SetState(GO_UP);
+			mSprite->setPositionY(mSprite->getPositionY() + speed);
+			break;
+		case 2:
+			SetState(GO_DOWN);
+			mSprite->setPositionY(mSprite->getPositionY() - speed);
+			break;
+		case 3:
+			SetState(GO_LEFT);
+			mSprite->setPositionX(mSprite->getPositionX() - speed);
+			break;
+		case 4:
+			SetState(GO_LEFT);
+			mSprite->setPositionX(mSprite->getPositionX() + speed);
+		}
+	}
+}
+
+void MainCharacter::StopRun()
+{
+	mSprite->stopAction(mAction[GO_UP]);
+	mSprite->stopAction(mAction[GO_DOWN]);
+	mSprite->stopAction(mAction[GO_LEFT]);
+}
+
+PhysicsBody* MainCharacter::GetPhysicsBody()
+{
+	return mPhysicsBody;
+}
+
+int MainCharacter::GetSpeed()
+{
+	return speed;
 }
 
 int MainCharacter::GetCurrentState()
@@ -89,12 +313,27 @@ int MainCharacter::GetCurrentState()
 	return currentState;
 }
 
-void MainCharacter::Update(float deltaTime)
+Sprite* MainCharacter::GetSprite()
 {
-
+	return mSprite;
 }
 
-PhysicsBody* MainCharacter::GetPhysicsBody()
+std::string MainCharacter::GetName()
 {
-	return mPhysicsBody;
+	return mName;
+}
+
+int MainCharacter::GetStageLevel()
+{
+	return stageLevel;
+}
+
+int MainCharacter::GetDirection()
+{
+	return direction;
+}
+
+void MainCharacter::SetDirection(int direction)
+{
+	this->direction = direction;
 }

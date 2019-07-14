@@ -20,7 +20,7 @@ bool LoadingScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto bg = ResourceManager::GetInstance()->GetSpriteById(0);
+	auto bg = ResourceManager::GetInstance()->GetSpriteById(2);
 	bg->setScale(visibleSize.width / bg->getContentSize().width, visibleSize.height / bg->getContentSize().height);
 	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(bg, -1);
@@ -32,14 +32,15 @@ bool LoadingScene::init()
 	this->addChild(label, 1);
 	
 
-	auto loadingBarBG = ResourceManager::GetInstance()->GetSpriteById(6);//Sprite::create("loadingbar_bg.png");
+	auto loadingBarBG = ResourceManager::GetInstance()->GetSpriteById(4);//Sprite::create("loadingbar_bg.png");
 	loadingBarBG->setPosition(visibleSize.width / 2, visibleSize.height / 4);
 	addChild(loadingBarBG);
 
-	auto loadingBar = ui::LoadingBar::create("res/sprites/loadingbar.png");
+	auto loadingBar = ResourceManager::GetInstance()->GetLoadingbar(0);
 	loadingBar->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 4));
 	loadingBar->setDirection(ui::LoadingBar::Direction::LEFT);
 	loadingBar->setPercent(0);
+	loadingBar->removeFromParent();
 	this->addChild(loadingBar);
 	this->schedule([=](float delta) {
 		float percent = loadingBar->getPercent();

@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>1.png</key>
+            <key>01.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>2.png</key>
+            <key>02.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>3.png</key>
+            <key>03.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -46,6 +46,21 @@
                 <string>{17,22}</string>
                 <key>textureRect</key>
                 <string>{{34,0},{17,22}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>04.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{17,22}</string>
+                <key>spriteSourceSize</key>
+                <string>{17,22}</string>
+                <key>textureRect</key>
+                <string>{{51,0},{17,22}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -61,9 +76,9 @@
             <key>realTextureFileName</key>
             <string>leftIdle.png</string>
             <key>size</key>
-            <string>{51,22}</string>
+            <string>{68,22}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:02dc3bf759828403dfbd393f95c9786c:d0f43b38d86ff52c5529a96cf47f38ec:a89eedc6887777b571464b050849a080$</string>
+            <string>$TexturePacker:SmartUpdate:5d06ffa0be23861c0618b0106d3901f0:6d33c075afff36c2bbd7b550cfc05bad:a89eedc6887777b571464b050849a080$</string>
             <key>textureFileName</key>
             <string>leftIdle.png</string>
         </dict>
