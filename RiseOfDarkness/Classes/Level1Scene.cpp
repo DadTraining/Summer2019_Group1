@@ -95,7 +95,8 @@ void Level1Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		MainCharacter::GetInstance()->SpecialAttack();
+		MainCharacter::GetInstance()->NormalAttack();
+
 	}
 }
 
@@ -103,7 +104,7 @@ void Level1Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		MainCharacter::GetInstance()->NormalAttack();
+		MainCharacter::GetInstance()->SpecialAttack();
 	}
 }
 
