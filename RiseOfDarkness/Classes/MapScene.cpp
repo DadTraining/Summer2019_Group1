@@ -1,12 +1,13 @@
 #include "MapScene.h"
 #include "ui/CocosGUI.h"
 #include "Level1Scene.h"
-#include "SelectScene.h"
+#include "HomeScene.h"
+#include "ResourceManager.h"
+#include "MainCharacter.h"
 
 using namespace std;
 USING_NS_CC;
 
-int lv = 11;
 vector<ui::Button*> buttonList;
 Scene* MapScene::CreateScene()
 {
@@ -26,18 +27,23 @@ bool MapScene::init()
 		return false;
 	}
 
+	lv = MainCharacter::GetInstance()->GetStageLevel();
+
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto btnMap = TMXTiledMap::create("res/tiledMaps/SelectScene/selectMap.tmx");
+	auto btnMap = ResourceManager::GetInstance()->GetTileMapById(2);//TMXTiledMap::create("res/tiledMaps/SelectScene/selectMap.tmx");
+	btnMap->removeFromParent();
 	btnMap->setAnchorPoint(Point(0, 0));
 	btnMap->setPosition(0,0);
 	btnMap->setScale(visibleSize.width / (btnMap->getMapSize().width*btnMap->getTileSize().width),
 		visibleSize.height / (btnMap->getMapSize().height*btnMap->getTileSize().height));
 	addChild(btnMap, 0);
-	auto background = Sprite::create("res/tiledMaps/SelectScene/background.png");
+	auto background = ResourceManager::GetInstance()->GetSpriteById(9);//Sprite::create("res/tiledMaps/SelectScene/background.png");
+	background->removeFromParent();
 	background->setAnchorPoint(Vec2(0.5, 0.5));
 	background->setPosition(Point(visibleSize/2));
 	
-	auto btnBack = ui::Button::create("res/tiledMaps/SelectScene/btnBack.png");
+	auto btnBack = ResourceManager::GetInstance()->GetButtonById(7);//ui::Button::create("res/tiledMaps/SelectScene/btnBack.png");
+	btnBack->removeFromParent();
 	btnBack->setAnchorPoint(Point(1, 1));
 	btnBack->setScale(0.12);
 	btnBack->setPosition(Vec2(visibleSize.width, visibleSize.height));
@@ -64,7 +70,8 @@ bool MapScene::init()
 		auto btnPos = btnGroup->getObject("btnLv"+to_string(i+1));
 		int x = btnPos["x"].asInt();
 		int y = btnPos["y"].asInt();
-		auto btn = ui::Button::create("res/tiledMaps/SelectScene/x.png");
+		auto btn = ResourceManager::GetInstance()->GetButtonById(8);//ui::Button::create("res/tiledMaps/SelectScene/x.png");
+		btn->removeFromParent();
 		btn->setPosition(Point(x, y));
 		btn->setScale(0.5);
 		btn->setVisible(false);
@@ -109,9 +116,10 @@ void MapScene::CreateMap()
 void MapScene::btnBackCallback(cocos2d::Ref * pSender)
 {
 	buttonList.clear();
-	Director::getInstance()->replaceScene(SelectScene::CreateScene());
+	Director::getInstance()->replaceScene(HomeScene::CreateScene());
 }
 
 void MapScene::onTouchEnded(Touch *touch, Event *unused_event)
 {
+
 }
