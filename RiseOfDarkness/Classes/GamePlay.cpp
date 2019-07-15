@@ -269,7 +269,6 @@ void GamePlay::CreateAllButton(Layer* layer)
 	m_sprites.push_back(hpBar);
 
 	auto mpBar = get->GetSpriteById(22);
-	mpBar->setScale((Director::getInstance()->getVisibleSize().width / mpBar->getBoundingBox().size.width) / 8);
 	mpBar->removeFromParent();
 	layer->addChild(mpBar, 9);
 	m_sprites.push_back(mpBar);

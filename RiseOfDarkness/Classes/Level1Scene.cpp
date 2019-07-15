@@ -25,20 +25,6 @@ bool Level1Scene::init()
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 
-	CreateMap();
-
-	player = Sprite::create("res/sprites/link-5_65.png");
-	TMXObjectGroup *playerGroup = mTileMap->objectGroupNamed("Player");
-	auto spawnPoint = playerGroup->getObject("mc");
-	int x = spawnPoint["x"].asInt();
-	int y = spawnPoint["y"].asInt();
-	log("%d, %d", x, y);
-	player->setPosition(Vec2(x + mTileMap->getTileSize().width/2,y + mTileMap->getTileSize().height/2));
-	player->setScale(1.7f);
-	player->setAnchorPoint(Vec2(0.5, 0));
-	auto mc_Body = PhysicsBody::createBox(player->getContentSize(), PHYSICSSHAPE_MATERIAL_DEFAULT);
-	player->setPhysicsBody(mc_Body);
-	addChild(player, 0);
 	MainCharacter::GetInstance()->Refresh();
 
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(3);
@@ -49,11 +35,6 @@ bool Level1Scene::init()
 	CreateAllButton(this);
 
 	AddListener();
-
-
-
-
->>>>>>> 50e64c01c70d33fa59375e8c2d910afbc247826b
 
 	scheduleUpdate();
 

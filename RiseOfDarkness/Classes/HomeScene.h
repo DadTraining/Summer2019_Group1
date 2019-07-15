@@ -24,7 +24,11 @@ public:
 
 	void SetCamera(Vec2 pos);
 	void CreateAllButton(Layer* layer);
-
+	//open inventory
+	void openInventory(cocos2d::Ref *);
+	void itemCallback(cocos2d::Ref*, int item);
+	void btnBackInventory(cocos2d::Ref *);
+	void btnEquipInventory(cocos2d::Ref *, int id);
 	CREATE_FUNC(HomeScene);
 };
 

@@ -2,6 +2,7 @@
 
 Armor::Armor()
 {
+	kind = ARMOR;
 }
 
 Armor::~Armor()

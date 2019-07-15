@@ -7,6 +7,7 @@
 using namespace std;
 Inventory::Inventory()
 {
+	capacity = 30;
 }
 
 Inventory::~Inventory()
@@ -15,10 +16,12 @@ Inventory::~Inventory()
 
 void Inventory::Init()
 {
+	items.reserve(capacity);
 }
 
 void Inventory::AddItem(int)
 {
+
 }
 
 void Inventory::DropItem(int)

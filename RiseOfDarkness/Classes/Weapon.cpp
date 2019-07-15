@@ -2,6 +2,7 @@
 
 Weapon::Weapon()
 {
+	kind = WEAPON;
 }
 
 Weapon::~Weapon()
