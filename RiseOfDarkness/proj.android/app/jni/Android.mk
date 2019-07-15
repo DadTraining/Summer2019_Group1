@@ -23,7 +23,7 @@ LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/MainMenuScene.cpp \
                    $(LOCAL_PATH)/../../../Classes/MapScene.cpp \
                    $(LOCAL_PATH)/../../../Classes/ResourceManager.cpp \
-                   $(LOCAL_PATH)/../../../Classes/SelectScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/SelectScene.cpp 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 
