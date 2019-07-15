@@ -4,7 +4,6 @@
  <tile id="0">
   <properties>
    <property name="Collidable" value="True"/>
-   <property name="collidable" type="bool" value="true"/>
   </properties>
   <objectgroup draworder="index">
    <object id="2" x="1" y="0" width="30" height="31"/>

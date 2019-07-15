@@ -40,6 +40,7 @@ bool Level1Scene::init()
 	auto mc_Body = PhysicsBody::createBox(player->getContentSize(), PHYSICSSHAPE_MATERIAL_DEFAULT);
 	player->setPhysicsBody(mc_Body);
 	addChild(player, 0);
+
 	scheduleUpdate();
 	setViewPointCenter(player->getPosition());
 	

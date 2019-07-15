@@ -102,6 +102,7 @@ bool SelectScene::init()
 	text->setPosition(Vec2(visibleSize.width / 8 + origin.x, visibleSize.height / 30+ origin.y));
 	text->setScaleX(1.5);
 	text->setScaleY(0.4);
+	
 	this->addChild(text);
 	return true;
 }

@@ -44,6 +44,20 @@ bool MapScene::init()
 	addChild(btnBack, 1);
 	btnBack->addClickEventListener(CC_CALLBACK_1(MapScene::btnBackCallback, this));
 	TMXObjectGroup *btnGroup = btnMap->objectGroupNamed("ObjButton");
+	TMXObjectGroup *objHome = btnMap->objectGroupNamed("Home");
+
+	auto infoBar = Sprite::create("res/sprites/infoBar.png");
+	infoBar->setAnchorPoint(Point(0, 1));
+	infoBar->setScale(0.5);
+	infoBar->setPosition(Vec2(10, visibleSize.height-10));
+	addChild(infoBar, 1);
+
+	auto homePoint = objHome->getObject("home");
+	int x = homePoint["x"].asInt();
+	int y = homePoint["y"].asInt();
+	auto homeIcon = ui::Button::create("res/tiledMaps/SelectScene/homeIcon.png");
+	homeIcon->setPosition(Point(x, y));
+	addChild(homeIcon, 1);
 
 	for (int i = 0; i < 11; i++)
 	{

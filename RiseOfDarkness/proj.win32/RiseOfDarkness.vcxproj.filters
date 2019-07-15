@@ -9,6 +9,11 @@
     <ClCompile Include="..\Classes\SelectScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\Classes\Level1Scene.cpp" />
+    <ClCompile Include="..\Classes\Inventory.cpp" />
+    <ClCompile Include="..\Classes\Item.cpp" />
+    <ClCompile Include="..\Classes\Armor.cpp" />
+    <ClCompile Include="..\Classes\Potion.cpp" />
+    <ClCompile Include="..\Classes\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -19,8 +24,16 @@
     <ClInclude Include="..\Classes\SelectScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="..\Classes\Level1Scene.h" />
+    <ClInclude Include="..\Classes\Inventory.h" />
+    <ClInclude Include="..\Classes\Item.h" />
+    <ClInclude Include="..\Classes\Armor.h" />
+    <ClInclude Include="..\Classes\Potion.h" />
+    <ClInclude Include="..\Classes\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
