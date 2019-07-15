@@ -6,7 +6,7 @@
 using namespace std;
 USING_NS_CC;
 using namespace ui;
-ui::ScrollView* inventory;
+ui::PageView* inventory;
 Menu *menu;
 vector<ui::Button*> listSprite;
 Scene* HomeScene::CreateScene()
@@ -147,61 +147,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	layer->addChild(btnBag,5);
 	btnBag->addClickEventListener(CC_CALLBACK_1(HomeScene::openInventory, this));
 
-	auto tab = ui::TabControl::create();
-	tab->setContentSize(Size(200, 200));
-	tab->setHeaderHeight(20);
-	tab->setHeaderWidth(70);
-	tab->setHeaderDockPlace(ui::TabControl::Dock::TOP);
-
-	auto tabWeapon = ui::TabHeader::create();
-	tabWeapon->setTitleText("Weapon");
-	auto tabArmor = ui::TabHeader::create();
-	tabArmor->setTitleText("Armor");
-	auto tabPotion = ui::TabHeader::create();
-	tabPotion->setTitleText("Potion");
 	
-	auto container1 = Layout::create();
-	container1->setOpacity(255);
-	container1->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-	container1->setBackGroundColor(Color3B::GRAY);
-	container1->setBackGroundColorOpacity(255);
-	auto container2 = Layout::create();
-	container2->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-	container2->setOpacity(255);
-	container2->setBackGroundColor(Color3B::BLUE);
-	container2->setBackGroundColorOpacity(255);
-	auto container3 = Layout::create();
-	container3->setBackGroundColorType(Layout::BackGroundColorType::SOLID);
-	container3->setOpacity(255);
-	container3->setBackGroundColor(Color3B::RED);
-	container3->setBackGroundColorOpacity(255);
-
-	tab->insertTab(0, tabWeapon, container1);
-	tab->insertTab(1, tabArmor, container2);
-	tab->insertTab(2, tabPotion, container3);
-
-	tab->setSelectTab(2);
-	layer->addChild(tab,9);
-	tab->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	inventory = ui::ScrollView::create();
-	//inventory->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
-	//inventory->setBackGroundColor(Color3B::BLUE);
-	inventory->setContentSize(Size(280, 200));
-	inventory->setAnchorPoint(Point(0, 1));
-	inventory->setPosition(Point(visibleSize.width / 2, visibleSize.height*0.8));
-	auto containerSize = Size(inventory->getContentSize().width,
-		inventory->getContentSize().height * 2);
-	log("size : %f,%f", containerSize.width, containerSize.height);
-	inventory->setInnerContainerSize(containerSize);
-	inventory->setInnerContainerPosition(Vec2(0, inventory->getContentSize().height));
-	//inventory->getInnerContainer()->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
-	//inventory->getInnerContainer()->setBackGroundColor(Color3B::WHITE);
-	inventory->getInnerContainer()->setAnchorPoint(Point(0, 1));
-	inventory->getInnerContainer()->setBackGroundColorOpacity(100);
-	inventory->setScrollBarEnabled(false);
-	inventory->setVisible(false);
-
-	layer->addChild(inventory, 10);
 	//init item
 	for (int i = 1; i <= 30; i++)
 	{
@@ -212,33 +158,42 @@ void HomeScene::CreateAllButton(Layer* layer)
 		listSprite.push_back(item0);
 	}
 
-	container1->addChild(listSprite[0], 11);
 
-	auto box = Sprite::create("res/sprites/item/grid.png");
+	auto box = Sprite::create("res/sprites/item/inventory1.png");
 	box->setAnchorPoint(Vec2(0, 0));
 	box->setScale(1);
 	box->setPosition(0,0);
-	//inventory->addChild(box, 10);
-	//set item position to show
-	int col = inventory->getContentSize().width / 32;
-	int row = 1, j = 0;
 	
-	for (int i = 0; i < listSprite.size(); i++)
+	Size size(264, 240);
+	inventory = PageView::create();
+	inventory->setDirection(PageView::Direction::HORIZONTAL);
+	inventory->setContentSize(size);
+	inventory->setPosition(visibleSize / 2);
+	inventory->removeAllItems();
+	inventory->setIndicatorEnabled(true);
+	inventory->setGlobalZOrder(200);
+	for (int i = 0; i < 3; i++)
 	{
-		listSprite[i]->setAnchorPoint(Point(0.5, 0.5));
-		listSprite[i]->setPosition(Vec2(j * 32 + inventory->getInnerContainerPosition().x,
-			inventory->getInnerContainerPosition().y * 2 - row * 32));
-		j++;
-		if (j == col)
-		{
-			j = 0;
-			row++;
-		}
+		Layout *layout = Layout::create();
+		layout->setContentSize(size);
+
+		ImageView* imageView = ImageView::create("res/sprites/item/inventory1.png");
+		imageView->setScale9Enabled(true);
+		imageView->setContentSize(size);
+		imageView->setPosition(Vec2(layout->getContentSize().width / 2.0f, layout->getContentSize().height / 2.0f));
+		layout->addChild(imageView);
 		
-		//inventory->addChild(listSprite[i], 11);
-		//log("item[%d] : %f,%f", i, listSprite[i]->getPositionX(), listSprite[i]->getPositionY());
+		inventory->insertCustomItem(layout, i);
+		inventory->scrollToItem(0);
 	}
 
+	layer->addChild(inventory, 15);
+	//set item position to show
+	for (int i = 0; i < listSprite.size(); i++)
+	{
+		
+		listSprite[i]->setPosition(Vec2())
+	}
 	// SPRITE ID 0
 	auto frameButton = get->GetSpriteById(18);
 	frameButton->removeFromParent();
