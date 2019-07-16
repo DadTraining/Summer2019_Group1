@@ -300,7 +300,6 @@ void GamePlay::EnablePressed()
 		m_sprites[8]->setVisible(true);
 	}
 	MainCharacter::GetInstance()->Run();
-	SetCamera(mainCharacter->getPosition());
 }
 
 void GamePlay::UpdateController()

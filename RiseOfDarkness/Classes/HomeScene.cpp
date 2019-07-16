@@ -49,6 +49,7 @@ void HomeScene::update(float deltaTime)
 
 	MainCharacter::GetInstance()->Update(deltaTime);
 
+	SetCamera(mainCharacter->getPosition());
 }
 
 void HomeScene::AddListener()
