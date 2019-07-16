@@ -7,7 +7,7 @@ class Item {
 protected:
 	int id;
 	int kind;
-	cocos2d::Sprite* itemSprite;
+	
 public:
 	Item();
 	~Item();
