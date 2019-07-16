@@ -1,5 +1,8 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
+#include "ui/CocosGUI.h"
+#include "cocos2d.h"
+USING_NS_CC;
 
 MainCharacter* MainCharacter::m_instance = nullptr;
 
@@ -67,8 +70,8 @@ void MainCharacter::CreateMainCharacter()
 	countingTime = 0;
 	maxHP = 200;
 	maxMP = 100;
-	currentHP = 200;
-	currentMP = 100;
+	currentHP = 10;
+	currentMP = 10;
 }
 
 void MainCharacter::Refresh()
@@ -79,8 +82,8 @@ void MainCharacter::Refresh()
 	countingTime = 0;
 	maxHP = 200;
 	maxMP = 100;
-	currentHP = 200;
-	currentMP = 100;
+	currentHP = 10;
+	currentMP = 10;
 }
 
 void MainCharacter::SetState(int nextState)
@@ -148,10 +151,36 @@ void MainCharacter::SetState(int nextState)
 	}
 }
 
-
 void MainCharacter::Update(float deltaTime)
 {
 	Idle();
+
+	AutoHeal(deltaTime);
+}
+void MainCharacter::AutoHeal(float deltaTime) {
+	
+		do {
+			countingTime += deltaTime;
+			if (countingTime >= 3)
+			{
+				countingTime = 0;
+			}
+		} while (countingTime != 0);
+		this->currentHP = this->currentHP + 2;
+		this->currentMP = this->currentMP + 1;
+	
+	/*while(this->currentHP < 100.0 && this->currentMP < 100.0){
+		do {
+			countingTime += deltaTime;
+			if (countingTime >= 3)
+			{
+				countingTime = 0;
+			}
+		} while (countingTime != 0);
+		this->currentHP = this->currentHP + 2;
+		this->currentMP = this->currentMP + 2;
+	 }*/
+		
 }
 
 void MainCharacter::Idle()
@@ -203,6 +232,18 @@ void MainCharacter::StopDefend()
 	default:
 		SetState(LEFT_IDLE);
 	}
+}
+
+
+
+float MainCharacter::GetPercentMP()
+{
+	return ((float)currentMP/(float)maxMP)*100.0;
+}
+
+float MainCharacter::GetPercentHP()
+{
+	return ((float)currentMP/(float)maxMP)*100.0;
 }
 
 void MainCharacter::SpecialAttack()

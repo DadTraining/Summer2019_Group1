@@ -3,9 +3,10 @@
 
 #include <vector>
 #include "cocos2d.h"
+#include "ui\CocosGUI.h"
 
 using namespace cocos2d;
-
+USING_NS_CC;
 class MainCharacter
 {
 public:
@@ -51,6 +52,9 @@ public:
 	void Run();
 	void StopRun();
 	void StopDefend();
+	float GetPercentMP();
+	float GetPercentHP();
+	void AutoHeal(float deltaTime);
 private:
 	static MainCharacter* m_instance;
 	Sprite* mSprite;

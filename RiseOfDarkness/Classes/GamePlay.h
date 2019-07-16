@@ -42,6 +42,7 @@ public:
 	virtual void SetCamera(Vec2 pos);
 	virtual void AddListener() = 0;
 	virtual void UpdateController();
+	
 };
 
 #endif
