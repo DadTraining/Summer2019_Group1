@@ -51,12 +51,14 @@ void MainCharacter::CreateMainCharacter()
 	mAction[LEFT_SHIELD] = ResourceManager::GetInstance()->GetActionById(14);
 
 	// CREATE PHYSICS BODY 
-	Size box;
 	box.width = mSprite->getContentSize().width / 1.5;
 	box.height = mSprite->getContentSize().height / 3;
-	mPhysicsBody = PhysicsBody::createBox(box, PHYSICSBODY_MATERIAL_DEFAULT, Vec2(0, -box.height));
+	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height));
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setRotationEnable(false);
+	mPhysicsBody->setDynamic(false);
+	mPhysicsBody->setCollisionBitmask(mainCharacterBitMask);
+	mPhysicsBody->setContactTestBitmask(true);
 	mSprite->setPhysicsBody(mPhysicsBody);
 
 	// CREATE ALL STATUS
@@ -69,14 +71,14 @@ void MainCharacter::CreateMainCharacter()
 	maxMP = 100;
 	currentHP = 200;
 	currentMP = 100;
+	preventRun = 0;
+
 }
 
 void MainCharacter::Refresh()
 {
 	direction = 2;
 	currentState = FRONT_IDLE;
-	speed = 1;
-	countingTime = 0;
 	maxHP = 200;
 	maxMP = 100;
 	currentHP = 200;
@@ -97,7 +99,7 @@ void MainCharacter::SetState(int nextState)
 	{
 		switch (nextState)
 		{
-		case BACK_IDLE:		
+		case BACK_IDLE:
 		case FRONT_IDLE:			
 		case LEFT_IDLE:
 			if (currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE || mSprite->getNumberOfRunningActions() == 0)
@@ -152,6 +154,8 @@ void MainCharacter::SetState(int nextState)
 void MainCharacter::Update(float deltaTime)
 {
 	Idle();
+
+	AutoRevive(deltaTime);
 }
 
 void MainCharacter::Idle()
@@ -233,36 +237,45 @@ void MainCharacter::NormalAttack()
 			SetState(BACK_SLASH);
 			break;
 		case 2:
+			mPhysicsBody->setPositionOffset(Vec2(0, -mSprite->getContentSize().height));
 			SetState(FRONT_SLASH);
 			break;
-		default:
+		case 3:
+			mPhysicsBody->setPositionOffset(Vec2(0, -mSprite->getContentSize().height / 3));
 			SetState(LEFT_SLASH);
+			break;
+		case 4:
+			mPhysicsBody->setPositionOffset(Vec2(0, -mSprite->getContentSize().height / 3));
+			SetState(LEFT_SLASH);
+			break;
 		}
 	}
 }
 
 void MainCharacter::Evade()
 {
-	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	if ((currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+		&& currentMP >= 30)
 	{
 		switch (direction)
 		{
 		case 1:
 			SetState(ROLL_BACK);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, Director::getInstance()->getVisibleSize().width / 8)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, Director::getInstance()->getVisibleSize().width / 12)));
 			break;
 		case 2:
 			SetState(ROLL_FRONT);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -Director::getInstance()->getVisibleSize().width / 8)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -Director::getInstance()->getVisibleSize().width / 12)));
 			break;
 		case 3:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(-Director::getInstance()->getVisibleSize().width / 8, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(-Director::getInstance()->getVisibleSize().width / 12, 0)));
 			break;
 		case 4:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(Director::getInstance()->getVisibleSize().width / 8, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(Director::getInstance()->getVisibleSize().width / 12, 0)));
 		}
+		currentMP -= 30;
 	}
 }
 
@@ -296,6 +309,33 @@ void MainCharacter::StopRun()
 	mSprite->stopAction(mAction[GO_UP]);
 	mSprite->stopAction(mAction[GO_DOWN]);
 	mSprite->stopAction(mAction[GO_LEFT]);
+}
+
+void MainCharacter::AutoRevive(float deltaTime)
+{
+	if (currentMP < maxMP)
+	{
+		countingTime += deltaTime;
+		if (countingTime >= 0.5)
+		{
+			countingTime = 0;
+			currentMP += 5;
+			if (currentMP > maxMP)
+			{
+				currentMP = maxMP;
+			}
+		}
+	}
+}
+
+float MainCharacter::GetPercentHP()
+{
+	return currentHP / maxHP * 100.0;
+}
+
+float MainCharacter::GetPercentMP()
+{
+	return currentMP / maxMP * 100.0;
 }
 
 PhysicsBody* MainCharacter::GetPhysicsBody()

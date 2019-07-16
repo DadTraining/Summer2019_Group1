@@ -168,7 +168,7 @@ res/animates/mainCharacter/rollBack/rollBack.plist
 10
 res/animates/mainCharacter/rollLeft/rollLeft.plist
 #TILEMAP
-4
+5
 0
 res/tiledMaps/home/home.tmx
 1
@@ -176,7 +176,9 @@ res/tiledMaps/home/upperHome.tmx
 2
 res/tiledMaps/mapScene/selectMap.tmx
 3
-res/tiledMaps/map1/map_lv1.tmx
+res/tiledMaps/map1/map1.tmx
+4
+res/tiledMaps/map1/upperMap1.tmx
 #LABEL
 2
 0
