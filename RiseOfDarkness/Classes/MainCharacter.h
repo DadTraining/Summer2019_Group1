@@ -9,6 +9,9 @@ using namespace cocos2d;
 class MainCharacter
 {
 public:
+	static const int mainCharacterBitMask = 101;
+	static const int obstacleBitMask = 1;
+
 	static const int FRONT_IDLE = 0;
 	static const int BACK_IDLE = 1;
 	static const int LEFT_IDLE = 2;
@@ -32,7 +35,6 @@ public:
 	static MainCharacter* GetInstance();
 	void Init(std::string name);
 	void Refresh();
-	void AddToScene(Layer* layer);
 	Sprite* GetSprite();
 	PhysicsBody* GetPhysicsBody();
 	int GetCurrentState();
@@ -51,6 +53,9 @@ public:
 	void Run();
 	void StopRun();
 	void StopDefend();
+	float GetPercentHP();
+	float GetPercentMP();
+	void AutoRevive(float deltaTime);
 private:
 	static MainCharacter* m_instance;
 	Sprite* mSprite;
@@ -61,8 +66,8 @@ private:
 	int direction;
 	int speed;
 	int preventRun;
-	int maxHP, currentHP;
-	int maxMP, currentMP;
+	float maxHP, currentHP, maxMP, currentMP;
+	Size box;
 	float countingTime;
 	std::string mName;
 	MainCharacter();

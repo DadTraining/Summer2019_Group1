@@ -21,6 +21,7 @@ public:
 	void SpecialAttack(Ref* sender, ui::Widget::TouchEventType type);
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
+	bool onContactBegin(PhysicsContact& contact);
 
 	void SetCamera(Vec2 pos);
 	void CreateAllButton(Layer* layer);

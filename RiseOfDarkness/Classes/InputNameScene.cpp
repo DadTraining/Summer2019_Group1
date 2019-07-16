@@ -4,6 +4,7 @@
 #include "HomeScene.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
+#include "Level1Scene.h"
 USING_NS_CC;
 
 Scene* InputNameScene::CreateScene()
@@ -57,7 +58,6 @@ bool InputNameScene::init()
 	});*/
 	
     textField->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
-		log("ok");
 	});
 	
 	this->addChild(textField,2);
