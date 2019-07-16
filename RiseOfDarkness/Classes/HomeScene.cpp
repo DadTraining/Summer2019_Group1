@@ -6,9 +6,13 @@
 using namespace std;
 USING_NS_CC;
 using namespace ui;
-ui::PageView* inventory;
+ui::Layout* layout;
 Menu *menu;
 vector<ui::Button*> listSprite;
+vector<ui::Button*> items;		//store all item sprites
+vector<ui::Widget*> itemEquip;  // store items equiped
+ui::Layout* equipment;          // show inventory
+vector<ui::Button*> itemEquipBox; // show grid inventory
 Scene* HomeScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
@@ -136,64 +140,167 @@ void HomeScene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
+void HomeScene::openInventory(cocos2d::Ref *pSender)
+{
+	layout->isVisible() ? log("close inventory") : log("open inventory");
+	//menu->setVisible(!menu->isVisible());
+	layout->setVisible(!layout->isVisible());
+	equipment->setVisible(!equipment->isVisible());
+
+}
+
+void HomeScene::itemCallback(cocos2d::Ref* pSender, int item)
+{
+	auto btnEquip = MenuItemImage::create("res/sprites/item/btnEquip.png", "res/sprites/item/btnEquip.png",
+		CC_CALLBACK_1(HomeScene::btnEquipInventory, this, item));
+	auto btnDrop = MenuItemImage::create("res/sprites/item/btnDrop.png", "res/sprites/item/btnDrop.png");
+	auto btnBack = MenuItemImage::create("res/sprites/item/btnClose.png", "res/sprites/item/btnClose.png",
+		CC_CALLBACK_1(HomeScene::btnBackInventory, this));
+
+	btnDrop->setScale(0.5);
+	btnEquip->setScale(0.5);
+	btnDrop->setPositionY(btnEquip->getPositionY() - btnEquip->getContentSize().height / 2);
+	menu = Menu::create(btnEquip, btnDrop, btnBack, NULL);
+	menu->setAnchorPoint(Vec2(0, 1));
+	menu->setVisible(false);
+
+	btnBack->setPositionY(btnDrop->getPositionY() - btnDrop->getContentSize().height / 2);
+	btnBack->setScale(0.5);
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	log("item %d clicked!", item);
+	menu->setVisible(!menu->isVisible());
+	menu->setPosition(items[item]->getPosition() + Vec2(layout->getPositionX(), 0));
+	addChild(menu, 99);
+}
+
+void HomeScene::btnBackInventory(cocos2d::Ref *)
+{
+	menu->setVisible(!menu->isVisible());
+}
+
+void HomeScene::btnEquipInventory(cocos2d::Ref *, int id)
+{
+	log("Equiped");
+	string path = "res/sprites/item/items_" + (id + 1 < 10 ? "0" + to_string(id + 1) : to_string(id + 1)) + ".png";
+	auto item = ui::Button::create(path);
+	item->retain();
+	itemEquip.push_back(item);
+	layout->removeChild(items[id]);
+	log("removed this");
+	menu->setVisible(false);
+	if (itemEquip.size()>0)
+	{
+		//remove child and add it again
+		for (int i = 0; i < itemEquip.size() - 1; i++)
+		{
+			equipment->removeChild(itemEquip[i]);
+		}
+		int max_cols = 2;
+		int cols = 0;
+		int rows = 0;
+		for (int i = 0; i < itemEquip.size(); i++)
+		{
+			if (cols == max_cols)
+			{
+				rows++;
+				cols = 0;
+			}
+			itemEquip[i]->setAnchorPoint(Vec2(0, 1));
+			itemEquip[i]->setPosition(itemEquipBox[i]->getPosition() + Vec2(16, -16));
+			equipment->addChild(itemEquip[i], 16);
+			cols++;
+		}
+	}
+}
+
 void HomeScene::CreateAllButton(Layer* layer)
 {
 	auto get = ResourceManager::GetInstance();
 	// add button for test
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+	for (int i = 0; i < 4; i++)
+	{
+		auto btn = ui::Button::create("res/sprites/item/box.png");
+		btn->setEnabled(false);
+		itemEquipBox.push_back(btn);
+	}
 
-	auto btnBag = ui::Button::create("res/sprites/item/inventory.png");
-	btnBag->setPosition(Vec2(visibleSize.width*0.4, btnBag->getContentSize().height));
-	layer->addChild(btnBag,5);
-	btnBag->addClickEventListener(CC_CALLBACK_1(HomeScene::openInventory, this));
+	equipment = ui::Layout::create();
+	equipment->setContentSize(Size(128, 128));
+	equipment->setPosition(Vec2(equipment->getContentSize().width / 2,
+		visibleSize.height / 2 - equipment->getContentSize().height / 2));
+	equipment->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
+	equipment->setBackGroundColor(Color3B::GREEN);
+	equipment->setVisible(false);
+	addChild(equipment,15);
 
+	int max_cols = equipment->getContentSize().width / 64;
+
+	int cols = 0, rows = 0;
+	for (int i = 0; i < itemEquipBox.size(); i++)
+	{
+		if (cols == max_cols)
+		{
+			rows++;
+			cols = 0;
+		}
+		itemEquipBox[i]->setAnchorPoint(Vec2(0, 1));
+		//itemEquip[i]->setAnchorPoint(Vec2(0, 1));
+		itemEquipBox[i]->setPosition(Vec2(cols * 64, equipment->getContentSize().height - 64 * rows));
+		//itemEquip[i]->setPosition(itemEquipBox[i]->getPosition() + Vec2(16, -16));
+		equipment->addChild(itemEquipBox[i], 16);
+		//equipment->addChild(itemEquip[i], 6);
+		cols++;
+	}
+
+	vector<ui::Button*> btnList;	//grid item
+	for (int i = 1; i <= 20; i++)
+	{
+		string path = "res/sprites/item/items_" + (i < 10 ? "0" + to_string(i) : to_string(i)) + ".png";
+		auto btn = ui::Button::create("res/sprites/item/box.png");
+		btn->setEnabled(false);
+		btnList.push_back(btn);
+		auto item = ui::Button::create(path);
+		item->addClickEventListener(CC_CALLBACK_1(HomeScene::itemCallback, this, i - 1));
+		items.push_back(item);
+	}
+	layout = ui::Layout::create();
+	layout->setContentSize(Size(320, 256));
+	layout->setPosition(Vec2(visibleSize.width / 2 - layout->getContentSize().width / 2,
+		visibleSize.height / 2 - layout->getContentSize().height / 2));
+	layout->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
+	layout->setBackGroundColor(Color3B::GREEN);
+	layout->setVisible(false);
+	addChild(layout,12);
+	log("layout: %f,%f", layout->getPositionX(), layout->getPositionY());
+
+	int max_col = layout->getContentSize().width / 64;
+
+	int col = 0, row = 0;
+	for (int i = 0; i < btnList.size(); i++)
+	{
+		if (col == max_col)
+		{
+			row++;
+			col = 0;
+		}
+		btnList[i]->setAnchorPoint(Vec2(0, 1));
+		items[i]->setAnchorPoint(Vec2(0, 1));
+		btnList[i]->setPosition(Vec2(col * 64, layout->getContentSize().height - 64 * row));
+		items[i]->setPosition(btnList[i]->getPosition() + Vec2(16, -16));
+		layout->addChild(btnList[i], 15);
+		layout->addChild(items[i], 16);
+		col++;
+	}
+
+	auto table = ui::Button::create("res/sprites/item/inventory.png");
+	table->setAnchorPoint(Point(0, 0));
+	table->setPosition(visibleSize/2);
 	
-	//init item
-	for (int i = 1; i <= 30; i++)
-	{
-		string normal = "res/sprites/item/items_" + (i < 10 ? "0" + to_string(i) : to_string(i)) + ".png";
-		string pressed = "res/sprites/item/items_" + (i < 10 ? "0" + to_string(i) : to_string(i)) + ".png";
-		auto item0 = ui::Button::create(normal, pressed);
-		item0->addClickEventListener(CC_CALLBACK_1(HomeScene::itemCallback, this, i - 1));
-		listSprite.push_back(item0);
-	}
+	addChild(table, 5);
 
+	table->addClickEventListener(CC_CALLBACK_1(HomeScene::openInventory, this));
 
-	auto box = Sprite::create("res/sprites/item/inventory1.png");
-	box->setAnchorPoint(Vec2(0, 0));
-	box->setScale(1);
-	box->setPosition(0,0);
-	
-	Size size(264, 240);
-	inventory = PageView::create();
-	inventory->setDirection(PageView::Direction::HORIZONTAL);
-	inventory->setContentSize(size);
-	inventory->setPosition(visibleSize / 2);
-	inventory->removeAllItems();
-	inventory->setIndicatorEnabled(true);
-	inventory->setGlobalZOrder(200);
-	for (int i = 0; i < 3; i++)
-	{
-		Layout *layout = Layout::create();
-		layout->setContentSize(size);
-
-		ImageView* imageView = ImageView::create("res/sprites/item/inventory1.png");
-		imageView->setScale9Enabled(true);
-		imageView->setContentSize(size);
-		imageView->setPosition(Vec2(layout->getContentSize().width / 2.0f, layout->getContentSize().height / 2.0f));
-		layout->addChild(imageView);
-		
-		inventory->insertCustomItem(layout, i);
-		inventory->scrollToItem(0);
-	}
-
-	layer->addChild(inventory, 15);
-	//set item position to show
-	for (int i = 0; i < listSprite.size(); i++)
-	{
-		
-		listSprite[i]->setPosition(Vec2())
-	}
 	// SPRITE ID 0
 	auto frameButton = get->GetSpriteById(18);
 	frameButton->removeFromParent();
@@ -344,62 +451,6 @@ void HomeScene::CreateAllButton(Layer* layer)
 	SetCamera(mainCharacter->getPosition());
 }
 
-//open inventory
-void HomeScene::openInventory(cocos2d::Ref *sender)
-{
-	inventory->setVisible(!inventory->isVisible());
-}
-void HomeScene::itemCallback(cocos2d::Ref *pSender, int item)
-{
-	auto btnEquip = MenuItemImage::create("res/sprites/item/btnEquip.png", "res/sprites/item/btnEquip.png",
-		CC_CALLBACK_1(HomeScene::btnEquipInventory, this, item));
-	auto btnDrop = MenuItemImage::create("res/sprites/item/btnDrop.png", "res/sprites/item/btnDrop.png");
-	auto btnBack = MenuItemImage::create("res/sprites/item/btnDrop.png", "res/sprites/item/btnDrop.png",
-		CC_CALLBACK_1(HomeScene::btnBackInventory, this));
-
-	btnDrop->setScale(0.5);
-	btnEquip->setScale(0.5);
-	btnDrop->setPositionY(btnEquip->getPositionY() - btnEquip->getContentSize().height / 2);
-	menu = Menu::create(btnEquip, btnDrop, btnBack, NULL);
-	menu->setAnchorPoint(Vec2(0, 1));
-	menu->setVisible(false);
-
-	btnBack->setPositionY(btnDrop->getPositionY() - btnDrop->getContentSize().height / 2);
-	btnBack->setScale(0.5);
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	switch (item)
-	{
-	case 0:
-		log("item 1 clicked!");
-		menu->setVisible(!menu->isVisible());
-		menu->setPosition(listSprite[item]->getPosition() + Vec2(inventory->getPositionX(), 0));
-		addChild(menu, 99);
-		break;
-	case 1:
-		log("item 2 clicked!");
-		menu->setVisible(!menu->isVisible());
-		menu->setPosition(listSprite[item]->getPosition() + Vec2(inventory->getPositionX(), 0));
-		addChild(menu, 99);
-		break;
-	default:
-		break;
-	}
-}
-
-void HomeScene::btnBackInventory(cocos2d::Ref *)
-{
-	menu->setVisible(!menu->isVisible());
-}
-
-void HomeScene::btnEquipInventory(cocos2d::Ref *, int id)
-{
-	log("Equiped");
-	inventory->removeChild(listSprite[id]);
-	log("removed this");
-	menu->setVisible(false);
-}
-
-//
 void HomeScene::SetCamera(Vec2 pos)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
