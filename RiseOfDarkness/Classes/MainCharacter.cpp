@@ -65,7 +65,7 @@ void MainCharacter::CreateMainCharacter()
 	stageLevel = 1;
 	direction = 2;
 	currentState = FRONT_IDLE;
-	speed = 1;
+	speed = 2;
 	countingTime = 0;
 	maxHP = 200;
 	maxMP = 100;

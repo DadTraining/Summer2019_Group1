@@ -51,6 +51,7 @@ void Level1Scene::update(float deltaTime)
 
 	MainCharacter::GetInstance()->Update(deltaTime);
 
+	SetCamera(mainCharacter->getPosition());
 }
 
 void Level1Scene::AddListener()
