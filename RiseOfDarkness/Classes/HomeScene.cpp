@@ -181,7 +181,7 @@ void HomeScene::btnBackInventory(cocos2d::Ref *)
 void HomeScene::btnEquipInventory(cocos2d::Ref *, int id)
 {
 	log("Equiped");
-	string path = "res/sprites/item/items_" + (id + 1 < 10 ? "0" + to_string(id + 1) : to_string(id + 1)) + ".png";
+	string path = "res/sprites/item/items_weapon_" + (id + 1 < 10 ? "0" + to_string(id + 1) : to_string(id + 1)) + ".png";
 	auto item = ui::Button::create(path);
 	item->retain();
 	itemEquip.push_back(item);
@@ -256,7 +256,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	vector<ui::Button*> btnList;	//grid item
 	for (int i = 1; i <= 20; i++)
 	{
-		string path = "res/sprites/item/items_" + (i < 10 ? "0" + to_string(i) : to_string(i)) + ".png";
+		string path = "res/sprites/item/items_weapon_" + (i < 10 ? "0" + to_string(i) : to_string(i)) + ".png";
 		auto btn = ui::Button::create("res/sprites/item/box.png");
 		btn->setEnabled(false);
 		btnList.push_back(btn);
