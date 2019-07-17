@@ -1,7 +1,6 @@
 #ifndef MAIN_CHARACTER_H
 #define MAIN_CHARACTER_H
 
-#include <vector>
 #include "cocos2d.h"
 
 using namespace cocos2d;
