@@ -5,6 +5,7 @@
 #include "Level2Scene.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
+#include "Level1Scene.h"
 USING_NS_CC;
 
 Scene* InputNameScene::CreateScene()
@@ -58,7 +59,6 @@ bool InputNameScene::init()
 	});*/
 	
     textField->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
-		log("ok");
 	});
 	
 	this->addChild(textField,2);
@@ -76,7 +76,7 @@ bool InputNameScene::init()
 			if (MainCharacter::GetInstance()->GetName() != "")
 			{
 				auto gotoNext = CallFunc::create([]() {
-					Director::getInstance()->replaceScene(Level2Scene::CreateScene());
+					Director::getInstance()->replaceScene(HomeScene::CreateScene());
 				});
 				runAction(gotoNext);
 			}

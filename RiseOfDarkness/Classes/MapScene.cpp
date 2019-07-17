@@ -8,7 +8,7 @@
 using namespace std;
 USING_NS_CC;
 
-vector<ui::Button*> buttonList;
+vector<ui::Widget*> buttonList;
 Scene* MapScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
@@ -56,7 +56,7 @@ bool MapScene::init()
 		auto btnPos = btnGroup->getObject("btnLv"+to_string(i+1));
 		int x = btnPos["x"].asInt();
 		int y = btnPos["y"].asInt();
-		auto btn = ResourceManager::GetInstance()->GetButtonById(8);//ui::Button::create("res/tiledMaps/SelectScene/x.png");
+		auto btn = ResourceManager::GetInstance()->GetButtonById(8)->clone();//ui::Button::create("res/tiledMaps/SelectScene/x.png");
 		btn->removeFromParent();
 		btn->setPosition(Point(x, y));
 		btn->setScale(0.5);

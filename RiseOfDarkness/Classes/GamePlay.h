@@ -25,15 +25,8 @@ protected:
 public:
 	GamePlay();
 	virtual ~GamePlay();
-
 	virtual void update(float deltaTime) = 0;
-	/*virtual bool OnTouchBeganSP(Touch* touch, Event* event);
-	virtual bool OnTouchEndedSP(Touch* touch, Event* event);
-	virtual void OnTouchMovedSP(Touch* touch, Event* event);
-	virtual void NormalAttackSP(Ref* sender, ui::Widget::TouchEventType type);
-	virtual void SpecialAttackSP(Ref* sender, ui::Widget::TouchEventType type);
-	virtual void EvadeSP(Ref* sender, ui::Widget::TouchEventType type);
-	virtual void DefendSP(Ref* sender, ui::Widget::TouchEventType type);*/
+	virtual void UpdateInfoBar();
 	virtual void EnablePressed();
 	virtual void DisablePressed();
 

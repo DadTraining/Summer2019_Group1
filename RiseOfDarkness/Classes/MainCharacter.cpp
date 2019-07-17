@@ -16,6 +16,12 @@ MainCharacter* MainCharacter::GetInstance()
 
 MainCharacter::~MainCharacter() {}
 
+void MainCharacter::AddToLayer(Layer* layer)
+{
+	layer->addChild(mSprite, 1);
+	slash = new Slash(layer);
+}
+
 void MainCharacter::Init(std::string name)
 {
 	mName = name;
@@ -49,115 +55,143 @@ void MainCharacter::CreateMainCharacter()
 	mAction[FRONT_SHIELD] = ResourceManager::GetInstance()->GetActionById(12);
 	mAction[BACK_SHIELD] = ResourceManager::GetInstance()->GetActionById(13);
 	mAction[LEFT_SHIELD] = ResourceManager::GetInstance()->GetActionById(14);
+	mAction[FRONT_GET_DAMAGE] = ResourceManager::GetInstance()->GetActionById(19);
+	mAction[BACK_GET_DAMAGE] = ResourceManager::GetInstance()->GetActionById(18);
+	mAction[LEFT_GET_DAMAGE] = ResourceManager::GetInstance()->GetActionById(20);
+	mAction[DEAD] = ResourceManager::GetInstance()->GetActionById(21);
 
 	// CREATE PHYSICS BODY 
-	Size box;
 	box.width = mSprite->getContentSize().width / 1.5;
 	box.height = mSprite->getContentSize().height / 3;
-	mPhysicsBody = PhysicsBody::createBox(box, PHYSICSBODY_MATERIAL_DEFAULT, Vec2(0, -box.height));
+	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height));
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setRotationEnable(false);
+	mPhysicsBody->setDynamic(false);
+	mPhysicsBody->setCollisionBitmask(MAIN_CHARACTER_BITMASK);
+	mPhysicsBody->setContactTestBitmask(true);
 	mSprite->setPhysicsBody(mPhysicsBody);
 
 	// CREATE ALL STATUS
 	stageLevel = 1;
 	direction = 2;
 	currentState = FRONT_IDLE;
-	speed = 1;
+	speed = SPEED;
+	attack = ATTACK;
+	defend = DEFEND;
 	countingTime = 0;
 	maxHP = 200;
 	maxMP = 100;
-	currentHP = 200;
-	currentMP = 100;
+	currentHP = maxHP;
+	currentMP = maxMP;
 }
 
 void MainCharacter::Refresh()
 {
 	direction = 2;
 	currentState = FRONT_IDLE;
-	speed = 1;
-	countingTime = 0;
-	maxHP = 200;
-	maxMP = 100;
-	currentHP = 200;
-	currentMP = 100;
+	currentHP = maxHP;
+	currentMP = maxMP;
 }
 
 void MainCharacter::SetState(int nextState)
 {
-	if (currentState == nextState && mSprite->getNumberOfRunningActions() == 0)
+	if (currentState != DEAD)
 	{
-		mSprite->runAction(mAction[nextState]);
-	}
-	else if (currentState == nextState)
-	{
-		return;
-	}
-	else
-	{
-		switch (nextState)
+		if (currentState == nextState && mSprite->getNumberOfRunningActions() == 0)
 		{
-		case BACK_IDLE:		
-		case FRONT_IDLE:			
-		case LEFT_IDLE:
-			if (currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE || mSprite->getNumberOfRunningActions() == 0)
+			mSprite->runAction(mAction[nextState]);
+		}
+		else if (currentState == nextState)
+		{
+			return;
+		}
+		else
+		{
+			switch (nextState)
 			{
+			case BACK_IDLE:
+			case FRONT_IDLE:
+			case LEFT_IDLE:
+				if (currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE || mSprite->getNumberOfRunningActions() == 0)
+				{
+					mSprite->stopAllActions();
+					mSprite->runAction(mAction[nextState]);
+					currentState = nextState;
+				}
+				break;
+			case GO_UP:
+			case GO_DOWN:
+			case GO_LEFT:
+				if ((currentState == FRONT_IDLE || currentState == BACK_IDLE || currentState == LEFT_IDLE))
+				{
+					mSprite->stopAllActions();
+					mSprite->runAction(mAction[nextState]);
+					currentState = nextState;
+				}
+				break;
+			case FRONT_SLASH:
+			case BACK_SLASH:
+			case LEFT_SLASH:
+				currentState = nextState;
 				mSprite->stopAllActions();
 				mSprite->runAction(mAction[nextState]);
+				break;
+			case ROLL_BACK:
+			case ROLL_FRONT:
+			case ROLL_LEFT:
 				currentState = nextState;
-			}
-			break;
-		case GO_UP:		
-		case GO_DOWN:
-		case GO_LEFT:
-			if ((currentState == FRONT_IDLE || currentState == BACK_IDLE || currentState == LEFT_IDLE))
-			{
 				mSprite->stopAllActions();
 				mSprite->runAction(mAction[nextState]);
+				break;
+			case FRONT_SHIELD:
+			case BACK_SHIELD:
+			case LEFT_SHIELD:
 				currentState = nextState;
+				mSprite->stopAllActions();
+				mSprite->runAction(mAction[nextState]);
+				break;
+			case FRONT_ARCHERY:
+			case BACK_ARCHERY:
+			case LEFT_ARCHERY:
+				currentState = nextState;
+				mSprite->stopAllActions();
+				mSprite->runAction(mAction[nextState]);
+				break;
+			case FRONT_GET_DAMAGE:
+			case BACK_GET_DAMAGE:
+			case LEFT_GET_DAMAGE:
+				currentState = nextState;
+				mSprite->stopAllActions();
+				mSprite->runAction(mAction[nextState]);
+				break;
+			case DEAD:
+				currentState = nextState;
+				mSprite->stopAllActions();
+				mSprite->runAction(mAction[nextState]);
+				break;
 			}
-			break;
-		case FRONT_SLASH:
-		case BACK_SLASH:
-		case LEFT_SLASH:
-			currentState = nextState;
-			mSprite->stopAllActions();
-			mSprite->runAction(mAction[nextState]);
-			break;
-		case ROLL_BACK:
-		case ROLL_FRONT:
-		case ROLL_LEFT:
-			currentState = nextState;
-			mSprite->stopAllActions();
-			mSprite->runAction(mAction[nextState]);
-			break;
-		case FRONT_SHIELD:
-		case BACK_SHIELD:
-		case LEFT_SHIELD:
-			currentState = nextState;
-			mSprite->stopAllActions();
-			mSprite->runAction(mAction[nextState]);
-			break;
-		case FRONT_ARCHERY:
-		case BACK_ARCHERY:
-		case LEFT_ARCHERY:
-			currentState = nextState;
-			mSprite->stopAllActions();
-			mSprite->runAction(mAction[nextState]);
 		}
 	}
 }
 
-
 void MainCharacter::Update(float deltaTime)
 {
-	Idle();
+	if (IsAlive())
+	{
+		Idle();
+
+		AutoRevive(deltaTime);
+	}
 }
 
 void MainCharacter::Idle()
 {
-	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD)
+	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD && mSprite->getNumberOfRunningActions() == 0)
 	{
+		if (currentState == BACK_SLASH || currentState == FRONT_SLASH || currentState == LEFT_SLASH)
+		{
+			slash->GetPhysicsBody()->setContactTestBitmask(false);
+		}
 		switch (direction)
 		{
 		case 1:
@@ -227,48 +261,63 @@ void MainCharacter::NormalAttack()
 {
 	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
 	{
+		slash->GetPhysicsBody()->setContactTestBitmask(true);
 		switch (direction)
 		{
 		case 1:
 			SetState(BACK_SLASH);
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() + 20));
+			slash->GetSprite()->setRotation(0);
 			break;
 		case 2:
 			SetState(FRONT_SLASH);
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() - 20));
+			slash->GetSprite()->setRotation(0);
 			break;
-		default:
+		case 3:
 			SetState(LEFT_SLASH);
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX() - 25, mSprite->getPositionY()));
+			slash->GetSprite()->setRotation(90);
+			break;
+		case 4:
+			SetState(LEFT_SLASH);
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX() + 25, mSprite->getPositionY()));
+			slash->GetSprite()->setRotation(90);
+			break;
 		}
 	}
 }
 
 void MainCharacter::Evade()
 {
-	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	if ((currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+		&& currentMP >= 30)
 	{
 		switch (direction)
 		{
 		case 1:
 			SetState(ROLL_BACK);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, Director::getInstance()->getVisibleSize().width / 8)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, Director::getInstance()->getVisibleSize().width / 12)));
 			break;
 		case 2:
 			SetState(ROLL_FRONT);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -Director::getInstance()->getVisibleSize().width / 8)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -Director::getInstance()->getVisibleSize().width / 12)));
 			break;
 		case 3:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(-Director::getInstance()->getVisibleSize().width / 8, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(-Director::getInstance()->getVisibleSize().width / 12, 0)));
 			break;
 		case 4:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(Director::getInstance()->getVisibleSize().width / 8, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(Director::getInstance()->getVisibleSize().width / 12, 0)));
 		}
+		currentMP -= 30;
 	}
 }
 
 void MainCharacter::Run()
 {
-	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD)
+	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD && currentHP > 0)
 	{
 		switch (direction)
 		{
@@ -291,11 +340,65 @@ void MainCharacter::Run()
 	}
 }
 
+void MainCharacter::GetDamage(int damage)
+{
+	currentHP += defend - damage;
+	slash->GetPhysicsBody()->setContactTestBitmask(false);
+	switch (direction)
+	{
+	case 1:
+		SetState(BACK_GET_DAMAGE);
+		break;
+	case 2:
+		SetState(FRONT_GET_DAMAGE);
+		break;
+	default:
+		SetState(LEFT_GET_DAMAGE);
+	}
+}
+
 void MainCharacter::StopRun()
 {
 	mSprite->stopAction(mAction[GO_UP]);
 	mSprite->stopAction(mAction[GO_DOWN]);
 	mSprite->stopAction(mAction[GO_LEFT]);
+}
+
+bool MainCharacter::IsAlive()
+{
+	if (currentHP <= 0)
+	{
+		SetState(DEAD);
+		return false;
+	}
+	return true;
+}
+
+void MainCharacter::AutoRevive(float deltaTime)
+{
+	if (currentMP < maxMP)
+	{
+		countingTime += deltaTime;
+		if (countingTime >= 0.5)
+		{
+			countingTime = 0;
+			currentMP += 5;
+			if (currentMP > maxMP)
+			{
+				currentMP = maxMP;
+			}
+		}
+	}
+}
+
+float MainCharacter::GetPercentHP()
+{
+	return currentHP / maxHP * 100.0;
+}
+
+float MainCharacter::GetPercentMP()
+{
+	return currentMP / maxMP * 100.0;
 }
 
 PhysicsBody* MainCharacter::GetPhysicsBody()
