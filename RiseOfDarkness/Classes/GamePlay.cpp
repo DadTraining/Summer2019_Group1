@@ -26,7 +26,7 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 
 	// Create physics body world
 	auto edgeBody = PhysicsBody::createEdgeBox(tileMap->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
-	edgeBody->setCollisionBitmask(MainCharacter::obstacleBitMask);
+	edgeBody->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
 	edgeBody->setContactTestBitmask(true);
 	auto edgeNode = Node::create();
 	edgeNode->setPosition(tileMap->getContentSize() / 2);
@@ -46,7 +46,7 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 			{
 				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
 				physics->setDynamic(false);
-				physics->setCollisionBitmask(MainCharacter::obstacleBitMask);
+				physics->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
 				physics->setContactTestBitmask(true);
 				tileSet->setPhysicsBody(physics);
 			}
@@ -61,7 +61,7 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 	// Add main character
 	mainCharacter = MainCharacter::GetInstance()->GetSprite();
 	mainCharacter->removeFromParent();
-	layer->addChild(mainCharacter, 1);
+	MainCharacter::GetInstance()->AddToLayer(layer);
 	auto obj = tileMap->objectGroupNamed(mc);
 	float x = obj->getObject(mc)["x"].asFloat();
 	float y = obj->getObject(mc)["y"].asFloat();

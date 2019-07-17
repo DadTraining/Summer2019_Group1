@@ -8,7 +8,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -34,7 +34,7 @@ bool Level1Scene::init()
 
 	AddListener();
 
-
+	CreateMonster();
 
 
 
@@ -52,6 +52,11 @@ void Level1Scene::update(float deltaTime)
 	MainCharacter::GetInstance()->Update(deltaTime);
 
 	SetCamera(mainCharacter->getPosition());
+}
+
+void Level1Scene::CreateMonster()
+{
+
 }
 
 void Level1Scene::AddListener()
@@ -103,8 +108,8 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
 
-	if ((a->getCollisionBitmask() == MainCharacter::mainCharacterBitMask && b->getCollisionBitmask() == MainCharacter::obstacleBitMask)
-		|| (a->getCollisionBitmask() == MainCharacter::obstacleBitMask && b->getCollisionBitmask() == MainCharacter::mainCharacterBitMask))
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
 	{
 		if (MainCharacter::GetInstance()->GetDirection() == 1)
 		{
@@ -122,6 +127,12 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		{
 			mainCharacter->setPositionX(mainCharacter->getPositionX() - 15);
 		}
+	}
+
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::MONSTER_ATTACK_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MONSTER_ATTACK_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	{
+		
 	}
 	return true;
 }

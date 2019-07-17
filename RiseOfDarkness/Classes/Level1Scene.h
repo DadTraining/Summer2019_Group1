@@ -8,6 +8,8 @@ using namespace cocos2d;
 
 class Level1Scene : public Layer, GamePlay
 {
+private:
+
 public:
     static cocos2d::Scene* CreateScene();
 
@@ -16,6 +18,8 @@ public:
 	void update(float deltaTime);
 
 	void AddListener();
+
+	void CreateMonster();
 
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);

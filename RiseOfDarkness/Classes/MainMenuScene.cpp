@@ -28,14 +28,6 @@ bool MainMenuScene::init()
 	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(bg, -1);
 
-	/*auto labelstart = Label::createWithTTF("Rise of Darkness", "fonts/Marker Felt.ttf", 40);
-	
-	labelstart->setPosition(Vec2(origin.x + visibleSize.width / 2,
-			origin.y + visibleSize.height / 1.2 - labelstart->getContentSize().height));
-	labelstart->enableOutline(Color4B::RED, 1);
-	this->addChild(labelstart, 1);*/
-	
-
 	auto button = ResourceManager::GetInstance()->GetButtonById(2);//Button::create("/res/buttons/startt.png");
 	button->removeFromParent();
 	button->setPosition(Vec2(visibleSize.width / 1.5 + origin.x, visibleSize.height / 2 + origin.y));

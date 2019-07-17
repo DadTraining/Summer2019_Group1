@@ -144,8 +144,8 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
 
-	if ((a->getCollisionBitmask() == MainCharacter::mainCharacterBitMask && b->getCollisionBitmask() == MainCharacter::obstacleBitMask)
-		|| (a->getCollisionBitmask() == MainCharacter::obstacleBitMask && b->getCollisionBitmask() == MainCharacter::mainCharacterBitMask))
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
 	{
 		if (MainCharacter::GetInstance()->GetDirection() == 1)
 		{
