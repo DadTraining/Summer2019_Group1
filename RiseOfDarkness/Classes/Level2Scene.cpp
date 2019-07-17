@@ -9,7 +9,7 @@ using namespace std;
 Scene* Level2Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	auto layer = Level2Scene::create();
 
@@ -61,7 +61,9 @@ bool Level2Scene::init()
 void Level2Scene::update(float deltaTime)
 {
 	UpdateController();
+	UpdateInfoBar();
 	m_maincharacter->GetInstance()->Update(deltaTime);
+	SetCamera(mainCharacter->getPosition());
 }
 
 void Level2Scene::AddListener()
@@ -77,6 +79,9 @@ void Level2Scene::AddListener()
 	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::NormalAttack, this));
 	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Defend, this));
 
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(Level2Scene::onContactBegin, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
 bool Level2Scene::OnTouchBegan(Touch* touch, Event* event)
@@ -140,4 +145,35 @@ void Level2Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 		m_maincharacter->GetInstance()->StopDefend();
 	}
 }
+
+bool Level2Scene::onContactBegin(PhysicsContact& contact)
+{
+	PhysicsBody* a = contact.getShapeA()->getBody();
+	PhysicsBody* b = contact.getShapeB()->getBody();
+
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK) 
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == Monster::MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == Monster::MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetDirection() == 1)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() - 15);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 2)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() + 15);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 3)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() + 15);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 4)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() - 15);
+		}
+	}
+	return true;
+}
+
 

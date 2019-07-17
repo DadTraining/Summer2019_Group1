@@ -169,8 +169,6 @@ res/animates/mainCharacter/rollBack/rollBack.plist
 0.1f
 10
 res/animates/mainCharacter/rollLeft/rollLeft.plist
-#TILEMAP
-6
 18
 0.1f
 6
@@ -224,7 +222,7 @@ res/animates/SpearMoblin/backAttack/backAttack.plist
 5
 res/animates/SpearMoblin/leftAttack/leftAttack.plist
 #TILEMAP
-5
+6
 0
 res/tiledMaps/home/home.tmx
 1
@@ -237,9 +235,6 @@ res/tiledMaps/map1/map_lv1.tmx
 res/tiledMaps/map2/map1.tmx
 5
 res/tiledMaps/map2/map1t.tmx
-res/tiledMaps/map1/map1.tmx
-4
-res/tiledMaps/map1/upperMap1.tmx
 #LABEL
 2
 0

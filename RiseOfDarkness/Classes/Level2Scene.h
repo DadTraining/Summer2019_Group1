@@ -29,7 +29,7 @@ public:
 	void SpecialAttack(Ref* sender, ui::Widget::TouchEventType type);
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
-
+	bool onContactBegin(PhysicsContact& contact);
 
 	CREATE_FUNC(Level2Scene);
 };

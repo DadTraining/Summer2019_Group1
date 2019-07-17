@@ -8,6 +8,9 @@ USING_NS_CC;
 
 class Monster
 {
+public:
+	static const int MONSTER_BITMASK = 4;
+
 private:
 	int mBlood;
 	int mDamage;
