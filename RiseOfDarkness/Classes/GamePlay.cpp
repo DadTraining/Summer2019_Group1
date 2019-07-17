@@ -130,6 +130,18 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 	mainCharacter = MainCharacter::GetInstance()->GetSprite();
 	mainCharacter->removeFromParent();
 	layer->addChild(mainCharacter, 1);
+	std::vector<Arrow*> mArrows= MainCharacter::GetInstance()->GetListArrow();
+	for (int i = 0; i < 10; i++)
+	{
+		auto sprite = Sprite::create("res/sprites/item/items_arrow_01.png");
+		sprite->setScaleX(0.6f);
+		Arrow *arrow = new Arrow(sprite);
+		arrow->SetVisible(false);
+		arrow->SetDistance(0);
+		layer->addChild(arrow->GetSprite(),7);
+		mArrows.push_back(arrow);
+	}
+	MainCharacter::GetInstance()->SetListArrow(mArrows);
 	auto obj = tileMap->objectGroupNamed(mc);
 	float x = obj->getObject(mc)["x"].asFloat();
 	float y = obj->getObject(mc)["y"].asFloat();

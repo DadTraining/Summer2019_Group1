@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "cocos2d.h"
-
+#include "Arrow.h"
 using namespace cocos2d;
 
 class MainCharacter
@@ -51,11 +51,16 @@ public:
 	void Run();
 	void StopRun();
 	void StopDefend();
+	void Fire(int);
+	void SetListArrow(std::vector<Arrow*>);
+	//get list arrows
+	std::vector<Arrow*> GetListArrow();
 private:
 	static MainCharacter* m_instance;
 	Sprite* mSprite;
 	Action* mAction[18];
 	PhysicsBody* mPhysicsBody;
+	std::vector<Arrow*>mArrows;
 	int stageLevel;
 	int currentState;
 	int direction;

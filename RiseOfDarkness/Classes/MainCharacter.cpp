@@ -1,3 +1,4 @@
+#include "Arrow.h"
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 
@@ -26,6 +27,8 @@ void MainCharacter::CreateMainCharacter()
 {
 	auto get = ResourceManager::GetInstance();
 
+	//CREATE LIST ARROW
+	
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
 	mSprite->setScale(2.0);
@@ -152,6 +155,13 @@ void MainCharacter::SetState(int nextState)
 void MainCharacter::Update(float deltaTime)
 {
 	Idle();
+	for (int i = 0; i < mArrows.size(); i++)
+	{
+		if (mArrows[i]->IsVisible())
+		{
+			mArrows[i]->update(deltaTime);
+		}
+	}
 }
 
 void MainCharacter::Idle()
@@ -205,6 +215,31 @@ void MainCharacter::StopDefend()
 	}
 }
 
+void MainCharacter::Fire(int direction)
+{
+	for (int i = 0; i < mArrows.size(); i++)
+	{
+		if (!mArrows[i]->IsVisible())
+		{
+			mArrows[i]->SetRotate(180);
+			mArrows[i]->SetPosition(mSprite->getPosition());
+			mArrows[i]->SetVisible(true);
+			mArrows[i]->SetDirection(direction);
+			break;
+		}
+	}
+}
+
+void MainCharacter::SetListArrow(std::vector<Arrow*> mArrows)
+{
+	this->mArrows = mArrows;
+}
+
+std::vector<Arrow*> MainCharacter::GetListArrow()
+{
+	return mArrows;
+}
+
 void MainCharacter::SpecialAttack()
 {
 	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
@@ -213,12 +248,20 @@ void MainCharacter::SpecialAttack()
 		{
 		case 1:
 			SetState(BACK_ARCHERY);
+			Fire(2);
 			break;
 		case 2:
 			SetState(FRONT_ARCHERY);
+			Fire(3);
+			break;
+		case 4:
+			SetState(LEFT_ARCHERY);
+			Fire(1);
 			break;
 		default:
 			SetState(LEFT_ARCHERY);
+			Fire(0);
+			break;
 		}
 	}
 }

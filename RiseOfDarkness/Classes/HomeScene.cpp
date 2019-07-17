@@ -16,7 +16,7 @@ vector<ui::Button*> itemEquipBox; // show grid inventory
 Scene* HomeScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	auto layer = HomeScene::create();
 
@@ -108,7 +108,7 @@ void HomeScene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		MainCharacter::GetInstance()->SpecialAttack();
+		MainCharacter::GetInstance()->NormalAttack();
 	}
 }
 
@@ -116,7 +116,8 @@ void HomeScene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		MainCharacter::GetInstance()->NormalAttack();
+		MainCharacter::GetInstance()->SpecialAttack();
+		
 	}
 }
 
@@ -217,89 +218,89 @@ void HomeScene::CreateAllButton(Layer* layer)
 {
 	auto get = ResourceManager::GetInstance();
 	// add button for test
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	for (int i = 0; i < 4; i++)
-	{
-		auto btn = ui::Button::create("res/sprites/item/box.png");
-		btn->setEnabled(false);
-		itemEquipBox.push_back(btn);
-	}
+	//auto visibleSize = Director::getInstance()->getVisibleSize();
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	auto btn = ui::Button::create("res/sprites/item/box.png");
+	//	btn->setEnabled(false);
+	//	itemEquipBox.push_back(btn);
+	//}
 
-	equipment = ui::Layout::create();
-	equipment->setContentSize(Size(128, 128));
-	equipment->setPosition(Vec2(equipment->getContentSize().width / 2,
-		visibleSize.height / 2 - equipment->getContentSize().height / 2));
-	equipment->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
-	equipment->setBackGroundColor(Color3B::GREEN);
-	equipment->setVisible(false);
-	addChild(equipment,15);
+	//equipment = ui::Layout::create();
+	//equipment->setContentSize(Size(128, 128));
+	//equipment->setPosition(Vec2(equipment->getContentSize().width / 2,
+	//	visibleSize.height / 2 - equipment->getContentSize().height / 2));
+	//equipment->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
+	//equipment->setBackGroundColor(Color3B::GREEN);
+	//equipment->setVisible(false);
+	//addChild(equipment,15);
 
-	int max_cols = equipment->getContentSize().width / 64;
+	//int max_cols = equipment->getContentSize().width / 64;
 
-	int cols = 0, rows = 0;
-	for (int i = 0; i < itemEquipBox.size(); i++)
-	{
-		if (cols == max_cols)
-		{
-			rows++;
-			cols = 0;
-		}
-		itemEquipBox[i]->setAnchorPoint(Vec2(0, 1));
-		//itemEquip[i]->setAnchorPoint(Vec2(0, 1));
-		itemEquipBox[i]->setPosition(Vec2(cols * 64, equipment->getContentSize().height - 64 * rows));
-		//itemEquip[i]->setPosition(itemEquipBox[i]->getPosition() + Vec2(16, -16));
-		equipment->addChild(itemEquipBox[i], 16);
-		//equipment->addChild(itemEquip[i], 6);
-		cols++;
-	}
+	//int cols = 0, rows = 0;
+	//for (int i = 0; i < itemEquipBox.size(); i++)
+	//{
+	//	if (cols == max_cols)
+	//	{
+	//		rows++;
+	//		cols = 0;
+	//	}
+	//	itemEquipBox[i]->setAnchorPoint(Vec2(0, 1));
+	//	//itemEquip[i]->setAnchorPoint(Vec2(0, 1));
+	//	itemEquipBox[i]->setPosition(Vec2(cols * 64, equipment->getContentSize().height - 64 * rows));
+	//	//itemEquip[i]->setPosition(itemEquipBox[i]->getPosition() + Vec2(16, -16));
+	//	equipment->addChild(itemEquipBox[i], 16);
+	//	//equipment->addChild(itemEquip[i], 6);
+	//	cols++;
+	//}
 
-	vector<ui::Button*> btnList;	//grid item
-	for (int i = 1; i <= 20; i++)
-	{
-		string path = "res/sprites/item/items_weapon_" + (i < 10 ? "0" + to_string(i) : to_string(i)) + ".png";
-		auto btn = ui::Button::create("res/sprites/item/box.png");
-		btn->setEnabled(false);
-		btnList.push_back(btn);
-		auto item = ui::Button::create(path);
-		item->addClickEventListener(CC_CALLBACK_1(HomeScene::itemCallback, this, i - 1));
-		items.push_back(item);
-	}
-	layout = ui::Layout::create();
-	layout->setContentSize(Size(320, 256));
-	layout->setPosition(Vec2(visibleSize.width / 2 - layout->getContentSize().width / 2,
-		visibleSize.height / 2 - layout->getContentSize().height / 2));
-	layout->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
-	layout->setBackGroundColor(Color3B::GREEN);
-	layout->setVisible(false);
-	addChild(layout,12);
-	log("layout: %f,%f", layout->getPositionX(), layout->getPositionY());
+	//vector<ui::Button*> btnList;	//grid item
+	//for (int i = 1; i <= 20; i++)
+	//{
+	//	string path = "res/sprites/item/items_weapon_" + (i < 10 ? "0" + to_string(i) : to_string(i)) + ".png";
+	//	auto btn = ui::Button::create("res/sprites/item/box.png");
+	//	btn->setEnabled(false);
+	//	btnList.push_back(btn);
+	//	auto item = ui::Button::create(path);
+	//	item->addClickEventListener(CC_CALLBACK_1(HomeScene::itemCallback, this, i - 1));
+	//	items.push_back(item);
+	//}
+	//layout = ui::Layout::create();
+	//layout->setContentSize(Size(320, 256));
+	//layout->setPosition(Vec2(visibleSize.width / 2 - layout->getContentSize().width / 2,
+	//	visibleSize.height / 2 - layout->getContentSize().height / 2));
+	//layout->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
+	//layout->setBackGroundColor(Color3B::GREEN);
+	//layout->setVisible(false);
+	//addChild(layout,12);
+	//log("layout: %f,%f", layout->getPositionX(), layout->getPositionY());
 
-	int max_col = layout->getContentSize().width / 64;
+	//int max_col = layout->getContentSize().width / 64;
 
-	int col = 0, row = 0;
-	for (int i = 0; i < btnList.size(); i++)
-	{
-		if (col == max_col)
-		{
-			row++;
-			col = 0;
-		}
-		btnList[i]->setAnchorPoint(Vec2(0, 1));
-		items[i]->setAnchorPoint(Vec2(0, 1));
-		btnList[i]->setPosition(Vec2(col * 64, layout->getContentSize().height - 64 * row));
-		items[i]->setPosition(btnList[i]->getPosition() + Vec2(16, -16));
-		layout->addChild(btnList[i], 15);
-		layout->addChild(items[i], 16);
-		col++;
-	}
+	//int col = 0, row = 0;
+	//for (int i = 0; i < btnList.size(); i++)
+	//{
+	//	if (col == max_col)
+	//	{
+	//		row++;
+	//		col = 0;
+	//	}
+	//	btnList[i]->setAnchorPoint(Vec2(0, 1));
+	//	items[i]->setAnchorPoint(Vec2(0, 1));
+	//	btnList[i]->setPosition(Vec2(col * 64, layout->getContentSize().height - 64 * row));
+	//	items[i]->setPosition(btnList[i]->getPosition() + Vec2(16, -16));
+	//	layout->addChild(btnList[i], 15);
+	//	layout->addChild(items[i], 16);
+	//	col++;
+	//}
 
-	auto table = ui::Button::create("res/sprites/item/inventory.png");
-	table->setAnchorPoint(Point(0, 0));
-	table->setPosition(visibleSize/2);
-	
-	addChild(table, 5);
+	//auto table = ui::Button::create("res/sprites/item/inventory.png");
+	//table->setAnchorPoint(Point(0, 0));
+	//table->setPosition(visibleSize/2);
+	//
+	//addChild(table, 5);
 
-	table->addClickEventListener(CC_CALLBACK_1(HomeScene::openInventory, this));
+	//table->addClickEventListener(CC_CALLBACK_1(HomeScene::openInventory, this));
 
 	// SPRITE ID 0
 	auto frameButton = get->GetSpriteById(18);
