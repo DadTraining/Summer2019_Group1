@@ -93,9 +93,12 @@ void Monster::Init()
 	mSprite->setScale(1.5f);
 
 	// physic body
-	mPhysicsBody = PhysicsBody::createBox(mSprite->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT, Vec2(0, 0));
+	mPhysicsBody = PhysicsBody::createBox(mSprite->getContentSize(), PhysicsMaterial(0, 0, 0), Vec2(0, 0));
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setRotationEnable(false);
+	mPhysicsBody->setDynamic(false);
+	mPhysicsBody->setCollisionBitmask(MONSTER_BITMASK);
+	mPhysicsBody->setContactTestBitmask(true);
 	mSprite->setPhysicsBody(mPhysicsBody);
 }
 
