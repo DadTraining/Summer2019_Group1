@@ -7,83 +7,11 @@ USING_NS_CC;
 GamePlay::GamePlay() {}
 GamePlay::~GamePlay() {}
 
-//void GamePlay::AddListener()
-//{
-//	auto touchListener = EventListenerTouchOneByOne::create();
-//	touchListener->onTouchBegan = CC_CALLBACK_2(HomeScene::OnTouchBegan, this);
-//	touchListener->onTouchEnded = CC_CALLBACK_2(HomeScene::OnTouchEnded, this);
-//	touchListener->onTouchMoved = CC_CALLBACK_2(HomeScene::OnTouchMoved, this);
-//	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
-//
-//	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(HomeScene::SpecialAttack, this));
-//	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(HomeScene::Evade, this));
-//	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(HomeScene::NormalAttack, this));
-//	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(HomeScene::Defend, this));
-//}
-//
-//bool GamePlay::OnTouchBeganSP(Touch* touch, Event* event)
-//{
-//	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
-//	mCurrentTouchPoint = touch->getLocation();
-//	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
-//	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
-//	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
-//	return true;
-//}
-//
-//bool GamePlay::OnTouchEndedSP(Touch* touch, Event* event)
-//{
-//	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
-//	mCurrentTouchPoint = Point(-1, -1);
-//	return true;
-//}
-//
-//void GamePlay::OnTouchMovedSP(Touch* touch, Event* event)
-//{
-//	/*Vec2 newPosition = touch->getPreviousLocation() - touch->getLocation() + camera->getPosition();
-//	SetCamera(newPosition);*/
-//	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
-//	mCurrentTouchPoint = touch->getLocation();
-//	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
-//	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
-//	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
-//}
-//
-//void GamePlay::SpecialAttackSP(Ref* sender, ui::Widget::TouchEventType type)
-//{
-//	if (type == ui::Widget::TouchEventType::BEGAN)
-//	{
-//		MainCharacter::GetInstance()->SpecialAttack();
-//	}
-//}
-//
-//void GamePlay::NormalAttackSP(Ref* sender, ui::Widget::TouchEventType type)
-//{
-//	if (type == ui::Widget::TouchEventType::BEGAN)
-//	{
-//		MainCharacter::GetInstance()->NormalAttack();
-//	}
-//}
-//
-//void GamePlay::EvadeSP(Ref* sender, ui::Widget::TouchEventType type)
-//{
-//	if (type == ui::Widget::TouchEventType::BEGAN)
-//	{
-//		MainCharacter::GetInstance()->Evade();
-//	}
-//}
-//
-//void GamePlay::DefendSP(Ref* sender, ui::Widget::TouchEventType type)
-//{
-//	if (type == ui::Widget::TouchEventType::BEGAN)
-//	{
-//		MainCharacter::GetInstance()->Defend();
-//	}
-//	if (type == ui::Widget::TouchEventType::ENDED)
-//	{
-//		MainCharacter::GetInstance()->StopDefend();
-//	}
-//}
+void GamePlay::UpdateInfoBar()
+{
+	hpLoadingBar->setPercent(MainCharacter::GetInstance()->GetPercentHP());
+	mpLoadingBar->setPercent(MainCharacter::GetInstance()->GetPercentMP());
+}
 
 void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* layer)
 {
@@ -98,6 +26,8 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 
 	// Create physics body world
 	auto edgeBody = PhysicsBody::createEdgeBox(tileMap->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+	edgeBody->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
+	edgeBody->setContactTestBitmask(true);
 	auto edgeNode = Node::create();
 	edgeNode->setPosition(tileMap->getContentSize() / 2);
 	edgeNode->setPhysicsBody(edgeBody);
@@ -116,6 +46,8 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 			{
 				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
 				physics->setDynamic(false);
+				physics->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
+				physics->setContactTestBitmask(true);
 				tileSet->setPhysicsBody(physics);
 			}
 		}
@@ -129,7 +61,7 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 	// Add main character
 	mainCharacter = MainCharacter::GetInstance()->GetSprite();
 	mainCharacter->removeFromParent();
-	layer->addChild(mainCharacter, 1);
+	MainCharacter::GetInstance()->AddToLayer(layer);
 	auto obj = tileMap->objectGroupNamed(mc);
 	float x = obj->getObject(mc)["x"].asFloat();
 	float y = obj->getObject(mc)["y"].asFloat();
@@ -275,12 +207,10 @@ void GamePlay::CreateAllButton(Layer* layer)
 
 	hpLoadingBar = get->GetLoadingbar(1);
 	hpLoadingBar->removeFromParent();
-	hpLoadingBar->setPercent(50);
 	layer->addChild(hpLoadingBar, 10);
 
 	mpLoadingBar = get->GetLoadingbar(2);
 	mpLoadingBar->removeFromParent();
-	mpLoadingBar->setPercent(50);
 	layer->addChild(mpLoadingBar, 10);
 
 	SetCamera(mainCharacter->getPosition());
@@ -370,7 +300,6 @@ void GamePlay::EnablePressed()
 		m_sprites[8]->setVisible(true);
 	}
 	MainCharacter::GetInstance()->Run();
-	SetCamera(mainCharacter->getPosition());
 }
 
 void GamePlay::UpdateController()
@@ -418,4 +347,3 @@ void GamePlay::UpdateController()
 	}
 	}
 }
-

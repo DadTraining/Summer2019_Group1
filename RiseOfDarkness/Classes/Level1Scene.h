@@ -8,6 +8,8 @@ using namespace cocos2d;
 
 class Level1Scene : public Layer, GamePlay
 {
+private:
+
 public:
     static cocos2d::Scene* CreateScene();
 
@@ -17,6 +19,8 @@ public:
 
 	void AddListener();
 
+	void CreateMonster();
+
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);
 	void OnTouchMoved(Touch* touch, Event* event);
@@ -24,6 +28,7 @@ public:
 	void SpecialAttack(Ref* sender, ui::Widget::TouchEventType type);
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
+	bool onContactBegin(PhysicsContact& contact);
 	
     CREATE_FUNC(Level1Scene);
 };

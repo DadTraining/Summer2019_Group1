@@ -8,7 +8,7 @@ USING_NS_CC;
 Scene* HomeScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	auto layer = HomeScene::create();
 
@@ -23,7 +23,8 @@ bool HomeScene::init()
 	{
 		return false;
 	}
-	
+
+
 	MainCharacter::GetInstance()->Refresh();
 
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(0);
@@ -35,10 +36,6 @@ bool HomeScene::init()
 	
 	AddListener();
 
-
-	
-	
-
 	scheduleUpdate();
 
 	return true;
@@ -48,8 +45,11 @@ void HomeScene::update(float deltaTime)
 {
 	UpdateController();
 
+	UpdateInfoBar();
+
 	MainCharacter::GetInstance()->Update(deltaTime);
 
+	SetCamera(mainCharacter->getPosition());
 }
 
 void HomeScene::AddListener()
@@ -71,6 +71,10 @@ void HomeScene::AddListener()
 		});
 		runAction(gotoMapScene);
 	});
+
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(HomeScene::onContactBegin, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
 bool HomeScene::OnTouchBegan(Touch* touch, Event* event)
@@ -103,7 +107,7 @@ void HomeScene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		MainCharacter::GetInstance()->SpecialAttack();
+		MainCharacter::GetInstance()->NormalAttack();
 	}
 }
 
@@ -111,7 +115,7 @@ void HomeScene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
-		MainCharacter::GetInstance()->NormalAttack();
+		MainCharacter::GetInstance()->SpecialAttack();
 	}
 }
 
@@ -133,6 +137,34 @@ void HomeScene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		MainCharacter::GetInstance()->StopDefend();
 	}
+}
+
+bool HomeScene::onContactBegin(PhysicsContact& contact)
+{
+	PhysicsBody* a = contact.getShapeA()->getBody();
+	PhysicsBody* b = contact.getShapeB()->getBody();
+
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetDirection() == 1)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() - 15);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 2)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() + 15);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 3)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() + 15);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 4)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() - 15);
+		}
+	}
+	return true;
 }
 
 void HomeScene::CreateAllButton(Layer* layer)
