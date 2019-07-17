@@ -147,21 +147,30 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
 	{
+		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
+			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
+		{
+			mainCharacter->stopAllActions();
+		}
 		if (MainCharacter::GetInstance()->GetDirection() == 1)
 		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() - 15);
+			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(1);
 		}
 		else if (MainCharacter::GetInstance()->GetDirection() == 2)
 		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() + 15);
+			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(2);
 		}
 		else if (MainCharacter::GetInstance()->GetDirection() == 3)
 		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() + 15);
+			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(3);
 		}
 		else if (MainCharacter::GetInstance()->GetDirection() == 4)
 		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() - 15);
+			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(4);
 		}
 	}
 	return true;

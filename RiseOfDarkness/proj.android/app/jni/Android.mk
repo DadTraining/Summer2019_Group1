@@ -23,7 +23,19 @@ LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/MainMenuScene.cpp \
                    $(LOCAL_PATH)/../../../Classes/MapScene.cpp \
                    $(LOCAL_PATH)/../../../Classes/ResourceManager.cpp \
-                   $(LOCAL_PATH)/../../../Classes/SelectScene.cpp 
+                   $(LOCAL_PATH)/../../../Classes/SelectScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Armor.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Arrow.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Enemy.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Inventory.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Item.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Level2Scene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Monster.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Pierce.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Potion.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Slash.cpp \
+                   $(LOCAL_PATH)/../../../Classes/SpearMoblin.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Weapon.cpp 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

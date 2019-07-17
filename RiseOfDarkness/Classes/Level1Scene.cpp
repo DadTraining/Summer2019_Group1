@@ -9,7 +9,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
