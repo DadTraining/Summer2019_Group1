@@ -2,21 +2,25 @@
 #define ENEMY_H
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 
 using namespace cocos2d;
 
 class Enemy
 {
 protected:
-	Sprite* mSprite;
+	Sprite* mSprite, *hpBar;
+	ui::LoadingBar* hpLoadingBar;
 	PhysicsBody* mPhysicsBody;
 	float currentHP, maxHP;
 	int direction;
 	float countingTime;
+	int currentState;
 public:
 	Enemy();
 	virtual ~Enemy();
 
+	virtual void SetState(int nextState) = 0;
 	virtual float GetPercentHP();
 	virtual Sprite* GetSprite();
 	virtual PhysicsBody* GetPhysicsBody();

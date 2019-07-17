@@ -10,14 +10,20 @@ using namespace cocos2d;
 class MainCharacter
 {
 public:
+	// BIT MASK
 	static const int MAIN_CHARACTER_BITMASK = 0;
 	static const int OBSTACLE_BITMASK = 1;
 	static const int SLASH_BITMASK = 2;
-	static const int MONSTER_ATTACK_BITMASK = 3;
+	static const int SPEARMOBLIN_BITMASK = 3;
+	static const int PIERCE_BITMASK = 4;
 
+	// STATUS
 	static const int SPEED = 2;
 	static const int ATTACK = 20;
 	static const int DEFEND = 10;
+
+	// DAMAGE ALL CHARACTER
+	static const int SPEARMOBLIN_DAMAGE = 40;
 
 	static const int FRONT_IDLE = 0;
 	static const int BACK_IDLE = 1;
@@ -66,10 +72,12 @@ public:
 	void StopDefend();
 	float GetPercentHP();
 	float GetPercentMP();
+	int GetAttack();
 	void AutoRevive(float deltaTime);
 	void AddToLayer(Layer* layer);
 	void GetDamage(int damage);
 	bool IsAlive();
+	void SetPreventRun(int prevent);
 private:
 	static MainCharacter* m_instance;
 	Sprite* mSprite;
@@ -81,8 +89,8 @@ private:
 	int speed;
 	int attack;
 	int defend;
+	int preventRun;
 	float maxHP, currentHP, maxMP, currentMP;
-	Size box;
 	float countingTime;
 	std::string mName;
 	Slash* slash;

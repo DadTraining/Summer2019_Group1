@@ -23,6 +23,10 @@ bool Enemy::IsAlive()
 {
 	if (currentHP <= 0)
 	{
+		mPhysicsBody->setContactTestBitmask(false);
+		mSprite->setVisible(false);
+		hpBar->setVisible(false);
+		hpLoadingBar->setVisible(false);
 		return false;
 	}
 	return true;
