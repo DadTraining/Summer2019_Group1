@@ -61,6 +61,7 @@ void MainCharacter::CreateMainCharacter()
 	mAction[DEAD] = ResourceManager::GetInstance()->GetActionById(21);
 
 	// CREATE PHYSICS BODY 
+	Size box;
 	box.width = mSprite->getContentSize().width / 1.5;
 	box.height = mSprite->getContentSize().height / 3;
 	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height));
@@ -83,6 +84,7 @@ void MainCharacter::CreateMainCharacter()
 	maxMP = 100;
 	currentHP = maxHP;
 	currentMP = maxMP;
+	preventRun = 0;
 }
 
 void MainCharacter::Refresh()
@@ -190,7 +192,7 @@ void MainCharacter::Idle()
 	{
 		if (currentState == BACK_SLASH || currentState == FRONT_SLASH || currentState == LEFT_SLASH)
 		{
-			slash->GetPhysicsBody()->setContactTestBitmask(false);
+			slash->GetSprite()->setPosition(Vec2(-1, -1));
 		}
 		switch (direction)
 		{
@@ -261,7 +263,6 @@ void MainCharacter::NormalAttack()
 {
 	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
 	{
-		slash->GetPhysicsBody()->setContactTestBitmask(true);
 		switch (direction)
 		{
 		case 1:
@@ -271,7 +272,7 @@ void MainCharacter::NormalAttack()
 			break;
 		case 2:
 			SetState(FRONT_SLASH);
-			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() - 20));
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() - 30));
 			slash->GetSprite()->setRotation(0);
 			break;
 		case 3:
@@ -315,6 +316,11 @@ void MainCharacter::Evade()
 	}
 }
 
+void MainCharacter::SetPreventRun(int prevent)
+{
+	preventRun = prevent;
+}
+
 void MainCharacter::Run()
 {
 	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD && currentHP > 0)
@@ -323,19 +329,47 @@ void MainCharacter::Run()
 		{
 		case 1:
 			SetState(GO_UP);
-			mSprite->setPositionY(mSprite->getPositionY() + speed);
+			if (preventRun != 1)
+			{
+				mSprite->setPositionY(mSprite->getPositionY() + speed);
+				if (preventRun != 0)
+				{
+					preventRun = 0;
+				}
+			}
 			break;
 		case 2:
 			SetState(GO_DOWN);
-			mSprite->setPositionY(mSprite->getPositionY() - speed);
+			if (preventRun != 2)
+			{
+				mSprite->setPositionY(mSprite->getPositionY() - speed);
+				if (preventRun != 0)
+				{
+					preventRun = 0;
+				}
+			}
 			break;
 		case 3:
 			SetState(GO_LEFT);
-			mSprite->setPositionX(mSprite->getPositionX() - speed);
+			if (preventRun != 3)
+			{
+				mSprite->setPositionX(mSprite->getPositionX() - speed);
+				if (preventRun != 0)
+				{
+					preventRun = 0;
+				}
+			}
 			break;
 		case 4:
 			SetState(GO_LEFT);
-			mSprite->setPositionX(mSprite->getPositionX() + speed);
+			if (preventRun != 4)
+			{
+				mSprite->setPositionX(mSprite->getPositionX() + speed);
+				if (preventRun != 0)
+				{
+					preventRun = 0;
+				}
+			}
 		}
 	}
 }
@@ -343,7 +377,7 @@ void MainCharacter::Run()
 void MainCharacter::GetDamage(int damage)
 {
 	currentHP += defend - damage;
-	slash->GetPhysicsBody()->setContactTestBitmask(false);
+	slash->GetSprite()->setPosition(Vec2(-1, -1));
 	switch (direction)
 	{
 	case 1:
@@ -434,6 +468,11 @@ int MainCharacter::GetStageLevel()
 int MainCharacter::GetDirection()
 {
 	return direction;
+}
+
+int MainCharacter::GetAttack()
+{
+	return attack;
 }
 
 void MainCharacter::SetDirection(int direction)

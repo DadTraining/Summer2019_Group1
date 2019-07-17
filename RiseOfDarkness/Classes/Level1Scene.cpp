@@ -1,6 +1,7 @@
 #include "Level1Scene.h"
 #include "MainCharacter.h"
 #include "ResourceManager.h"
+#include "SpearMoblin.h"
 using namespace std;
 
 USING_NS_CC;
@@ -52,11 +53,31 @@ void Level1Scene::update(float deltaTime)
 	MainCharacter::GetInstance()->Update(deltaTime);
 
 	SetCamera(mainCharacter->getPosition());
+
+	for (int i = 0; i < m_SpearMoblins.size(); i++)
+	{
+		if (m_SpearMoblins[i]->GetSprite()->isVisible())
+		{
+			m_SpearMoblins[i]->Update(deltaTime);
+		}
+	}
 }
 
 void Level1Scene::CreateMonster()
 {
-
+	float x, y;
+	auto spearGoblinGroup = tileMap->getObjectGroup("SpearMoblin");
+	int amount = 3;
+	char str[10];
+	for (int i = 1; i <= amount; i++)
+	{
+		SpearMoblin *spearMoblin = new SpearMoblin(this, i + 2);
+		sprintf(str, "%02d", i);
+		x = spearGoblinGroup->getObject(str)["x"].asFloat();
+		y = spearGoblinGroup->getObject(str)["y"].asFloat();
+		spearMoblin->GetSprite()->setPosition(x, y);
+		m_SpearMoblins.push_back(spearMoblin);
+	}
 }
 
 void Level1Scene::AddListener()
@@ -108,31 +129,49 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
 
+	// MAIN CHARACTER WITH OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
 	{
+		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
+			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
+		{
+			mainCharacter->stopAllActions();
+		}
 		if (MainCharacter::GetInstance()->GetDirection() == 1)
 		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() - 15);
+			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(1);
 		}
 		else if (MainCharacter::GetInstance()->GetDirection() == 2)
 		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() + 15);
+			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(2);
 		}
 		else if (MainCharacter::GetInstance()->GetDirection() == 3)
 		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() + 15);
+			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(3);
 		}
 		else if (MainCharacter::GetInstance()->GetDirection() == 4)
 		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() - 15);
+			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(4);
 		}
 	}
 
-	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::MONSTER_ATTACK_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MONSTER_ATTACK_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	// MAIN CHARACTER SLASH SPEARMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
 	{
-		
+		m_SpearMoblins.at(a->getGroup())->GetDamage(MainCharacter::GetInstance()->GetAttack());
+	}
+
+	// SPEARMOBLIN PIERCE MAIN CHARACTER
+	if ((a->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
 	}
 	return true;
 }

@@ -1,5 +1,5 @@
 #SPRITE
-24
+25
 0
 res/sprites/character/mainCharacter.png
 1
@@ -48,6 +48,8 @@ res/sprites/gameplay/hp_back.png
 res/sprites/gameplay/mp_back.png
 23
 res/sprites/gameplay/arrow.png
+24
+res/sprites/character/spearMoblin.png
 #BUTTON
 15
 0
@@ -240,10 +242,16 @@ res/labels/MarkerFelt.ttf
 1
 res/labels/MarkerFelt.ttf
 #LOADING_BAR
-3
+6
 0
 res/loadingbar/loadingbar.png
 1
 res/loadingbar/color_hp.png
 2
 res/loadingbar/color_mp.png
+3
+res/loadingbar/color_hp.png
+4
+res/loadingbar/color_hp.png
+5
+res/loadingbar/color_hp.png

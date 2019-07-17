@@ -1,16 +1,16 @@
-#include "Slash.h"
+#include "Pierce.h"
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 
-Slash::Slash() {}
+Pierce::Pierce() {}
 
-Slash::Slash(Layer* layer)
+Pierce::Pierce(Layer* layer)
 {
-	mSprite = ResourceManager::GetInstance()->GetSpriteById(23);
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
 	mSprite->setVisible(false);
 	mPhysicsBody = PhysicsBody::createBox(mSprite->getContentSize(), PhysicsMaterial(0, 0, 0));
 	mPhysicsBody->setRotationEnable(false);
-	mPhysicsBody->setCollisionBitmask(MainCharacter::SLASH_BITMASK);
+	mPhysicsBody->setCollisionBitmask(MainCharacter::PIERCE_BITMASK);
 	mPhysicsBody->setDynamic(false);
 	mPhysicsBody->setContactTestBitmask(true);
 	mPhysicsBody->setGravityEnable(false);
@@ -18,14 +18,14 @@ Slash::Slash(Layer* layer)
 	layer->addChild(mSprite, 1);
 }
 
-Slash::~Slash() {}
+Pierce::~Pierce() {}
 
-Sprite* Slash::GetSprite()
+Sprite* Pierce::GetSprite()
 {
 	return mSprite;
 }
 
-PhysicsBody* Slash::GetPhysicsBody()
+PhysicsBody* Pierce::GetPhysicsBody()
 {
 	return mPhysicsBody;
 }
