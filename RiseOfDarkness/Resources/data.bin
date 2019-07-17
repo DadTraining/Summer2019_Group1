@@ -224,7 +224,7 @@ res/animates/SpearMoblin/backAttack/backAttack.plist
 5
 res/animates/SpearMoblin/leftAttack/leftAttack.plist
 #TILEMAP
-5
+7
 0
 res/tiledMaps/home/home.tmx
 1
@@ -235,6 +235,10 @@ res/tiledMaps/mapScene/selectMap.tmx
 res/tiledMaps/map1/map1.tmx
 4
 res/tiledMaps/map1/upperMap1.tmx
+5
+res/tiledMaps/map2/map1.tmx
+6
+res/tiledMaps/map2/map1t.tmx
 #LABEL
 2
 0

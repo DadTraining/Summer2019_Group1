@@ -40,6 +40,12 @@
     <ClCompile Include="..\Classes\GamePlay.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Level2Scene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Monster.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\Slash.cpp" />
     <ClCompile Include="..\Classes\Enemy.cpp" />
     <ClCompile Include="..\Classes\SpearMoblin.cpp" />
@@ -83,6 +89,12 @@
       <Filter>win32</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\GamePlay.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level2Scene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Monster.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Slash.h" />

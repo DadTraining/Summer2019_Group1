@@ -2,6 +2,7 @@
 #include <String.h>
 #include <iostream>
 #include "HomeScene.h"
+#include "Level2Scene.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include "Level1Scene.h"
@@ -75,7 +76,7 @@ bool InputNameScene::init()
 			if (MainCharacter::GetInstance()->GetName() != "")
 			{
 				auto gotoNext = CallFunc::create([]() {
-					Director::getInstance()->replaceScene(Level1Scene::CreateScene());
+					Director::getInstance()->replaceScene(Level2Scene::CreateScene());
 				});
 				runAction(gotoNext);
 			}
