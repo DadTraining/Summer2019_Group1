@@ -9,7 +9,7 @@ using namespace std;
 Scene* Level2Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	auto layer = Level2Scene::create();
 
@@ -152,6 +152,36 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	PhysicsBody* b = contact.getShapeB()->getBody();
 
 	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
+			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
+		{
+			mainCharacter->stopAllActions();
+		}
+		if (MainCharacter::GetInstance()->GetDirection() == 1)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(1);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 2)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(2);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 3)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(3);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 4)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(4);
+		}
+	}
+
+	/*if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK) 
 		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == Monster::MONSTER_BITMASK)
 		|| (a->getCollisionBitmask() == Monster::MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
@@ -172,7 +202,7 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		{
 			mainCharacter->setPositionX(mainCharacter->getPositionX() - 15);
 		}
-	}
+	}*/
 	return true;
 }
 
