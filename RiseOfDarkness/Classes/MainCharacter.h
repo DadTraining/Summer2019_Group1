@@ -5,6 +5,8 @@
 #include "Slash.h"
 #include <vector>
 #include "Arrow.h"
+#include "Item.h"
+#include "Inventory.h"
 using namespace cocos2d;
 
 class MainCharacter
@@ -87,6 +89,9 @@ private:
 	Action* mAction[22];
 	PhysicsBody* mPhysicsBody;
 	std::vector<Arrow*>mArrows;
+	std::vector<int> mAllItems;
+	std::vector<Item*> mItems;
+	Inventory *inventory;
 
 	int stageLevel;
 	int currentState;

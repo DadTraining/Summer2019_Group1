@@ -6,6 +6,6 @@ private:
 	int hp_regen;
 	int mp_regen;
 public:
-	Potion();
+	Potion(int);
 	~Potion();
 };
