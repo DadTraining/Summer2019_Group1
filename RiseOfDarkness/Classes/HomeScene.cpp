@@ -176,6 +176,13 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 	return true;
 }
 
+void HomeScene::OpenInventory(cocos2d::Ref * sender)
+{
+	MainCharacter::GetInstance()->GetInventory()->SetVisible(
+		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	);
+}
+
 void HomeScene::CreateAllButton(Layer* layer)
 {
 	auto get = ResourceManager::GetInstance();
@@ -289,6 +296,13 @@ void HomeScene::CreateAllButton(Layer* layer)
 	layer->addChild(map, 7);
 	m_buttons.push_back(map);
 
+	//BUTTON OPEN INVENTORY
+	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
+	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
+	buttonOpenInventory->retain();
+	layer->addChild(buttonOpenInventory, 7);
+	m_buttons.push_back(buttonOpenInventory);
+
 	mName = get->GetLabelById(0);
 	mName->setString(MainCharacter::GetInstance()->GetName());
 	mName->removeFromParent();
@@ -378,7 +392,8 @@ void HomeScene::SetCamera(Vec2 pos)
 	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
 
 	m_buttons[4]->setPosition(Vec2(pos.x, pos.y - visibleSize.height / 2));
-
+	m_buttons[5]->setPosition(Vec2(pos.x+visibleSize.width/8, pos.y - visibleSize.height / 2));
+	m_buttons[5]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));
 	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2);
 	mName->setPosition(pos.x - visibleSize.width / 2 + m_sprites[10]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_sprites[10]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
 	m_sprites[11]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_sprites[10]->getBoundingBox().size.height);
@@ -388,4 +403,7 @@ void HomeScene::SetCamera(Vec2 pos)
 	m_sprites[13]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
 	hpLoadingBar->setPosition(m_sprites[12]->getPosition());
 	mpLoadingBar->setPosition(m_sprites[13]->getPosition());
+
+	//AddChild inventory
+	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
 }

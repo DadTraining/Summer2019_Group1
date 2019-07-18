@@ -13,6 +13,8 @@ public:
 	void UseItem(int);
 	void SetCapacity(int);
 	int GetCapacity();
+	void SetVisible(bool b);
+	bool IsVisible();
 	void SetSpritePosition(cocos2d::Vec2 pos);
 	cocos2d::Vec2 GetSpritePosition();
 	void AddToLayer(cocos2d::Layer*);

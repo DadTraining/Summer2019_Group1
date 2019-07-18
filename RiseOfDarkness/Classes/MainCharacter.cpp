@@ -31,8 +31,9 @@ void MainCharacter::AddToLayer(Layer* layer)
 		layer->addChild(arrow->GetSprite(), 7);
 		mArrows.push_back(arrow);
 	}
-	inventory->SetSpritePosition(Vec2(500, 250));
+	//inventory->SetSpritePosition(Vec2(500, 250));
 	inventory->AddToLayer(layer);
+	inventory->SetVisible(false);
 	auto items = inventory->GetItems();
 	for (int i = 0; i < items.size(); i++)
 	{
@@ -524,6 +525,11 @@ Sprite* MainCharacter::GetSprite()
 std::string MainCharacter::GetName()
 {
 	return mName;
+}
+
+Inventory * MainCharacter::GetInventory()
+{
+	return inventory;
 }
 
 int MainCharacter::GetStageLevel()

@@ -61,6 +61,7 @@ public:
 	void SetState(int nextStage);
 	int GetSpeed();
 	std::string GetName();
+	Inventory *GetInventory();
 	int GetStageLevel();
 	int GetDirection();
 	void SetDirection(int direction);
