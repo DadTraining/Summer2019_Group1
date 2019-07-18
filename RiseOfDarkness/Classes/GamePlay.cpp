@@ -177,6 +177,27 @@ void GamePlay::CreateAllButton(Layer* layer)
 	layer->addChild(defend, 6);
 	m_buttons.push_back(defend);
 
+	// PAUSE BUTTON ID 4
+	auto pause = get->GetButtonById(16);
+	pause->removeFromParent();
+	pause->setAnchorPoint(Vec2(1, 1));
+	layer->addChild(pause, 6);
+	m_buttons.push_back(pause);
+
+	// RESUME BUTTON ID 5
+	auto resume = get->GetButtonById(17);
+	resume->removeFromParent();
+	resume->setVisible(false);
+	layer->addChild(resume, 6);
+	m_buttons.push_back(resume);
+
+	// RETURN MAP BUTTON ID 6
+	auto returnMap = get->GetButtonById(18);
+	returnMap->removeFromParent();
+	returnMap->setVisible(false);
+	layer->addChild(returnMap, 6);
+	m_buttons.push_back(returnMap);
+
 	mName = get->GetLabelById(0);
 	mName->setString(MainCharacter::GetInstance()->GetName());
 	mName->removeFromParent();
@@ -262,6 +283,10 @@ void GamePlay::SetCamera(Vec2 pos)
 	m_buttons[1]->setPosition(Vec2(frameSkillButtonPosition.x, frameSkillButtonPosition.y - frameSkillButtonSize.height / 1.5));
 	m_buttons[2]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
 	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
+	
+	m_buttons[4]->setPosition(Vec2(pos + visibleSize / 2));
+	m_buttons[5]->setPosition(Vec2(pos.x, pos.y + m_buttons[5]->getBoundingBox().size.height));
+	m_buttons[6]->setPosition(Vec2(pos.x, pos.y - m_buttons[6]->getBoundingBox().size.height));
 
 	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2);
 	mName->setPosition(pos.x - visibleSize.width / 2 + m_sprites[10]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_sprites[10]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));

@@ -2,6 +2,7 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 #include "SpearMoblin.h"
+#include "MapScene.h"
 using namespace std;
 
 USING_NS_CC;
@@ -9,7 +10,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -93,6 +94,31 @@ void Level1Scene::AddListener()
 	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level1Scene::NormalAttack, this));
 	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level1Scene::Defend, this));
 
+	m_buttons[4]->addClickEventListener([&](Ref* event) {
+		if (!m_buttons[5]->isVisible())
+		{
+			m_buttons[5]->setVisible(true);
+			m_buttons[6]->setVisible(true);
+			Director::getInstance()->pause();
+		}
+	});
+
+	m_buttons[5]->addClickEventListener([&](Ref* event) {
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(false);
+		Director::getInstance()->resume();
+	});
+
+	m_buttons[6]->addClickEventListener([&](Ref* event) {
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(false);
+		Director::getInstance()->resume();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(MapScene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
+
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level1Scene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
@@ -160,11 +186,36 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	// ARROW COLLIDE WITH OBSTACLE
+	if (a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+	{
+		MainCharacter::GetInstance()->GetListArrow().at(a->getGroup())->SetVisible(false);
+	}
+	else if (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
+	{
+		MainCharacter::GetInstance()->GetListArrow().at(b->getGroup())->SetVisible(false);
+	}
+
 	// MAIN CHARACTER SLASH SPEARMOBLIN
-	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	if (a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+	{
+		m_SpearMoblins.at(b->getGroup())->GetDamage(MainCharacter::GetInstance()->GetAttack());
+	}
+	else if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK)
 	{
 		m_SpearMoblins.at(a->getGroup())->GetDamage(MainCharacter::GetInstance()->GetAttack());
+	}
+
+	// MAIN CHARACTER'S ARROW COLLIDE SPEARMOBLIN
+	if (a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+	{
+		m_SpearMoblins.at(b->getGroup())->GetDamage(MainCharacter::NORMAL_ARROW);
+		//MainCharacter::GetInstance()->GetListArrow().at(a->getGroup())->SetVisible(false);
+	}
+	else if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
+	{
+		m_SpearMoblins.at(a->getGroup())->GetDamage(MainCharacter::NORMAL_ARROW);
+		//MainCharacter::GetInstance()->GetListArrow().at(b->getGroup())->SetVisible(false);
 	}
 
 	// SPEARMOBLIN PIERCE MAIN CHARACTER

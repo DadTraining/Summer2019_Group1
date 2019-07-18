@@ -9,7 +9,8 @@ Arrow::Arrow(Sprite* sprite)
 	mPhysicsBody = PhysicsBody::createBox(Size(mSprite->getContentSize()), PhysicsMaterial(1.0f, 0.0f, 1.0f));
 	mPhysicsBody->setRotationEnable(false);
 	mPhysicsBody->setGravityEnable(false);
-	mPhysicsBody->setCollisionBitmask(102);
+	mPhysicsBody->setDynamic(false);
+	mPhysicsBody->setCollisionBitmask(MainCharacter::NORMAL_ARROW_BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);	
 	mSprite->setPhysicsBody(mPhysicsBody);
 	setAlive(false);
@@ -70,6 +71,7 @@ void Arrow::update(float deltaTime)
 		{
 			//setAlive(false);
 			mSprite->setVisible(false);
+			mSprite->setPosition(Vec2(-10, -10));
 			SetDistance(0);
 		}
 }
@@ -77,6 +79,11 @@ void Arrow::update(float deltaTime)
 void Arrow::SetVisible(bool b)
 {
 	mSprite->setVisible(b);
+	SetDistance(0);
+	if (!b)
+	{
+		mSprite->setPosition(Vec2(-1, -1));
+	}
 }
 
 bool Arrow::IsVisible()
