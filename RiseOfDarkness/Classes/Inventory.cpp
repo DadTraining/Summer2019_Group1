@@ -5,7 +5,7 @@
 #include "Weapon.h"
 
 using namespace std;
-Inventory::Inventory()
+Inventory::Inventory(Sprite* sprite)
 {
 	capacity = 24;
 }
@@ -16,7 +16,7 @@ Inventory::~Inventory()
 
 void Inventory::Init()
 {
-	items.reserve(capacity);
+	
 }
 
 void Inventory::AddItem(int)
@@ -39,4 +39,9 @@ void Inventory::SetCapacity(int)
 int Inventory::GetCapacity()
 {
 	return capacity;
+}
+
+std::vector<Item*> Inventory::GetItems()
+{
+	return std::vector<Item*>();
 }
