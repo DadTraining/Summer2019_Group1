@@ -3,8 +3,11 @@
 
 #include "cocos2d.h"
 #include <vector>
+#include <list>
+#include "Bullet.h"
 
 USING_NS_CC;
+using namespace std;
 
 class Monster
 {
@@ -19,6 +22,7 @@ private:
 	int mDirection;
 	int mCurrentState;
 	bool isRun;
+	list<Bullet*> m_bullets;
 	Sprite* mSprite;
 	Action* mAction[10];
 	PhysicsBody* mPhysicsBody;

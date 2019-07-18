@@ -1,8 +1,14 @@
 #include "Monster.h"
+#include "ResourceManager.h"
 
 Monster::Monster(Layer * layer)
 {
 	Init();
+	/*for (int i = 0; i < 3; i++)
+	{
+		m_bullets.push_back(new Bullet(layer));
+	}*/
+	m_bullets.push_back(new Bullet(layer));
 	layer->addChild(mSprite, 1);
 }
 
@@ -78,7 +84,9 @@ void Monster::Init()
 	mDirection = 1;
 	mCurrentState = 0;
 
-	mSprite = Sprite::create("monster.png");
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(24));
+	mSprite->removeFromParent();
+
 	mSprite->setScale(1.5f);
 
 	// physic body
@@ -105,9 +113,27 @@ void Monster::Run()
 	this->isRun = true;
 }
 
+int numBl = 0;
 void Monster::Update(float deltaTime)
 {
-	
+	if (numBl == 3)
+	{
+		Hit();
+		numBl = 0;
+	}
+	else
+	{
+		numBl++;
+	}
+	list<Bullet*>::iterator ind = this->m_bullets.begin();
+	for (int i = 0; i < this->m_bullets.size(); i++)
+	{
+		if ((*ind)->GetSprite()->isVisible())
+		{
+			(*ind)->Update(deltaTime, mSprite->getPosition());
+		}
+		ind++;
+	}
 }
 
 bool Monster::Detect(Vec2 posMc)
@@ -118,7 +144,7 @@ bool Monster::Detect(Vec2 posMc)
 	dis = sqrt(pow((mSprite->getPosition().x - posMc.x), 2)
 		+ pow((mSprite->getPosition().y - posMc.y), 2));
 	log("DIS: %f", dis);
-	if (dis <= 50)
+	if (dis <= 100)
 	{
 		log("DETECT !");
 		return true;
@@ -136,7 +162,17 @@ void Monster::StopRun()
 
 void Monster::Hit()
 {
-	log("HIT...HIT...HIT");
+	list<Bullet*>::iterator ind = this->m_bullets.begin();
+	for (int i = 0; i < this->m_bullets.size(); i++)
+	{
+		if (!(*ind)->GetSprite()->isVisible())
+		{
+			(*ind)->GetSprite()->setPosition(this->mSprite->getPosition());
+			(*ind)->GetSprite()->setVisible(true);
+			break;
+		}
+		ind++;
+	}
 }
 
 void Monster::StartRun()

@@ -1,5 +1,5 @@
 #SPRITE
-24
+26
 0
 res/sprites/character/mainCharacter.png
 1
@@ -48,6 +48,10 @@ res/sprites/gameplay/hp_back.png
 res/sprites/gameplay/mp_back.png
 23
 res/sprites/gameplay/arrow.png
+24
+res/sprites/monster/monster.png
+25
+res/sprites/monster/bullet.png
 #BUTTON
 15
 0

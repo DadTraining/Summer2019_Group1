@@ -70,7 +70,7 @@ void Level2Scene::update(float deltaTime)
 		if (m_monster[j]->Detect(mainCharacter->getPosition()) == true)
 		{
 			m_monster[j]->StopRun();
-			m_monster[j]->Hit();
+			m_monster[j]->Update(deltaTime);
 		}
 		else
 		{
