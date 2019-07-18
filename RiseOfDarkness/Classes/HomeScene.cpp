@@ -317,6 +317,20 @@ void HomeScene::CreateAllButton(Layer* layer)
 	mpLoadingBar->removeFromParent();
 	mpLoadingBar->setPercent(50);
 	layer->addChild(mpLoadingBar, 10);
+	
+	
+	//==================
+	/*auto coin_bg = Sprite::create("res/sprites/coin_bg.png");
+	//coin_bg->removeFromParent();
+	coin_bg->setAnchorPoint(Vec2(0,2));
+	layer->addChild(coin_bg, 11);
+	m_sprites.push_back(coin_bg);
+
+	auto coin = Sprite::create("res/sprites/coin.png");
+	//coin_bg->removeFromParent();
+	coin->setAnchorPoint(Vec2(0, 1));
+	layer->addChild(coin,11);
+	m_sprites.push_back(coin);*/
 
 	SetCamera(mainCharacter->getPosition());
 }
@@ -379,4 +393,11 @@ void HomeScene::SetCamera(Vec2 pos)
 	m_sprites[13]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
 	hpLoadingBar->setPosition(m_sprites[12]->getPosition());
 	mpLoadingBar->setPosition(m_sprites[13]->getPosition());
+	
+	//m_sprites[14]->setPosition(Vec2(infoBarPosition.x, infoBarPosition.y + 100));
+	//m_sprites[15]->setPosition(Vec2(infoBarPosition.x, infoBarPosition.y + 200));
+
+	//coin->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 2.8);
+	
+	
 }

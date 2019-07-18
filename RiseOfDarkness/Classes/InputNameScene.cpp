@@ -5,6 +5,7 @@
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include "Level1Scene.h"
+#include "Level3Scene.h"
 USING_NS_CC;
 
 Scene* InputNameScene::CreateScene()
@@ -75,7 +76,7 @@ bool InputNameScene::init()
 			if (MainCharacter::GetInstance()->GetName() != "")
 			{
 				auto gotoNext = CallFunc::create([]() {
-					Director::getInstance()->replaceScene(HomeScene::CreateScene());
+					Director::getInstance()->replaceScene(Level3Scene::CreateScene());
 				});
 				runAction(gotoNext);
 			}
