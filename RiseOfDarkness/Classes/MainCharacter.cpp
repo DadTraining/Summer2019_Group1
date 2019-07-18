@@ -1,6 +1,6 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
-
+#include "Arrow.h"
 MainCharacter* MainCharacter::m_instance = nullptr;
 
 MainCharacter::MainCharacter() {}
@@ -20,6 +20,16 @@ void MainCharacter::AddToLayer(Layer* layer)
 {
 	layer->addChild(mSprite, 1);
 	slash = new Slash(layer);
+	for (int i = 0; i < 10; i++)
+	{
+		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+		sprite->setScaleX(0.6f);
+		Arrow *arrow = new Arrow(sprite);
+		arrow->SetVisible(false);
+		arrow->SetDistance(0);
+		layer->addChild(arrow->GetSprite(), 7);
+		mArrows.push_back(arrow);
+	}
 }
 
 void MainCharacter::Init(std::string name)
@@ -181,6 +191,13 @@ void MainCharacter::Update(float deltaTime)
 	if (IsAlive())
 	{
 		Idle();
+		for (int i = 0; i < mArrows.size(); i++)
+		{
+			if (mArrows[i]->IsVisible())
+			{
+				mArrows[i]->update(deltaTime);
+			}
+		}
 
 		AutoRevive(deltaTime);
 	}
@@ -241,6 +258,31 @@ void MainCharacter::StopDefend()
 	}
 }
 
+void MainCharacter::Fire(int direction)
+{
+	for (int i = 0; i < mArrows.size(); i++)
+	{
+		if (!mArrows[i]->IsVisible())
+		{
+			mArrows[i]->SetRotate(180);
+			mArrows[i]->SetPosition(mSprite->getPosition());
+			mArrows[i]->SetVisible(true);
+			mArrows[i]->SetDirection(direction);
+			break;
+		}
+	}
+}
+
+void MainCharacter::SetListArrow(std::vector<Arrow*> mArrows)
+{
+	this->mArrows = mArrows;
+}
+
+std::vector<Arrow*> MainCharacter::GetListArrow()
+{
+	return mArrows;
+}
+
 void MainCharacter::SpecialAttack()
 {
 	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
@@ -249,12 +291,20 @@ void MainCharacter::SpecialAttack()
 		{
 		case 1:
 			SetState(BACK_ARCHERY);
+			Fire(2);
 			break;
 		case 2:
 			SetState(FRONT_ARCHERY);
+			Fire(3);
+			break;
+		case 4:
+			SetState(LEFT_ARCHERY);
+			Fire(1);
 			break;
 		default:
 			SetState(LEFT_ARCHERY);
+			Fire(0);
+			break;
 		}
 	}
 }

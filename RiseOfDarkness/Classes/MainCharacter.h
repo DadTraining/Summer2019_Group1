@@ -3,7 +3,8 @@
 
 #include "cocos2d.h"
 #include "Slash.h"
-
+#include <vector>
+#include "Arrow.h"
 using namespace cocos2d;
 
 class MainCharacter
@@ -68,6 +69,9 @@ public:
 	void Evade();
 	void Run();
 	void StopRun();
+	void Fire(int);
+	void SetListArrow(std::vector<Arrow*>);
+	std::vector<Arrow*> GetListArrow();
 	void StopDefend();
 	float GetPercentHP();
 	float GetPercentMP();
@@ -82,6 +86,8 @@ private:
 	Sprite* mSprite;
 	Action* mAction[22];
 	PhysicsBody* mPhysicsBody;
+	std::vector<Arrow*>mArrows;
+
 	int stageLevel;
 	int currentState;
 	int direction;
