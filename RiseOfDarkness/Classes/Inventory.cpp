@@ -79,6 +79,17 @@ int Inventory::GetCapacity()
 	return capacity;
 }
 
+void Inventory::SetVisible(bool b)
+{
+	tab->setVisible(b);
+	mSprite->setVisible(b);
+}
+
+bool Inventory::IsVisible()
+{
+	return (tab->isVisible() && mSprite->isVisible());
+}
+
 void Inventory::SetSpritePosition(cocos2d::Vec2 pos)
 {
 	mSprite->setPosition(pos);

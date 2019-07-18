@@ -74,7 +74,7 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 void GamePlay::CreateAllButton(Layer* layer)
 {
 	auto get = ResourceManager::GetInstance();
-
+	
 	// SPRITE ID 0
 	auto frameButton = get->GetSpriteById(18);
 	frameButton->removeFromParent();
@@ -262,7 +262,7 @@ void GamePlay::SetCamera(Vec2 pos)
 	m_buttons[1]->setPosition(Vec2(frameSkillButtonPosition.x, frameSkillButtonPosition.y - frameSkillButtonSize.height / 1.5));
 	m_buttons[2]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
 	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
-
+	
 	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2);
 	mName->setPosition(pos.x - visibleSize.width / 2 + m_sprites[10]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_sprites[10]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
 	m_sprites[11]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_sprites[10]->getBoundingBox().size.height);
