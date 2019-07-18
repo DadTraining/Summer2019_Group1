@@ -16,6 +16,7 @@ public:
 	static const int SLASH_BITMASK = 2;
 	static const int SPEARMOBLIN_BITMASK = 3;
 	static const int PIERCE_BITMASK = 4;
+	static const int NORMAL_ARROW_BITMASK = 5;
 
 	// STATUS
 	static const int SPEED = 2;
@@ -24,6 +25,7 @@ public:
 
 	// DAMAGE ALL CHARACTER
 	static const int SPEARMOBLIN_DAMAGE = 40;
+	static const int NORMAL_ARROW = 10;
 
 	static const int FRONT_IDLE = 0;
 	static const int BACK_IDLE = 1;

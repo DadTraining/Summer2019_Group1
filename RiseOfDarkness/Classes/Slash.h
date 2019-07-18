@@ -12,9 +12,9 @@ private:
 	PhysicsBody* mPhysicsBody;
 public:
 	Slash();
-	Slash(Layer* layer);
 	~Slash();
 
+	void AddToLayer(Layer* layer);
 	Sprite* GetSprite();
 	PhysicsBody* GetPhysicsBody();
 };

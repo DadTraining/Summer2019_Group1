@@ -4,7 +4,7 @@
 
 Pierce::Pierce() {}
 
-Pierce::Pierce(Layer* layer)
+Pierce::Pierce()
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
 	mSprite->setVisible(false);
@@ -15,6 +15,10 @@ Pierce::Pierce(Layer* layer)
 	mPhysicsBody->setContactTestBitmask(true);
 	mPhysicsBody->setGravityEnable(false);
 	mSprite->setPhysicsBody(mPhysicsBody);
+}
+
+void Pierce::AddToLayer(Layer* layer)
+{
 	layer->addChild(mSprite, 1);
 }
 

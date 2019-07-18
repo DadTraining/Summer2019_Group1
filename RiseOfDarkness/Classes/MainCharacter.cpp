@@ -19,16 +19,10 @@ MainCharacter::~MainCharacter() {}
 void MainCharacter::AddToLayer(Layer* layer)
 {
 	layer->addChild(mSprite, 1);
-	slash = new Slash(layer);
-	for (int i = 0; i < 10; i++)
+	slash->AddToLayer(layer);
+	for (int i = 0; i < mArrows.size(); i++)
 	{
-		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
-		sprite->setScaleX(0.6f);
-		Arrow *arrow = new Arrow(sprite);
-		arrow->SetVisible(false);
-		arrow->SetDistance(0);
-		layer->addChild(arrow->GetSprite(), 7);
-		mArrows.push_back(arrow);
+		layer->addChild(mArrows[i]->GetSprite(), 7);
 	}
 }
 
@@ -95,6 +89,18 @@ void MainCharacter::CreateMainCharacter()
 	currentHP = maxHP;
 	currentMP = maxMP;
 	preventRun = 0;
+
+	slash = new Slash();
+	for (int i = 0; i < 10; i++)
+	{
+		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+		sprite->retain();
+		sprite->setScaleX(0.6f);
+		Arrow *arrow = new Arrow(sprite);
+		arrow->SetVisible(false);
+		arrow->SetDistance(0);
+		mArrows.push_back(arrow);
+	}
 }
 
 void MainCharacter::Refresh()

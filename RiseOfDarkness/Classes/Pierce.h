@@ -12,7 +12,7 @@ private:
 	PhysicsBody* mPhysicsBody;
 public:
 	Pierce();
-	Pierce(Layer* layer);
+	void AddToLayer(Layer* layer);
 	~Pierce();
 
 	Sprite* GetSprite();
