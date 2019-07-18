@@ -3,13 +3,16 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "MainCharacter.h"
 
 using namespace cocos2d;
 
 class GamePlay
 {
 protected:
+	MainCharacter *m_maincharacter;
 	Sprite* mainCharacter;
+
 	TMXTiledMap* tileMap, *upperTileMap;
 	Camera* camera;
 	PhysicsBody* body;

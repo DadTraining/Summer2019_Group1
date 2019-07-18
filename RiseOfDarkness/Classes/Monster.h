@@ -10,14 +10,15 @@ class Monster
 {
 public:
 	static const int MONSTER_BITMASK = 4;
+	//static bool isRun;
 
 private:
 	int mBlood;
 	int mDamage;
 	float mSpeed;
-	float mRange;
 	int mDirection;
 	int mCurrentState;
+	bool isRun;
 	Sprite* mSprite;
 	Action* mAction[10];
 	PhysicsBody* mPhysicsBody;
@@ -31,8 +32,6 @@ public:
 	int GetDamage();
 	void SetSpeed(float speed);
 	float GetSpeed();
-	void SetRange(float range);
-	float GetRange();
 	void SetDirection(int direction);
 	int GetDirection();
 	void SetCurrentState(int currentState);
@@ -43,8 +42,10 @@ public:
 	void Init();
 	void Run();
 	void Update(float deltaTime);
-	bool Detect(Vec2* pos);
+	bool Detect(Vec2 posMc);
+	void StopRun();
 	void Hit();
+	void StartRun();
 };
 
 #endif // !__MONSTER_H__

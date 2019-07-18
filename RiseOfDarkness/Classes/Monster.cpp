@@ -40,16 +40,6 @@ float Monster::GetSpeed()
 	return this->mSpeed;
 }
 
-void Monster::SetRange(float range)
-{
-	this->mRange = range;
-}
-
-float Monster::GetRange()
-{
-	return this->mRange;
-}
-
 void Monster::SetDirection(int direction)
 {
 	this->mDirection = direction;
@@ -85,7 +75,6 @@ void Monster::Init()
 	mBlood = 100;
 	mDamage = 10;
 	mSpeed = 0.7f;
-	mRange = 50;
 	mDirection = 1;
 	mCurrentState = 0;
 
@@ -112,6 +101,8 @@ void Monster::Run()
 
 	auto rep = RepeatForever::create(seq);
 	mSprite->runAction(rep);
+	log("RUN");
+	this->isRun = true;
 }
 
 void Monster::Update(float deltaTime)
@@ -119,7 +110,41 @@ void Monster::Update(float deltaTime)
 	
 }
 
-bool Monster::Detect(Vec2 * pos)
+bool Monster::Detect(Vec2 posMc)
 {
+	float dis = 1000;
+
+	log("Pos MT: %f, %f", mSprite->getPosition().x, mSprite->getPosition().y);
+	dis = sqrt(pow((mSprite->getPosition().x - posMc.x), 2)
+		+ pow((mSprite->getPosition().y - posMc.y), 2));
+	log("DIS: %f", dis);
+	if (dis <= 50)
+	{
+		log("DETECT !");
+		return true;
+	}
+	log("DON'T DETECT !");
 	return false;
 }
+
+void Monster::StopRun()
+{
+	mSprite->stopAllActions();
+	log("STOP RUN");
+	this->isRun = false;
+}
+
+void Monster::Hit()
+{
+	log("HIT...HIT...HIT");
+}
+
+void Monster::StartRun()
+{
+	if (this->isRun == false)
+	{
+		Run();
+	}
+	log("START RUN");
+}
+

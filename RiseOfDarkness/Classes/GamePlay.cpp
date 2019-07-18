@@ -59,7 +59,8 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 	layer->addChild(upperTileMap, 3);
 
 	// Add main character
-	mainCharacter = MainCharacter::GetInstance()->GetSprite();
+	m_maincharacter = MainCharacter::GetInstance();
+	mainCharacter = m_maincharacter->GetSprite();
 	mainCharacter->removeFromParent();
 	MainCharacter::GetInstance()->AddToLayer(layer);
 	auto obj = tileMap->objectGroupNamed(mc);

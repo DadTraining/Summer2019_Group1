@@ -2,6 +2,7 @@
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include "MapScene.h"
+#include <math.h>
 
 USING_NS_CC;
 using namespace std;
@@ -41,11 +42,11 @@ bool Level2Scene::init()
 	for (int j = 0; j < 3; j++)
 	{
 		string nameObj = "mt" + to_string(j + 1);
-		m_listSprite[j] = m_monster[j]->GetSprite();
+		listMonster[j] = m_monster[j]->GetSprite();
 		auto obj = tileMap->objectGroupNamed("mt");
 		float x = obj->getObject(nameObj)["x"].asFloat();
 		float y = obj->getObject(nameObj)["y"].asFloat();
-		m_listSprite[j]->setPosition(x, y);
+		listMonster[j]->setPosition(x, y);
 		m_monster[j]->Run();
 	}
 
@@ -64,6 +65,18 @@ void Level2Scene::update(float deltaTime)
 	UpdateInfoBar();
 	m_maincharacter->GetInstance()->Update(deltaTime);
 	SetCamera(mainCharacter->getPosition());
+	for (int j = 0; j < 3; j++)
+	{
+		if (m_monster[j]->Detect(mainCharacter->getPosition()) == true)
+		{
+			m_monster[j]->StopRun();
+			m_monster[j]->Hit();
+		}
+		else
+		{
+			m_monster[j]->StartRun();
+		}
+	}
 }
 
 void Level2Scene::AddListener()
@@ -175,5 +188,6 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	}
 	return true;
 }
+
 
 

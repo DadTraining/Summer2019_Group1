@@ -34,6 +34,7 @@ void MainCharacter::CreateMainCharacter()
 
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
+	mSprite->removeFromParent();
 	mSprite->setScale(2.0);
 
 	// CREATE ACTION
