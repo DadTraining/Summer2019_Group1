@@ -95,23 +95,25 @@ void Level1Scene::AddListener()
 	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level1Scene::Defend, this));
 
 	m_buttons[4]->addClickEventListener([&](Ref* event) {
-		if (!m_buttons[5]->isVisible())
+		if (!m_buttons[6]->isVisible())
 		{
-			m_buttons[5]->setVisible(true);
 			m_buttons[6]->setVisible(true);
+			m_buttons[7]->setVisible(true);
 			Director::getInstance()->pause();
 		}
 	});
 
-	m_buttons[5]->addClickEventListener([&](Ref* event) {
-		m_buttons[5]->setVisible(false);
+	m_buttons[5]->addClickEventListener(CC_CALLBACK_1(Level1Scene::OpenInventory, this));
+
+	m_buttons[6]->addClickEventListener([&](Ref* event) {
 		m_buttons[6]->setVisible(false);
+		m_buttons[7]->setVisible(false);
 		Director::getInstance()->resume();
 	});
 
-	m_buttons[6]->addClickEventListener([&](Ref* event) {
-		m_buttons[5]->setVisible(false);
+	m_buttons[7]->addClickEventListener([&](Ref* event) {
 		m_buttons[6]->setVisible(false);
+		m_buttons[7]->setVisible(false);
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
 			Director::getInstance()->replaceScene(MapScene::CreateScene());
@@ -122,6 +124,14 @@ void Level1Scene::AddListener()
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level1Scene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+}
+
+
+void Level1Scene::OpenInventory(cocos2d::Ref * sender)
+{
+	MainCharacter::GetInstance()->GetInventory()->SetVisible(
+		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	);
 }
 
 bool Level1Scene::OnTouchBegan(Touch* touch, Event* event)

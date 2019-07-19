@@ -144,6 +144,7 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
 
+	// MAIN CHARACTER WITH OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
 	{
@@ -172,6 +173,16 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
 			MainCharacter::GetInstance()->SetPreventRun(4);
 		}
+	}
+
+	// ARROW COLLIDE WITH OBSTACLE
+	if (a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+	{
+		MainCharacter::GetInstance()->GetListArrow().at(a->getGroup())->SetVisible(false);
+	}
+	else if (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
+	{
+		MainCharacter::GetInstance()->GetListArrow().at(b->getGroup())->SetVisible(false);
 	}
 	return true;
 }
@@ -299,7 +310,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	//BUTTON OPEN INVENTORY
 	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
 	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
-	buttonOpenInventory->retain();
+	buttonOpenInventory->removeFromParent();
 	layer->addChild(buttonOpenInventory, 7);
 	m_buttons.push_back(buttonOpenInventory);
 

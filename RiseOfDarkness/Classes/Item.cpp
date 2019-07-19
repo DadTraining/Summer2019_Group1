@@ -22,6 +22,7 @@ void Item::CreateSprite(int id)
 void Item::AddToScene(cocos2d::ui::Layout *layout, cocos2d::Vec2 pos)
 {
 	itemButton->setPosition(pos);
+	itemButton->removeFromParent();
 	layout->addChild(itemButton,21);
 }
 

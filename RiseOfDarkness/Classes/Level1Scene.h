@@ -21,6 +21,8 @@ public:
 
 	void CreateMonster();
 
+	void OpenInventory(cocos2d::Ref * sender);
+
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);
 	void OnTouchMoved(Touch* touch, Event* event);

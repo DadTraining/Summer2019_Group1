@@ -55,6 +55,10 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 
 	tab->setSelectTab(0);
 	CC_SAFE_RETAIN(tab);
+	CC_SAFE_RETAIN(container1);
+	CC_SAFE_RETAIN(container2);
+	CC_SAFE_RETAIN(container3);
+
 }
 
 void Inventory::AddItem(int id)

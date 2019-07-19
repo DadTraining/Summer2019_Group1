@@ -184,14 +184,21 @@ void GamePlay::CreateAllButton(Layer* layer)
 	layer->addChild(pause, 6);
 	m_buttons.push_back(pause);
 
-	// RESUME BUTTON ID 5
+	//BUTTON OPEN INVENTORY
+	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
+	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
+	buttonOpenInventory->retain();
+	layer->addChild(buttonOpenInventory, 7);
+	m_buttons.push_back(buttonOpenInventory);
+
+	// RESUME BUTTON ID 6
 	auto resume = get->GetButtonById(17);
 	resume->removeFromParent();
 	resume->setVisible(false);
 	layer->addChild(resume, 6);
 	m_buttons.push_back(resume);
 
-	// RETURN MAP BUTTON ID 6
+	// RETURN MAP BUTTON ID 7
 	auto returnMap = get->GetButtonById(18);
 	returnMap->removeFromParent();
 	returnMap->setVisible(false);
@@ -285,8 +292,10 @@ void GamePlay::SetCamera(Vec2 pos)
 	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
 	
 	m_buttons[4]->setPosition(Vec2(pos + visibleSize / 2));
-	m_buttons[5]->setPosition(Vec2(pos.x, pos.y + m_buttons[5]->getBoundingBox().size.height));
-	m_buttons[6]->setPosition(Vec2(pos.x, pos.y - m_buttons[6]->getBoundingBox().size.height));
+	m_buttons[5]->setPosition(Vec2(pos.x + visibleSize.width / 8, pos.y - visibleSize.height / 2));
+	m_buttons[5]->addClickEventListener(CC_CALLBACK_1(GamePlay::OpenInventory, this));
+	m_buttons[6]->setPosition(Vec2(pos.x, pos.y + m_buttons[5]->getBoundingBox().size.height));
+	m_buttons[7]->setPosition(Vec2(pos.x, pos.y - m_buttons[6]->getBoundingBox().size.height));
 
 	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2);
 	mName->setPosition(pos.x - visibleSize.width / 2 + m_sprites[10]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_sprites[10]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
@@ -297,6 +306,16 @@ void GamePlay::SetCamera(Vec2 pos)
 	m_sprites[13]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
 	hpLoadingBar->setPosition(m_sprites[12]->getPosition());
 	mpLoadingBar->setPosition(m_sprites[13]->getPosition());
+
+	//AddChild inventory
+	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
+}
+
+void GamePlay::OpenInventory(cocos2d::Ref * sender)
+{
+	MainCharacter::GetInstance()->GetInventory()->SetVisible(
+		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	);
 }
 
 void GamePlay::DisablePressed()
