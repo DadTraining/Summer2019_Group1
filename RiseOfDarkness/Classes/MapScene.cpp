@@ -4,6 +4,7 @@
 #include "HomeScene.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
+#include "Level2Scene.h"
 
 using namespace std;
 USING_NS_CC;
@@ -57,7 +58,6 @@ bool MapScene::init()
 		int x = btnPos["x"].asInt();
 		int y = btnPos["y"].asInt();
 		auto btn = ResourceManager::GetInstance()->GetButtonById(8)->clone();//ui::Button::create("res/tiledMaps/SelectScene/x.png");
-		btn->removeFromParent();
 		btn->setPosition(Point(x, y));
 		btn->setScale(0.5);
 		btn->setVisible(false);
@@ -83,13 +83,14 @@ bool MapScene::init()
 
 void MapScene::LoadLevel(Ref *pSender,int level)
 {
+	buttonList.clear();
 	switch (level)
 	{
 	case 1:
-		
 		Director::getInstance()->replaceScene(Level1Scene::CreateScene());
-		
-	default:
+		break;
+	case 2:
+		Director::getInstance()->replaceScene(Level2Scene::CreateScene());
 		break;
 	}
 }
