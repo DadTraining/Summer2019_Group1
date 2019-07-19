@@ -53,19 +53,19 @@ bool GameOverScene::init()
 	//label->enableOutline(Color4B::RED, 1);
 	this->addChild(label, 1);
 
-	auto buttonexit = ui::Button::create("/res/buttons/notify/exit.png", "/res/buttons/notify/exit_bg.png");
+	/*auto buttonexit = ui::Button::create("/res/buttons/notify/exit.png", "/res/buttons/notify/exit_bg.png");
 	//buttonfinish->removeFromParent();
 	buttonexit->setPosition(Vec2(origin.x + visibleSize.width / 2 + 185,
 		origin.y + visibleSize.height / 1.5 + 7));
 	buttonexit->setScale(0.2);
-	this->addChild(buttonexit);
+	this->addChild(buttonexit);*/
 
 	auto buttonresume = ui::Button::create("/res/buttons/gameover/resume.png", "/res/buttons/gameover/resume_bg.png");
 	//buttonfinish->removeFromParent();
 	buttonresume->setPosition(Vec2(visibleSize.width / 2+50, visibleSize.height / 1.5 - 170));
 	buttonresume->setScale(0.5);
 
-	buttonexit->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	buttonresume->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
 
 	});
