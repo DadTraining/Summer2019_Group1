@@ -12,7 +12,7 @@ SpearMoblin::SpearMoblin(Layer* layer, int id)
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
 	box.height = mSprite->getContentSize().height / 2.2;
-	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, box.height / 3));
+	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, box.height / 5));
 	mPhysicsBody->setRotationEnable(false);
 	mPhysicsBody->setCollisionBitmask(MainCharacter::SPEARMOBLIN_BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);
@@ -21,7 +21,8 @@ SpearMoblin::SpearMoblin(Layer* layer, int id)
 	mSprite->setPhysicsBody(mPhysicsBody);
 	layer->addChild(mSprite);
 
-	pierce = new Pierce(layer);
+	pierce = new Pierce();
+	pierce->AddToLayer(layer);
 
 	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
 	hpBar->retain();
