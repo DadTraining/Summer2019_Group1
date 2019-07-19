@@ -17,10 +17,9 @@ private:
 	static const int BACK_ATTACK = 7;
 	static const int LEFT_ATTACK = 8;
 
-	static const int SPEED = 3;
 	Action* mAction[9];
 	Pierce* pierce;
-	float coolDownAttack;
+	bool onTarget;
 public:
 	SpearMoblin();
 	SpearMoblin(Layer* layer, int id);
@@ -32,8 +31,6 @@ public:
 
 	void Auto(float deltaTime);
 
-	void SetDirection(int dir);
-
 	void Run();
 
 	void Idle();
@@ -41,6 +38,11 @@ public:
 	bool Detect();
 
 	void Attack();
+
+	void CollideObstacle();
+
+	void SetDirection(int dir);
+
 };
 
 #endif

@@ -2,7 +2,6 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 
-
 Pierce::Pierce()
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));

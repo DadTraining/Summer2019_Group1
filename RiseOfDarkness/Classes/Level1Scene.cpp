@@ -68,7 +68,7 @@ void Level1Scene::CreateMonster()
 {
 	float x, y;
 	auto spearGoblinGroup = tileMap->getObjectGroup("SpearMoblin");
-	int amount = 3;
+	int amount = 1;
 	char str[10];
 	for (int i = 1; i <= amount; i++)
 	{
@@ -210,12 +210,12 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	if (a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 	{
 		m_SpearMoblins.at(b->getGroup())->GetDamage(MainCharacter::NORMAL_ARROW);
-		//MainCharacter::GetInstance()->GetListArrow().at(a->getGroup())->SetVisible(false);
+		MainCharacter::GetInstance()->GetListArrow().at(a->getGroup())->SetVisible(false);
 	}
 	else if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
 	{
 		m_SpearMoblins.at(a->getGroup())->GetDamage(MainCharacter::NORMAL_ARROW);
-		//MainCharacter::GetInstance()->GetListArrow().at(b->getGroup())->SetVisible(false);
+		MainCharacter::GetInstance()->GetListArrow().at(b->getGroup())->SetVisible(false);
 	}
 
 	// SPEARMOBLIN PIERCE MAIN CHARACTER
@@ -224,6 +224,19 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	{
 		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
 	}
+
+	// SPEARMOBLIN COLLIDE OBSTACLES
+	if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+	{
+		m_SpearMoblins.at(a->getGroup())->SetPreventRun();
+		m_SpearMoblins.at(a->getGroup())->CollideObstacle();
+	}
+	else if (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+	{
+		m_SpearMoblins.at(b->getGroup())->SetPreventRun();
+		m_SpearMoblins.at(b->getGroup())->CollideObstacle();
+	}
+
 	return true;
 }
 

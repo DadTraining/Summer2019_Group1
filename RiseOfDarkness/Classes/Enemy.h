@@ -14,8 +14,10 @@ protected:
 	PhysicsBody* mPhysicsBody;
 	float currentHP, maxHP;
 	int direction;
-	float countingTime;
+	float countingTime, coolDownAttack;
 	int currentState;
+	int preventRun;
+	int speed;
 public:
 	Enemy();
 	virtual ~Enemy();
@@ -28,6 +30,9 @@ public:
 	virtual bool IsAlive();
 	virtual int GetDirection();
 	virtual void AutoRevive(float reviveTime, float currentTime, int HP);
+	virtual void SetPreventRun();
+	virtual void ReverseDirection();
+	virtual void SetDirection(int dir);
 };
 
 #endif

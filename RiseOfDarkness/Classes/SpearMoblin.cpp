@@ -8,7 +8,7 @@ SpearMoblin::SpearMoblin(){}
 SpearMoblin::SpearMoblin(Layer* layer, int id)
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(24));
-	mSprite->setScale(2);
+	mSprite->setScale(1.5);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
 	box.height = mSprite->getContentSize().height / 2.2;
@@ -53,14 +53,17 @@ SpearMoblin::SpearMoblin(Layer* layer, int id)
 	CC_SAFE_RETAIN(mAction[BACK_ATTACK]);
 	CC_SAFE_RETAIN(mAction[LEFT_ATTACK]);
 
-	direction = 2;
+	direction = 3;
 	currentState = FRONT_IDLE;
 
 	maxHP = 100;
 	currentHP = maxHP;
+	speed = 3;
 
 	countingTime = 0;
 	coolDownAttack = 0;
+	preventRun = 0;
+	onTarget = false;
 }
 
 SpearMoblin::~SpearMoblin()
@@ -85,10 +88,11 @@ void SpearMoblin::Update(float deltaTime)
 	{
 		hpLoadingBar->setPercent(GetPercentHP());
 		Idle();
-		if (Detect() && coolDownAttack >= 2)
+		if (Detect())
 		{
-			Attack();
+			//Attack();
 			coolDownAttack = 0;
+			Run();
 		}
 		else if (Detect())
 		{
@@ -139,37 +143,11 @@ void SpearMoblin::SetState(int nextState)
 	}
 }
 
-void SpearMoblin::SetDirection(int dir)
-{
-	if (direction != dir)
-	{
-		if (dir == 4)
-		{
-			mSprite->setFlipX(true);
-		}
-		else if (direction == 4)
-		{
-			mSprite->setFlipX(false);
-		}
-		direction = dir;
-	}
-}
+
 
 void SpearMoblin::Auto(float deltaTime)
 {
-	countingTime += deltaTime;
-	if (countingTime < 5)
-	{
-		SetDirection(3);
-	}
-	else if (countingTime < 10)
-	{
-		SetDirection(4);
-	}
-	else
-	{
-		countingTime = 0;
-	}
+
 	Run();
 }
 
@@ -201,20 +179,32 @@ void SpearMoblin::Run()
 		switch (direction)
 		{
 		case 1:
-			mSprite->setPositionY(mSprite->getPositionY() + SPEED);
-			SetState(GO_UP);
+			if (preventRun != 1)
+			{
+				mSprite->setPositionY(mSprite->getPositionY() + speed);
+				SetState(GO_UP);
+			}
 			break;
 		case 2:
-			mSprite->setPositionY(mSprite->getPositionY() - SPEED);
-			SetState(GO_DOWN);
+			if (preventRun != 2)
+			{
+				mSprite->setPositionY(mSprite->getPositionY() - speed);
+				SetState(GO_DOWN);
+			}
 			break;
 		case 3:
-			mSprite->setPositionX(mSprite->getPositionX() - SPEED);
-			SetState(GO_LEFT);
+			if (preventRun != 3)
+			{
+				mSprite->setPositionX(mSprite->getPositionX() - speed);
+				SetState(GO_LEFT);
+			}
 			break;
 		case 4:
-			mSprite->setPositionX(mSprite->getPositionX() + SPEED);
-			SetState(GO_LEFT);
+			if (preventRun != 4)
+			{
+				mSprite->setPositionX(mSprite->getPositionX() + speed);
+				SetState(GO_LEFT);
+			}
 		}
 	}
 }
@@ -251,20 +241,9 @@ bool SpearMoblin::Detect()
 	auto smPos = mSprite->getPosition();
 
 	float dis = std::sqrt((mcPos.x - smPos.x)*(mcPos.x - smPos.x) + (mcPos.y - smPos.y)*(mcPos.y - smPos.y));
-	if (dis <= 50)
+	if (dis <= 100)
 	{
-		if (std::abs(mcPos.x - smPos.x) > std::abs(mcPos.y - smPos.y))
-		{
-			if (mcPos.x < smPos.x)
-			{
-				SetDirection(3);
-			}
-			else
-			{
-				SetDirection(4);
-			}
-		}
-		else
+		if (std::abs(mcPos.x - smPos.x) < std::abs(mcPos.y - smPos.y))
 		{
 			if (mcPos.y < smPos.y)
 			{
@@ -275,7 +254,47 @@ bool SpearMoblin::Detect()
 				SetDirection(1);
 			}
 		}
+		else
+		{
+			if (mcPos.x < smPos.x)
+			{
+				SetDirection(3);
+			}
+			else
+			{
+				SetDirection(4);
+			}
+		}
+		onTarget = true;
 		return true;
 	}
 	return false;
+}
+
+void SpearMoblin::CollideObstacle()
+{
+	ReverseDirection();
+}
+
+void SpearMoblin::SetDirection(int dir)
+{
+	if (!onTarget)
+	{
+		if (direction != dir)
+		{
+			if (dir == 4)
+			{
+				mSprite->setFlipX(true);
+			}
+			else if (direction == 4)
+			{
+				mSprite->setFlipX(false);
+			}
+			direction = dir;
+		}
+		if (preventRun != dir)
+		{
+			preventRun = 0;
+		}
+	}
 }
