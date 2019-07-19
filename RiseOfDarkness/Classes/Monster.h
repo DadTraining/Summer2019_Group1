@@ -19,7 +19,8 @@ private:
 	int mBlood;
 	int mDamage;
 	float mSpeed;
-	int mDirection;
+	int mDirMove;
+	int mDirHit;
 	int mCurrentState;
 	bool isRun;
 	list<Bullet*> m_bullets;
@@ -36,8 +37,10 @@ public:
 	int GetDamage();
 	void SetSpeed(float speed);
 	float GetSpeed();
-	void SetDirection(int direction);
-	int GetDirection();
+	void SetDirMove(int direction);
+	int GetDirMove();
+	void SetDirHit(int direction);
+	int GetDirhit();
 	void SetCurrentState(int currentState);
 	int GetCurrentState();
 	Sprite* GetSprite();
@@ -45,6 +48,7 @@ public:
 
 	void Init();
 	void Run();
+	void MoveHit(Vec2 posMc);
 	void Update(float deltaTime);
 	bool Detect(Vec2 posMc);
 	void StopRun();

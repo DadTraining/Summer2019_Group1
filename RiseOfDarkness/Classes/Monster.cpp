@@ -1,5 +1,6 @@
 #include "Monster.h"
 #include "ResourceManager.h"
+#include <math.h>
 
 Monster::Monster(Layer * layer)
 {
@@ -46,14 +47,14 @@ float Monster::GetSpeed()
 	return this->mSpeed;
 }
 
-void Monster::SetDirection(int direction)
+void Monster::SetDirMove(int direction)
 {
-	this->mDirection = direction;
+	this->mDirMove = direction;
 }
 
-int Monster::GetDirection()
+int Monster::GetDirMove()
 {
-	return this->mDirection;
+	return this->mDirMove;
 }
 
 void Monster::SetCurrentState(int currentState)
@@ -81,7 +82,7 @@ void Monster::Init()
 	mBlood = 100;
 	mDamage = 10;
 	mSpeed = 0.7f;
-	mDirection = 1;
+	mDirMove = 2;
 	mCurrentState = 0;
 
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(24));
@@ -111,6 +112,35 @@ void Monster::Run()
 	mSprite->runAction(rep);
 	log("RUN");
 	this->isRun = true;
+}
+
+void Monster::MoveHit(Vec2 posMc)
+{
+	auto xMc = posMc.x;
+	auto yMc = posMc.y;
+	auto xMt = mSprite->getPositionX();
+	auto yMt = mSprite->getPositionY();
+
+	if (abs(yMc - yMt) > 32 )
+	{
+		if (xMc < xMt)
+		{
+			this->mSprite->setPosition(xMt - 1, yMt);
+		}
+		if (xMc > xMt)
+		{
+			this->mSprite->setPosition(xMt + 1, yMt);
+		}
+	}
+	else
+	{
+		if (xMc < xMt)
+		{
+		}
+		if (xMc > xMt)
+		{
+		}
+	}
 }
 
 int numBl = 0;
@@ -150,6 +180,12 @@ bool Monster::Detect(Vec2 posMc)
 		return true;
 	}
 	log("DON'T DETECT !");
+	list<Bullet*>::iterator ind = this->m_bullets.begin();
+	for (int i = 0; i < this->m_bullets.size(); i++)
+	{
+		(*ind)->GetSprite()->setVisible(false);
+		ind++;
+	}
 	return false;
 }
 
