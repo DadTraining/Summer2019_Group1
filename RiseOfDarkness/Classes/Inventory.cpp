@@ -5,7 +5,8 @@
 #include "Weapon.h"
 
 using namespace std;
-Inventory::Inventory(Sprite* sprite)
+
+Inventory::Inventory(cocos2d::Sprite* sprite)
 {
 	capacity = 24;
 }

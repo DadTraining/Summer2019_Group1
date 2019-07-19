@@ -10,6 +10,8 @@ class InputNameScene : public Scene
 {
 private:
 	ui::TextField* textField;
+	ui::TextField* textField2;
+	
 public:
 	static Scene* CreateScene();
 

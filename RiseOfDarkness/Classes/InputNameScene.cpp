@@ -6,6 +6,7 @@
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include "Level1Scene.h"
+#include "NotifyScene.h"
 USING_NS_CC;
 
 Scene* InputNameScene::CreateScene()
@@ -48,7 +49,7 @@ bool InputNameScene::init()
 	label->enableOutline(Color4B::RED, 1);
 	this->addChild(label, 1);
 	
-	textField = ui::TextField::create("enter here.. ", "fonts/Marker Felt.ttf", 30);
+	textField = ui::TextField::create("enter here... ", "fonts/Marker Felt.ttf", 30);
 	
 	textField->setPasswordEnabled(false);
 	textField->setMaxLength(50);
@@ -63,6 +64,8 @@ bool InputNameScene::init()
 	
 	this->addChild(textField,2);
 
+	//============================
+
 	auto buttonfinish = ResourceManager::GetInstance()->GetButtonById(9);//ui::Button::create("/res/buttons/finish.png");
 	buttonfinish->removeFromParent();
 	buttonfinish->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 3 + origin.y));
@@ -76,11 +79,20 @@ bool InputNameScene::init()
 			if (MainCharacter::GetInstance()->GetName() != "")
 			{
 				auto gotoNext = CallFunc::create([]() {
-					Director::getInstance()->replaceScene(HomeScene::CreateScene());
+					Director::getInstance()->replaceScene(Level1Scene::CreateScene());
+				});
+				runAction(gotoNext);
+			}
+			else 
+			{
+				auto gotoNext = CallFunc::create([] {
+					//CCNotificationCenter::getInstance()->postNotification("vui long");
+					Director::getInstance()->replaceScene(NotifyScene::CreateScene());
 				});
 				runAction(gotoNext);
 			}
 		}
+		
 	});
 
 	this->addChild(buttonfinish);
