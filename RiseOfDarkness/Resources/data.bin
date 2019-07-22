@@ -100,7 +100,7 @@ res/buttons/gameplay/defendButtonPressed.png
 res/buttons/gameplay/mapButtonNormal.png
 res/buttons/gameplay/mapButtonNormal.png
 #ANIMATE
-31
+34
 0
 0.1f
 10
@@ -225,6 +225,18 @@ res/animates/SpearMoblin/backAttack/backAttack.plist
 0.1f
 5
 res/animates/SpearMoblin/leftAttack/leftAttack.plist
+31
+0.1f
+4
+res/animates/rope/up/up.plist
+32
+0.1f
+4
+res/animates/rope/down/down.plist
+33
+0.1f
+4
+res/animates/rope/right/right.plist
 #TILEMAP
 6
 0

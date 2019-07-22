@@ -2,7 +2,7 @@
 #include "ResourceManager.h"
 #include <math.h>
 
-Monster::Monster(Layer * layer)
+Monster::Monster(Layer * layer, int id)
 {
 	Init();
 	/*for (int i = 0; i < 3; i++)
@@ -15,6 +15,9 @@ Monster::Monster(Layer * layer)
 
 Monster::~Monster()
 {
+	mAction[UP]->autorelease();
+	mAction[DOWN]->autorelease();
+	mAction[RIGHT]->autorelease();
 }
 
 void Monster::SetBlood(int blood)
@@ -81,7 +84,7 @@ void Monster::Init()
 {
 	mBlood = 100;
 	mDamage = 10;
-	mSpeed = 0.7f;
+	mSpeed = 1.0f;
 	mDirMove = 2;
 	mCurrentState = 0;
 
@@ -98,13 +101,22 @@ void Monster::Init()
 	mPhysicsBody->setCollisionBitmask(MONSTER_BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);
 	mSprite->setPhysicsBody(mPhysicsBody);
+
+	// create animate
+	mAction[UP] = ResourceManager::GetInstance()->GetActionById(31)->clone();
+	mAction[DOWN] = ResourceManager::GetInstance()->GetActionById(32)->clone();
+	mAction[RIGHT] = ResourceManager::GetInstance()->GetActionById(33)->clone();
+
+	CC_SAFE_RETAIN(mAction[UP]);
+	CC_SAFE_RETAIN(mAction[DOWN]);
+	CC_SAFE_RETAIN(mAction[RIGHT]);
 }
 
 void Monster::Run()
 {
 	auto move1 = MoveBy::create(3.0f, Vec2(100, 0));
 	auto move2 = MoveBy::create(3.0f, Vec2(-100, 0));
-	
+
 	auto delay = DelayTime::create(0.5);
 	auto seq = Sequence::create(move1, delay, move2, delay, nullptr);
 
@@ -125,11 +137,14 @@ void Monster::MoveHit(Vec2 posMc)
 	{
 		if (xMc < xMt)
 		{
-			this->mSprite->setPosition(xMt - 1, yMt);
+			this->mSprite->setPosition(xMt - mSpeed, yMt);
+			mSprite->setFlipX(true);
 		}
 		if (xMc > xMt)
 		{
-			this->mSprite->setPosition(xMt + 1, yMt);
+			mSprite->setFlipX(false);
+			this->mSprite->setPosition(xMt + mSpeed, yMt);
+			mSprite->runAction(mAction[RIGHT]);
 		}
 	}
 	else
@@ -170,16 +185,16 @@ bool Monster::Detect(Vec2 posMc)
 {
 	float dis = 1000;
 
-	log("Pos MT: %f, %f", mSprite->getPosition().x, mSprite->getPosition().y);
+	//log("Pos MT: %f, %f", mSprite->getPosition().x, mSprite->getPosition().y);
 	dis = sqrt(pow((mSprite->getPosition().x - posMc.x), 2)
 		+ pow((mSprite->getPosition().y - posMc.y), 2));
-	log("DIS: %f", dis);
+	//log("DIS: %f", dis);
 	if (dis <= 100)
 	{
-		log("DETECT !");
+		//log("DETECT !");
 		return true;
 	}
-	log("DON'T DETECT !");
+	//log("DON'T DETECT !");
 	list<Bullet*>::iterator ind = this->m_bullets.begin();
 	for (int i = 0; i < this->m_bullets.size(); i++)
 	{
@@ -192,7 +207,7 @@ bool Monster::Detect(Vec2 posMc)
 void Monster::StopRun()
 {
 	mSprite->stopAllActions();
-	log("STOP RUN");
+	//log("STOP RUN");
 	this->isRun = false;
 }
 
@@ -211,12 +226,12 @@ void Monster::Hit()
 	}
 }
 
-void Monster::StartRun()
+void Monster::ResumRun()
 {
 	if (this->isRun == false)
 	{
 		Run();
 	}
-	log("START RUN");
+	//log("START RUN");
 }
 

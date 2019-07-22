@@ -5,15 +5,20 @@
 #include <vector>
 #include <list>
 #include "Bullet.h"
+#include "Enemy.h"
 
 USING_NS_CC;
 using namespace std;
 
-class Monster
+class Monster : public Enemy
 {
 public:
-	static const int MONSTER_BITMASK = 4;
-	//static bool isRun;
+	static const int MONSTER_BITMASK = 10;
+
+	static const int UP = 0;
+	static const int DOWN = 1;
+	static const int LEFT = 2;
+	static const int RIGHT = 3;
 
 private:
 	int mBlood;
@@ -29,7 +34,7 @@ private:
 	PhysicsBody* mPhysicsBody;
 
 public:
-	Monster(Layer* layer);
+	Monster(Layer* layer, int id);
 	~Monster();
 	void SetBlood(int blood);
 	int GetBlood();
@@ -53,7 +58,7 @@ public:
 	bool Detect(Vec2 posMc);
 	void StopRun();
 	void Hit();
-	void StartRun();
+	void ResumRun();
 };
 
 #endif // !__MONSTER_H__

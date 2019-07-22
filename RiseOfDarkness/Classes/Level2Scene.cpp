@@ -35,7 +35,7 @@ bool Level2Scene::init()
 
 	for (int i = 0; i < 3; i++)
 	{
-		auto mt = new Monster(this);
+		auto mt = new Monster(this, i+2);
 		m_monster.push_back(mt);
 	}
 
@@ -75,8 +75,7 @@ void Level2Scene::update(float deltaTime)
 		}
 		else
 		{
-
-			m_monster[j]->StartRun();
+			m_monster[j]->ResumRun();
 		}
 	}
 }
