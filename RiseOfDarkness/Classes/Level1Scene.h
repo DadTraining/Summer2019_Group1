@@ -3,13 +3,13 @@
 
 #include "GamePlay.h"
 #include "cocos2d.h"
-#include "SpearMoblin.h"
+#include "Enemy.h"
 using namespace cocos2d;
 
 class Level1Scene : public Layer, GamePlay
 {
 private:
-	std::vector<SpearMoblin*> m_SpearMoblins;
+	std::vector<Enemy*> m_SpearMoblins;
 public:
     static cocos2d::Scene* CreateScene();
 

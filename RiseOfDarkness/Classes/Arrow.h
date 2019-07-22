@@ -23,7 +23,7 @@ public:
 	static const int DOWN = 3;
 
 	static const int RANGE = 250;
-	Arrow(cocos2d::Sprite *sprite);
+	Arrow(cocos2d::Sprite *sprite, int BITMASK);
 	~Arrow();
 	void setAlive(bool alive);
 	void fly(bool isRight);

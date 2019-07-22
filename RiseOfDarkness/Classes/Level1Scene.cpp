@@ -2,6 +2,7 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 #include "SpearMoblin.h"
+#include "BowMoblin.h"
 #include "MapScene.h"
 #include "HomeScene.h"
 
@@ -12,7 +13,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -74,19 +75,36 @@ void Level1Scene::update(float deltaTime)
 
 void Level1Scene::CreateMonster()
 {
-	float x, y;
-	auto spearGoblinGroup = tileMap->getObjectGroup("SpearMoblin");
-	int amount = 3;
-	char str[10];
-	for (int i = 1; i <= amount; i++)
+	float x1, y1;
+	int direction1;
+	auto spearGoblinGroup = tileMap->getObjectGroup("spearMoblin");
+	int amount1 = 4;
+	char str1[10];
+	for (int i = 1; i <= amount1; i++)
 	{
-		SpearMoblin *spearMoblin = new SpearMoblin(this);
-		sprintf(str, "%02d", i);
-		x = spearGoblinGroup->getObject(str)["x"].asFloat();
-		y = spearGoblinGroup->getObject(str)["y"].asFloat();
-		spearMoblin->GetSprite()->setPosition(x, y);
+		sprintf(str1, "%02d", i);
+		direction1 = spearGoblinGroup->getObject(str1)["direction"].asInt();
+		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
+		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
+		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1));
 		spearMoblin->GetPhysicsBody()->setGroup(i - 1);
 		m_SpearMoblins.push_back(spearMoblin);
+	}
+
+	float x2, y2;
+	int direction2;
+	auto bowGoblinGroup = tileMap->getObjectGroup("bowMoblin");
+	int amount2 = 3;
+	char str2[10];
+	for (int i = 1; i <= amount2; i++)
+	{
+		sprintf(str2, "%02d", i);
+		direction2 = bowGoblinGroup->getObject(str2)["direction"].asInt();
+		x2 = bowGoblinGroup->getObject(str2)["x"].asFloat();
+		y2 = bowGoblinGroup->getObject(str2)["y"].asFloat();
+		BowMoblin *bowMoblin = new BowMoblin(this, direction2, Vec2(x2, y2));
+		bowMoblin->GetPhysicsBody()->setGroup(i - 1 + amount1);
+		m_SpearMoblins.push_back(bowMoblin);
 	}
 }
 
@@ -264,6 +282,14 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
 	}
 
+	// BOWMOBLIN ARROW DAMAGE MAIN CHARACTER
+	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
+		
+	}
+
 	// SPEARMOBLIN COLLIDE OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
@@ -271,14 +297,13 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_SpearMoblins[a->getGroup()]->SetPreventRun();
-			m_SpearMoblins[a->getGroup()]->CollideObstacle();
+			m_SpearMoblins[a->getGroup()]->ReverseDirection();
 		}
 		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_SpearMoblins[b->getGroup()]->SetPreventRun();
-			m_SpearMoblins[b->getGroup()]->CollideObstacle();
+			m_SpearMoblins[b->getGroup()]->ReverseDirection();
 		}
-		log("ok");
 	}
 
 	return true;

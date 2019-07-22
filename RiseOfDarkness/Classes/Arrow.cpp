@@ -2,7 +2,7 @@
 #include "MainCharacter.h"
 USING_NS_CC;
 
-Arrow::Arrow(Sprite* sprite)
+Arrow::Arrow(Sprite* sprite, int BITMASK)
 {
 	mSprite = sprite; 
 	//physics body
@@ -10,7 +10,7 @@ Arrow::Arrow(Sprite* sprite)
 	mPhysicsBody->setRotationEnable(false);
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setDynamic(false);
-	mPhysicsBody->setCollisionBitmask(MainCharacter::NORMAL_ARROW_BITMASK);
+	mPhysicsBody->setCollisionBitmask(BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);	
 	mSprite->setPhysicsBody(mPhysicsBody);
 	setAlive(false);

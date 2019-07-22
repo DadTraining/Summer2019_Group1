@@ -19,6 +19,8 @@ public:
 	static const int SPEARMOBLIN_BITMASK = 103;
 	static const int PIERCE_BITMASK = 104;
 	static const int NORMAL_ARROW_BITMASK = 105;
+	static const int BOWMOBLIN_BITMASK = 106;
+	static const int BOWMOBLIN_ARROW_BITMASK = 107;
 
 	// STATUS
 	static const int SPEED = 5;
@@ -28,6 +30,7 @@ public:
 	// DAMAGE ALL CHARACTER
 	static const int SPEARMOBLIN_DAMAGE = 40;
 	static const int NORMAL_ARROW = 10;
+	static const int BOWMOBLIN_DAMAGE = 30;
 
 	static const int FRONT_IDLE = 0;
 	static const int BACK_IDLE = 1;
@@ -51,7 +54,6 @@ public:
 	static const int BACK_GET_DAMAGE = 19;
 	static const int LEFT_GET_DAMAGE = 20;
 	static const int DEAD = 21;
-
 
 private:
 	int stageLevel;

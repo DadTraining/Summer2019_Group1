@@ -1,10 +1,11 @@
-#ifndef SPEAR_MOBLIN_H
-#define SPEAR_MOBLIN_H	
+#ifndef BOW_MOBLIN_H
+#define BOW_MOBLIN_H	
 
 #include "Enemy.h"
-#include "Pierce.h"
+#include "Arrow.h"
+#include <vector>
 
-class SpearMoblin : public Enemy
+class BowMoblin : public Enemy
 {
 private:
 	static const int FRONT_IDLE = 0;
@@ -18,18 +19,18 @@ private:
 	static const int LEFT_ATTACK = 8;
 
 	static const int HP = 100;
-	static const int DETECT_RANGE = 100;
-	static const int ATTACK_RANGE = 30;
-	static const int ATTACK_COOLDOWN = 1;
+	static const int DETECT_RANGE = 300;
+	static const int ATTACK_RANGE = 200;
+	static const int ATTACK_COOLDOWN = 3;
 	static const int REVIVE_TIME = 5;
 	static const int HP_REVIVE = 10;
 
 	Action* mAction[9];
-	Pierce* pierce;
+	std::vector<Arrow*> m_arrows;
 public:
-	SpearMoblin();
-	SpearMoblin(Layer* layer, int direction, Vec2 pos);
-	~SpearMoblin();
+	BowMoblin();
+	BowMoblin(Layer* layer, int direction, Vec2 pos);
+	~BowMoblin();
 
 	void Update(float deltaTime);
 
@@ -40,6 +41,8 @@ public:
 	void Idle();
 
 	void Attack();
+
+	std::vector<Arrow*> GetListArrow();
 };
 
 #endif

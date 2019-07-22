@@ -13,7 +13,8 @@ protected:
 	ui::LoadingBar* hpLoadingBar;
 	PhysicsBody* mPhysicsBody;
 	float currentHP, maxHP;
-	int direction;
+	int direction, firstDirection;
+	Vec2 pos;
 	float countingTime, coolDownAttack;
 	int currentState;
 	int preventRun;
@@ -23,16 +24,19 @@ public:
 	virtual ~Enemy();
 
 	virtual void SetState(int nextState) = 0;
+	virtual void Update(float deltaTime) = 0;
 	virtual float GetPercentHP();
 	virtual Sprite* GetSprite();
 	virtual PhysicsBody* GetPhysicsBody();
 	virtual void GetDamage(int damage);
 	virtual bool IsAlive();
 	virtual int GetDirection();
-	virtual void AutoRevive(float reviveTime, float currentTime, int HP);
+	virtual void AutoRevive(int HP);
 	virtual void SetPreventRun();
 	virtual void ReverseDirection();
 	virtual void SetDirection(int dir);
+	virtual bool Detect(float detectRange);
+	virtual bool Target(float attackRange);
 };
 
 #endif

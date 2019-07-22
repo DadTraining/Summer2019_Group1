@@ -114,7 +114,7 @@ void MainCharacter::CreateMainCharacter()
 		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
 		sprite->retain();
 		sprite->setScaleX(0.6f);
-		Arrow *arrow = new Arrow(sprite);
+		Arrow *arrow = new Arrow(sprite, MainCharacter::NORMAL_ARROW_BITMASK);
 		arrow->SetVisible(false);
 		arrow->SetDistance(0);
 		mArrows.push_back(arrow);

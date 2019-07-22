@@ -56,6 +56,7 @@
     <ClCompile Include="..\Classes\Item.cpp" />
     <ClCompile Include="..\Classes\Potion.cpp" />
     <ClCompile Include="..\Classes\Weapon.cpp" />
+    <ClCompile Include="..\Classes\BowMoblin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -113,6 +114,7 @@
     <ClInclude Include="..\Classes\Item.h" />
     <ClInclude Include="..\Classes\Potion.h" />
     <ClInclude Include="..\Classes\Weapon.h" />
+    <ClInclude Include="..\Classes\BowMoblin.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

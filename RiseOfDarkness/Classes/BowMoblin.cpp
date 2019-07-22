@@ -1,13 +1,13 @@
-#include "SpearMoblin.h"
+#include "BowMoblin.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include <math.h>
 
-SpearMoblin::SpearMoblin(){}
+BowMoblin::BowMoblin() {}
 
-SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
+BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos)
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(24));
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(31));
 	mSprite->setScale(1.5);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
@@ -21,8 +21,6 @@ SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
 	mSprite->setPhysicsBody(mPhysicsBody);
 	layer->addChild(mSprite);
 
-	pierce = new Pierce();
-	pierce->AddToLayer(layer);
 
 	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
 	layer->addChild(hpBar);
@@ -33,15 +31,15 @@ SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
 	hpBar->retain();
 	hpLoadingBar->retain();
 
-	mAction[FRONT_IDLE] = ResourceManager::GetInstance()->GetActionById(22)->clone();
-	mAction[BACK_IDLE] = ResourceManager::GetInstance()->GetActionById(23)->clone();
-	mAction[LEFT_IDLE] = ResourceManager::GetInstance()->GetActionById(24)->clone();
-	mAction[GO_DOWN] = ResourceManager::GetInstance()->GetActionById(26)->clone();
-	mAction[GO_UP] = ResourceManager::GetInstance()->GetActionById(25)->clone();
-	mAction[GO_LEFT] = ResourceManager::GetInstance()->GetActionById(27)->clone();
-	mAction[FRONT_ATTACK] = ResourceManager::GetInstance()->GetActionById(28)->clone();
-	mAction[BACK_ATTACK] = ResourceManager::GetInstance()->GetActionById(29)->clone();
-	mAction[LEFT_ATTACK] = ResourceManager::GetInstance()->GetActionById(30)->clone();
+	mAction[FRONT_IDLE] = ResourceManager::GetInstance()->GetActionById(34)->clone();
+	mAction[BACK_IDLE] = ResourceManager::GetInstance()->GetActionById(35)->clone();
+	mAction[LEFT_IDLE] = ResourceManager::GetInstance()->GetActionById(36)->clone();
+	mAction[GO_DOWN] = ResourceManager::GetInstance()->GetActionById(38)->clone();
+	mAction[GO_UP] = ResourceManager::GetInstance()->GetActionById(37)->clone();
+	mAction[GO_LEFT] = ResourceManager::GetInstance()->GetActionById(39)->clone();
+	mAction[FRONT_ATTACK] = ResourceManager::GetInstance()->GetActionById(40)->clone();
+	mAction[BACK_ATTACK] = ResourceManager::GetInstance()->GetActionById(41)->clone();
+	mAction[LEFT_ATTACK] = ResourceManager::GetInstance()->GetActionById(42)->clone();
 
 	CC_SAFE_RETAIN(mAction[FRONT_IDLE]);
 	CC_SAFE_RETAIN(mAction[BACK_IDLE]);
@@ -67,9 +65,21 @@ SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
 	countingTime = 0;
 	coolDownAttack = 0;
 	preventRun = 0;
+
+	for (int i = 0; i < 5; i++)
+	{
+		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+		sprite->setScaleX(0.6f);
+		Arrow *arrow = new Arrow(sprite, MainCharacter::BOWMOBLIN_ARROW_BITMASK);
+		arrow->SetVisible(false);
+		arrow->SetDistance(0);
+		layer->addChild(sprite, 7);
+		m_arrows.push_back(arrow);
+	}
+
 }
 
-SpearMoblin::~SpearMoblin()
+BowMoblin::~BowMoblin()
 {
 	mAction[FRONT_IDLE]->autorelease();
 	mAction[BACK_IDLE]->autorelease();
@@ -85,7 +95,7 @@ SpearMoblin::~SpearMoblin()
 	hpLoadingBar->autorelease();
 }
 
-void SpearMoblin::Update(float deltaTime)
+void BowMoblin::Update(float deltaTime)
 {
 	if (IsAlive())
 	{
@@ -113,10 +123,17 @@ void SpearMoblin::Update(float deltaTime)
 		{
 			AutoRevive(HP_REVIVE);
 		}
+		for (int i = 0; i < m_arrows.size(); i++)
+		{
+			if (m_arrows[i]->IsVisible())
+			{
+				m_arrows[i]->update(deltaTime);
+			}
+		}
 	}
 }
 
-void SpearMoblin::SetState(int nextState)
+void BowMoblin::SetState(int nextState)
 {
 	if (currentState == nextState && mSprite->getNumberOfRunningActions() == 0)
 	{
@@ -153,11 +170,11 @@ void SpearMoblin::SetState(int nextState)
 	}
 }
 
-void SpearMoblin::Idle()
+void BowMoblin::Idle()
 {
 	if (mSprite->getNumberOfRunningActions() == 0)
 	{
-		pierce->GetSprite()->setPosition(Vec2(-1, -1));
+
 		switch (direction)
 		{
 		case 1:
@@ -172,7 +189,7 @@ void SpearMoblin::Idle()
 	}
 }
 
-void SpearMoblin::Run()
+void BowMoblin::Run()
 {
 	if (currentState != LEFT_ATTACK || currentState != FRONT_ATTACK || currentState != BACK_ATTACK)
 	{
@@ -211,30 +228,59 @@ void SpearMoblin::Run()
 	}
 }
 
-void SpearMoblin::Attack()
+void BowMoblin::Attack()
 {
+	for (int i = 0; i < m_arrows.size(); i++)
+	{
+		if (!m_arrows[i]->IsVisible())
+		{
+			m_arrows[i]->SetRotate(180);
+			m_arrows[i]->SetPosition(mSprite->getPosition());
+			m_arrows[i]->SetVisible(true);
+			switch (direction)
+			{
+			case 1:
+				m_arrows[i]->SetDirection(2);
+				SetState(BACK_ATTACK);
+				break;
+			case 2:
+				m_arrows[i]->SetDirection(3);
+				SetState(FRONT_ATTACK);
+				break;
+			case 3:
+				m_arrows[i]->SetDirection(0);
+				SetState(LEFT_ATTACK);
+				break;
+			case 4:
+				m_arrows[i]->SetDirection(1);
+				SetState(LEFT_ATTACK);
+			}
+			break;
+		}
+	}
 	switch (direction)
 	{
 	case 1:
-		pierce->GetSprite()->setRotation(90);
-		pierce->GetSprite()->setPosition(mSprite->getPositionX(), mSprite->getPositionY() + 15);
+
 		SetState(BACK_ATTACK);
 		break;
 	case 2:
-		pierce->GetSprite()->setRotation(90);
-		pierce->GetSprite()->setPosition(mSprite->getPositionX(), mSprite->getPositionY() - 15);
+
 		SetState(FRONT_ATTACK);
 		break;
 	case 3:
-		pierce->GetSprite()->setRotation(0);
-		pierce->GetSprite()->setPosition(mSprite->getPositionX() - 20, mSprite->getPositionY() - 10);
+
 		SetState(LEFT_ATTACK);
 		break;
 	case 4:
-		pierce->GetSprite()->setRotation(0);
-		pierce->GetSprite()->setPosition(mSprite->getPositionX() + 20, mSprite->getPositionY() - 10);
+
 		SetState(LEFT_ATTACK);
 	}
+}
+
+std::vector<Arrow*> BowMoblin::GetListArrow()
+{
+	return m_arrows;
 }
 
 

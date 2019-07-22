@@ -189,22 +189,22 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 	}
 
 	// MAIN CHARACTER COLLIDE WITH WEAPON SHOP
-	if ((a->getCollisionBitmask() == 101 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 101))
+	if ((a->getCollisionBitmask() == 11 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 11))
 	{
 		OpenWeaponShop();
 	}
 
 	// MAIN CHARACTER COLLIDE WITH EQUIPMENT SHOP
-	if ((a->getCollisionBitmask() == 102 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 102))
+	if ((a->getCollisionBitmask() == 12 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 12))
 	{
 		OpenEquipmentShop();
 	}
 
 	// MAIN CHARACTER COLLIDE WITH POTION SHOP
-	if ((a->getCollisionBitmask() == 103 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 103))
+	if ((a->getCollisionBitmask() == 13 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 13))
 	{
 		OpenPotionShop();
 	}
@@ -466,7 +466,7 @@ void HomeScene::CreateNPC()
 			{
 				auto physics1 = PhysicsBody::createBox(tileSet1->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
 				physics1->setDynamic(false);
-				physics1->setCollisionBitmask(101);
+				physics1->setCollisionBitmask(11);
 				physics1->setContactTestBitmask(true);
 				tileSet1->setPhysicsBody(physics1);
 			}
@@ -495,7 +495,7 @@ void HomeScene::CreateNPC()
 			{
 				auto physics2 = PhysicsBody::createBox(tileSet2->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
 				physics2->setDynamic(false);
-				physics2->setCollisionBitmask(102);
+				physics2->setCollisionBitmask(12);
 				physics2->setContactTestBitmask(true);
 				tileSet2->setPhysicsBody(physics2);
 			}
@@ -524,7 +524,7 @@ void HomeScene::CreateNPC()
 			{
 				auto physics3 = PhysicsBody::createBox(tileSet3->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
 				physics3->setDynamic(false);
-				physics3->setCollisionBitmask(103);
+				physics3->setCollisionBitmask(13);
 				physics3->setContactTestBitmask(true);
 				tileSet3->setPhysicsBody(physics3);
 			}

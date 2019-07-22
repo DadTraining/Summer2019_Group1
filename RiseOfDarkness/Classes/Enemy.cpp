@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "MainCharacter.h"
 
 Enemy::Enemy() {}
 
@@ -35,6 +36,7 @@ bool Enemy::IsAlive()
 void Enemy::GetDamage(int damage)
 {
 	currentHP -= damage;
+	countingTime = 0;
 }
 
 int Enemy::GetDirection()
@@ -42,9 +44,9 @@ int Enemy::GetDirection()
 	return direction;
 }
 
-void Enemy::AutoRevive(float reviveTime, float currentTime, int HP)
+void Enemy::AutoRevive(int HP)
 {
-	if (currentHP < maxHP && currentTime >= reviveTime)
+	if (currentHP < maxHP)
 	{
 		currentHP += HP;
 		if (currentHP > maxHP)
@@ -113,4 +115,84 @@ void Enemy::SetDirection(int dir)
 	{
 		preventRun = 0;
 	}
+}
+
+bool Enemy::Detect(float detectRange)
+{
+	auto mcPos = MainCharacter::GetInstance()->GetSprite()->getPosition();
+	auto ePos = mSprite->getPosition();
+
+	float dis = std::sqrt((mcPos.x - ePos.x)*(mcPos.x - ePos.x) + (mcPos.y - ePos.y)*(mcPos.y - ePos.y));
+
+	if (dis <= detectRange)
+	{
+		if (countingTime > 1)
+		{
+			countingTime = 0;
+			if (std::abs(mcPos.x - ePos.x) < std::abs(mcPos.y - ePos.y))
+			{
+				if (mcPos.y < ePos.y)
+				{
+					SetDirection(2);
+				}
+				else
+				{
+					SetDirection(1);
+				}
+			}
+			else
+			{
+				if (mcPos.x < ePos.x)
+				{
+					SetDirection(3);
+				}
+				else
+				{
+					SetDirection(4);
+				}
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Enemy::Target(float attackRange)
+{
+	auto mcPos = MainCharacter::GetInstance()->GetSprite()->getPosition();
+	auto ePos = mSprite->getPosition();
+
+	float dis = std::sqrt((mcPos.x - ePos.x)*(mcPos.x - ePos.x) + (mcPos.y - ePos.y)*(mcPos.y - ePos.y));
+
+	if (dis <= attackRange)
+	{
+		if (ePos.x <= mcPos.x + 3 && ePos.x >= mcPos.x - 3)
+		{
+			if (ePos.y < mcPos.y)
+			{
+				SetDirection(1);
+			}
+			else
+			{
+				SetDirection(2);
+			}
+		}
+		else if (ePos.y <= mcPos.y + 3 && ePos.y >= mcPos.y - 3)
+		{
+			if (ePos.x > mcPos.x)
+			{
+				SetDirection(3);
+			}
+			else
+			{
+				SetDirection(4);
+			}
+		}
+		else
+		{
+			return false;
+		}
+		return true;
+	}
+	return false;
 }
