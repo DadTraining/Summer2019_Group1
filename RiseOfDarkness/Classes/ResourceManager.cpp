@@ -124,8 +124,21 @@ void ResourceManager::Init(const std::string &path)
 			m_loadingbar[i]->retain();
 		}
 	}
+
+	auto weaponSeller = m_sprites[29];
+	weaponSeller->setScale((Director::getInstance()->getVisibleSize().width / weaponSeller->getBoundingBox().size.width) / 22);
+
+	auto equipmentSeller = m_sprites[28];
+	equipmentSeller->setScale((Director::getInstance()->getVisibleSize().width / equipmentSeller->getBoundingBox().size.width) / 22);
+
+	auto potionSeller = m_sprites[30];
+	potionSeller->setScale((Director::getInstance()->getVisibleSize().width / potionSeller->getBoundingBox().size.width) / 22);
+
 	auto mainCharacterFace = m_sprites[19];
 	mainCharacterFace->setScale((Director::getInstance()->getVisibleSize().width / mainCharacterFace->getBoundingBox().size.width) / 20);
+
+	auto mainCharacterFaceButton = m_buttons[25];
+	mainCharacterFaceButton->setScale((Director::getInstance()->getVisibleSize().width / mainCharacterFaceButton->getBoundingBox().size.width) / 20);
 
 	auto infoBar = m_sprites[20];
 	infoBar->setScale((Director::getInstance()->getVisibleSize().width / infoBar->getBoundingBox().size.width) / 5);

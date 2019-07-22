@@ -36,6 +36,8 @@ bool HomeScene::init()
 	
 	AddListener();
 
+	CreateNPC();
+
 	scheduleUpdate();
 
 	return true;
@@ -50,6 +52,8 @@ void HomeScene::update(float deltaTime)
 	MainCharacter::GetInstance()->Update(deltaTime);
 
 	SetCamera(mainCharacter->getPosition());
+
+	RunActionNPC();
 }
 
 void HomeScene::AddListener()
@@ -173,6 +177,37 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 			MainCharacter::GetInstance()->SetPreventRun(4);
 		}
 	}
+
+	// ARROW COLLIDE WITH OBSTACLE
+	if (a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+	{
+		MainCharacter::GetInstance()->GetListArrow().at(a->getGroup())->SetVisible(false);
+	}
+	else if (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
+	{
+		MainCharacter::GetInstance()->GetListArrow().at(b->getGroup())->SetVisible(false);
+	}
+
+	// MAIN CHARACTER COLLIDE WITH WEAPON SHOP
+	if ((a->getCollisionBitmask() == 101 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 101))
+	{
+		OpenWeaponShop();
+	}
+
+	// MAIN CHARACTER COLLIDE WITH EQUIPMENT SHOP
+	if ((a->getCollisionBitmask() == 102 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 102))
+	{
+		OpenEquipmentShop();
+	}
+
+	// MAIN CHARACTER COLLIDE WITH POTION SHOP
+	if ((a->getCollisionBitmask() == 103 && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == 103))
+	{
+		OpenPotionShop();
+	}
 	return true;
 }
 
@@ -289,7 +324,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	layer->addChild(defend, 6);
 	m_buttons.push_back(defend);
 
-	// GO TO MAP BUTTON
+	// GO TO MAP BUTTON 4
 	auto map = get->GetButtonById(14);
 	map->removeFromParent();
 	map->setAnchorPoint(Vec2(0.5, 0));
@@ -297,11 +332,11 @@ void HomeScene::CreateAllButton(Layer* layer)
 	m_buttons.push_back(map);
 
 	//BUTTON OPEN INVENTORY
-	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
+	/*auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
 	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
 	buttonOpenInventory->retain();
 	layer->addChild(buttonOpenInventory, 7);
-	m_buttons.push_back(buttonOpenInventory);
+	m_buttons.push_back(buttonOpenInventory);*/
 
 	mName = get->GetLabelById(0);
 	mName->setString(MainCharacter::GetInstance()->GetName());
@@ -309,11 +344,12 @@ void HomeScene::CreateAllButton(Layer* layer)
 	mName->setAnchorPoint(Vec2(0, 1));
 	layer->addChild(mName, 8);
 
-	auto mainCharacterFace = get->GetSpriteById(19);
+	// STATUS MC ID 5
+	auto mainCharacterFace = get->GetButtonById(25);
 	mainCharacterFace->setAnchorPoint(Vec2(0, 1));
 	mainCharacterFace->removeFromParent();
 	layer->addChild(mainCharacterFace, 8);
-	m_sprites.push_back(mainCharacterFace);
+	m_buttons.push_back(mainCharacterFace);
 
 	auto infoBar = get->GetSpriteById(20);
 	infoBar->setAnchorPoint(Vec2(0, 1));
@@ -392,18 +428,155 @@ void HomeScene::SetCamera(Vec2 pos)
 	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
 
 	m_buttons[4]->setPosition(Vec2(pos.x, pos.y - visibleSize.height / 2));
-	m_buttons[5]->setPosition(Vec2(pos.x+visibleSize.width/8, pos.y - visibleSize.height / 2));
-	m_buttons[5]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));
-	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2);
-	mName->setPosition(pos.x - visibleSize.width / 2 + m_sprites[10]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_sprites[10]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
-	m_sprites[11]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_sprites[10]->getBoundingBox().size.height);
-	auto infoBarPosition = m_sprites[11]->getPosition();
-	auto infoBarSize = m_sprites[11]->getBoundingBox().size;
-	m_sprites[12]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 2.8);
-	m_sprites[13]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
-	hpLoadingBar->setPosition(m_sprites[12]->getPosition());
-	mpLoadingBar->setPosition(m_sprites[13]->getPosition());
+	/*m_buttons[5]->setPosition(Vec2(pos.x+visibleSize.width/8, pos.y - visibleSize.height / 2));
+	m_buttons[5]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));*/
+	m_buttons[5]->setPosition(Vec2(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2));
+	mName->setPosition(pos.x - visibleSize.width / 2 + m_buttons[5]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_buttons[5]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
+	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_buttons[5]->getBoundingBox().size.height);
+	auto infoBarPosition = m_sprites[10]->getPosition();
+	auto infoBarSize = m_sprites[10]->getBoundingBox().size;
+	m_sprites[11]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 2.8);
+	m_sprites[12]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
+	hpLoadingBar->setPosition(m_sprites[11]->getPosition());
+	mpLoadingBar->setPosition(m_sprites[12]->getPosition());
 
 	//AddChild inventory
-	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
+	//MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
+}
+
+void HomeScene::CreateNPC()
+{
+	weaponSeller = ResourceManager::GetInstance()->GetSpriteById(29);
+	weaponSeller->removeFromParent();
+	this->addChild(weaponSeller, 0);
+	auto obj1 = tileMap->objectGroupNamed("weaponSeller");
+	float x1 = obj1->getObject("weaponSeller")["x"].asFloat();
+	float y1 = obj1->getObject("weaponSeller")["y"].asFloat();
+	weaponSeller->setPosition(x1, y1);
+	weaponSeller->setAnchorPoint(Vec2(0.5, 0));
+	weapon = ResourceManager::GetInstance()->GetActionById(32);
+	CC_SAFE_RETAIN(weapon);
+	auto ob1 = tileMap->getLayer("weaponShop");
+	ob1->setVisible(false);
+	Size layerSize1 = ob1->getLayerSize();
+	for (int i = 0; i < layerSize1.width; i++)
+	{
+		for (int j = 0; j < layerSize1.height; j++)
+		{
+			auto tileSet1 = ob1->getTileAt(Vec2(i, j));
+			if (tileSet1 != NULL)
+			{
+				auto physics1 = PhysicsBody::createBox(tileSet1->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+				physics1->setDynamic(false);
+				physics1->setCollisionBitmask(101);
+				physics1->setContactTestBitmask(true);
+				tileSet1->setPhysicsBody(physics1);
+			}
+		}
+	}
+
+	equipmentSeller = ResourceManager::GetInstance()->GetSpriteById(28);
+	equipmentSeller->removeFromParent();
+	this->addChild(equipmentSeller, 0);
+	auto obj2 = tileMap->objectGroupNamed("equipmentSeller");
+	float x2 = obj2->getObject("equipmentSeller")["x"].asFloat();
+	float y2 = obj2->getObject("equipmentSeller")["y"].asFloat();
+	equipmentSeller->setPosition(x2, y2);
+	equipmentSeller->setAnchorPoint(Vec2(0.5, 0));
+	equipment = ResourceManager::GetInstance()->GetActionById(31);
+	CC_SAFE_RETAIN(equipment);
+	auto ob2 = tileMap->getLayer("equipmentShop");
+	ob2->setVisible(false);
+	Size layerSize2 = ob2->getLayerSize();
+	for (int i = 0; i < layerSize2.width; i++)
+	{
+		for (int j = 0; j < layerSize2.height; j++)
+		{
+			auto tileSet2 = ob2->getTileAt(Vec2(i, j));
+			if (tileSet2 != NULL)
+			{
+				auto physics2 = PhysicsBody::createBox(tileSet2->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+				physics2->setDynamic(false);
+				physics2->setCollisionBitmask(102);
+				physics2->setContactTestBitmask(true);
+				tileSet2->setPhysicsBody(physics2);
+			}
+		}
+	}
+	
+	potionSeller = ResourceManager::GetInstance()->GetSpriteById(30);
+	potionSeller->removeFromParent();
+	this->addChild(potionSeller, 0);
+	auto obj3 = tileMap->objectGroupNamed("potionSeller");
+	float x3 = obj3->getObject("potionSeller")["x"].asFloat();
+	float y3 = obj3->getObject("potionSeller")["y"].asFloat();
+	potionSeller->setPosition(x3, y3);
+	potionSeller->setAnchorPoint(Vec2(0.5, 0));
+	potion = ResourceManager::GetInstance()->GetActionById(33);
+	CC_SAFE_RETAIN(potion);
+	auto ob3 = tileMap->getLayer("potionShop");
+	ob3->setVisible(false);
+	Size layerSize3 = ob3->getLayerSize();
+	for (int i = 0; i < layerSize3.width; i++)
+	{
+		for (int j = 0; j < layerSize3.height; j++)
+		{
+			auto tileSet3 = ob3->getTileAt(Vec2(i, j));
+			if (tileSet3 != NULL)
+			{
+				auto physics3 = PhysicsBody::createBox(tileSet3->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+				physics3->setDynamic(false);
+				physics3->setCollisionBitmask(103);
+				physics3->setContactTestBitmask(true);
+				tileSet3->setPhysicsBody(physics3);
+			}
+		}
+	}
+	CreateShop();
+}
+
+void HomeScene::RunActionNPC()
+{
+	if (weaponSeller->getNumberOfRunningActions() == 0)
+	{
+		weaponSeller->runAction(weapon);
+	}
+	if (equipmentSeller->getNumberOfRunningActions() == 0)
+	{
+		equipmentSeller->runAction(equipment);
+	}
+	if (potionSeller->getNumberOfRunningActions() == 0)
+	{
+		potionSeller->runAction(potion);
+	}
+}
+
+void HomeScene::OpenWeaponShop()
+{
+	log("weapon shop");
+}
+
+void HomeScene::OpenEquipmentShop()
+{
+	log("quipment shop");
+}
+
+void HomeScene::OpenPotionShop()
+{
+	log("potion shop");
+}
+
+void HomeScene::CreateShop()
+{
+	// WEAPON SHOP
+
+
+	//EQUIPMENT SHOP
+
+
+	//POTION SHOP
+
+
+
+
 }

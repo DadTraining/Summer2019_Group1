@@ -22,7 +22,7 @@ private:
 	bool onTarget;
 public:
 	SpearMoblin();
-	SpearMoblin(Layer* layer, int id);
+	SpearMoblin(Layer* layer);
 	~SpearMoblin();
 
 	void Update(float deltaTime);
@@ -43,6 +43,7 @@ public:
 
 	void SetDirection(int dir);
 
+	bool Target();
 };
 
 #endif

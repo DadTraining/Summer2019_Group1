@@ -198,22 +198,44 @@ void GamePlay::CreateAllButton(Layer* layer)
 	layer->addChild(returnMap, 6);
 	m_buttons.push_back(returnMap);
 
+	// HOME BUTTON ID 7
+	auto home = ResourceManager::GetInstance()->GetButtonById(24);
+	home->setVisible(false);
+	home->removeFromParent();
+	layer->addChild(home, 12);
+	m_buttons.push_back(home);
+
+	// RETRY BUTTON ID 8
+	auto retry = ResourceManager::GetInstance()->GetButtonById(23);
+	retry->removeFromParent();
+	retry->setVisible(false);
+	layer->addChild(retry, 12);
+	m_buttons.push_back(retry);
+
+	// GAMEOVER TEXT
+	gameover = get->GetLabelById(1);
+	gameover->setString("GameOver");
+	gameover->setVisible(false);
+	gameover->removeFromParent();
+	layer->addChild(gameover, 12);
+
 	mName = get->GetLabelById(0);
 	mName->setString(MainCharacter::GetInstance()->GetName());
 	mName->removeFromParent();
 	mName->setAnchorPoint(Vec2(0, 1));
-	layer->addChild(mName, 8);
+	layer->addChild(mName, 12);
 
-	auto mainCharacterFace = get->GetSpriteById(19);
+	// STATUS MC ID 9
+	auto mainCharacterFace = get->GetButtonById(25);
 	mainCharacterFace->setAnchorPoint(Vec2(0, 1));
 	mainCharacterFace->removeFromParent();
 	layer->addChild(mainCharacterFace, 8);
-	m_sprites.push_back(mainCharacterFace);
+	m_buttons.push_back(mainCharacterFace);
 
 	auto infoBar = get->GetSpriteById(20);
 	infoBar->setAnchorPoint(Vec2(0, 1));
 	infoBar->removeFromParent();
-	layer->addChild(infoBar, 8);
+	layer->addChild(infoBar, 12);
 	m_sprites.push_back(infoBar);
 
 	auto hpBar = get->GetSpriteById(21);
@@ -228,11 +250,11 @@ void GamePlay::CreateAllButton(Layer* layer)
 
 	hpLoadingBar = get->GetLoadingbar(1);
 	hpLoadingBar->removeFromParent();
-	layer->addChild(hpLoadingBar, 10);
+	layer->addChild(hpLoadingBar, 12);
 
 	mpLoadingBar = get->GetLoadingbar(2);
 	mpLoadingBar->removeFromParent();
-	layer->addChild(mpLoadingBar, 10);
+	layer->addChild(mpLoadingBar, 12);
 
 	SetCamera(mainCharacter->getPosition());
 }
@@ -288,15 +310,19 @@ void GamePlay::SetCamera(Vec2 pos)
 	m_buttons[5]->setPosition(Vec2(pos.x, pos.y + m_buttons[5]->getBoundingBox().size.height));
 	m_buttons[6]->setPosition(Vec2(pos.x, pos.y - m_buttons[6]->getBoundingBox().size.height));
 
-	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2);
-	mName->setPosition(pos.x - visibleSize.width / 2 + m_sprites[10]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_sprites[10]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
-	m_sprites[11]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_sprites[10]->getBoundingBox().size.height);
-	auto infoBarPosition = m_sprites[11]->getPosition();
-	auto infoBarSize = m_sprites[11]->getBoundingBox().size;
-	m_sprites[12]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 2.8);
-	m_sprites[13]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
-	hpLoadingBar->setPosition(m_sprites[12]->getPosition());
-	mpLoadingBar->setPosition(m_sprites[13]->getPosition());
+	m_buttons[7]->setPosition(Vec2(pos.x - m_buttons[7]->getBoundingBox().size.width, pos.y - m_buttons[7]->getBoundingBox().size.height / 2));
+	m_buttons[8]->setPosition(Vec2(pos.x + m_buttons[8]->getBoundingBox().size.width, pos.y - m_buttons[8]->getBoundingBox().size.height / 2));
+	gameover->setPosition(Vec2(pos.x, pos.y + m_buttons[7]->getBoundingBox().size.height / 2));
+
+	m_buttons[9]->setPosition(Vec2(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2));
+	mName->setPosition(pos.x - visibleSize.width / 2 + m_buttons[9]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_buttons[9]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
+	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_buttons[9]->getBoundingBox().size.height);
+	auto infoBarPosition = m_sprites[10]->getPosition();
+	auto infoBarSize = m_sprites[10]->getBoundingBox().size;
+	m_sprites[11]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 2.8);
+	m_sprites[12]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
+	hpLoadingBar->setPosition(m_sprites[11]->getPosition());
+	mpLoadingBar->setPosition(m_sprites[12]->getPosition());
 }
 
 void GamePlay::DisablePressed()

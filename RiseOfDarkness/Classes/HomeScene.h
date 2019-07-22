@@ -7,7 +7,8 @@
 class HomeScene : public Layer, GamePlay
 {
 private:
-	
+	Sprite* weaponSeller, *potionSeller, *equipmentSeller;
+	Action* weapon, *potion, *equipment;
 public:
 	static Scene* CreateScene();
 	virtual bool init();
@@ -25,6 +26,12 @@ public:
 	void OpenInventory(cocos2d::Ref* sender);
 	void SetCamera(Vec2 pos);
 	void CreateAllButton(Layer* layer);
+	void CreateNPC();
+	void RunActionNPC();
+	void OpenWeaponShop();
+	void OpenPotionShop();
+	void OpenEquipmentShop();
+	void CreateShop();
 
 	CREATE_FUNC(HomeScene);
 };

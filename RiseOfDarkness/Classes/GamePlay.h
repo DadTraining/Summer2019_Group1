@@ -19,7 +19,7 @@ protected:
 	Point mCurrentTouchPoint;
 	Point mNextTouchPoint;
 	Size distance;
-	Label* mName;
+	Label* mName, *gameover;
 	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
 
 public:

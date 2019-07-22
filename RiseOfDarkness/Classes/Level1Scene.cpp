@@ -3,6 +3,8 @@
 #include "ResourceManager.h"
 #include "SpearMoblin.h"
 #include "MapScene.h"
+#include "HomeScene.h"
+
 using namespace std;
 
 USING_NS_CC;
@@ -62,6 +64,12 @@ void Level1Scene::update(float deltaTime)
 			m_SpearMoblins[i]->Update(deltaTime);
 		}
 	}
+	if (!MainCharacter::GetInstance()->IsAlive())
+	{
+		m_buttons[7]->setVisible(true);
+		m_buttons[8]->setVisible(true);
+		gameover->setVisible(true);
+	}
 }
 
 void Level1Scene::CreateMonster()
@@ -72,7 +80,7 @@ void Level1Scene::CreateMonster()
 	char str[10];
 	for (int i = 1; i <= amount; i++)
 	{
-		SpearMoblin *spearMoblin = new SpearMoblin(this, i + 2);
+		SpearMoblin *spearMoblin = new SpearMoblin(this);
 		sprintf(str, "%02d", i);
 		x = spearGoblinGroup->getObject(str)["x"].asFloat();
 		y = spearGoblinGroup->getObject(str)["y"].asFloat();
@@ -113,8 +121,26 @@ void Level1Scene::AddListener()
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(false);
 		Director::getInstance()->resume();
+		m_SpearMoblins.clear();
+
 		auto gotoMap = CallFunc::create([] {
 			Director::getInstance()->replaceScene(MapScene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
+
+	m_buttons[7]->addClickEventListener([&](Ref* event) {
+		m_SpearMoblins.clear();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(HomeScene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
+
+	m_buttons[8]->addClickEventListener([&](Ref* event) {
+		m_SpearMoblins.clear();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(Level1Scene::CreateScene());
 		});
 		runAction(gotoMap);
 	});

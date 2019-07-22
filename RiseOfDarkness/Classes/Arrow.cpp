@@ -148,7 +148,8 @@ void Arrow::SetScale(float scaleX,float scaleY)
 
 void Arrow::AddToScene(Layer *layer)
 {
-	layer->addChild(mSprite);
+	mSprite->removeFromParent();
+	layer->addChild(mSprite, 7);
 }
 
 cocos2d::Vec2 Arrow::GetPosition()

@@ -2,7 +2,7 @@
 #include "ResourceManager.h"
 #include "LoadingScene.h"
 #include "InputNameScene.h"
-
+#include "SelectScene.h"
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
 
@@ -79,7 +79,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	ResourceManager::GetInstance()->Init("data.bin");
 
     // create a scene. it's an autorelease object
-    auto scene = InputNameScene::CreateScene();
+    auto scene = SelectScene::CreateScene();
 
     // run
     director->runWithScene(scene);

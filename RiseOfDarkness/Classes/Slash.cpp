@@ -20,6 +20,7 @@ Slash::~Slash() {}
 
 void Slash::AddToLayer(Layer* layer)
 {
+	mSprite->removeFromParent();
 	layer->addChild(mSprite, 1);
 
 }

@@ -22,8 +22,10 @@ void MainCharacter::AddToLayer(Layer* layer)
 	slash->AddToLayer(layer);
 	for (int i = 0; i < mArrows.size(); i++)
 	{
-		layer->addChild(mArrows[i]->GetSprite(), 7);
+		mArrows[i]->AddToScene(layer);
 	}
+
+
 	//inventory->SetSpritePosition(Vec2(500, 250));
 	/*inventory->AddToLayer(layer);
 	inventory->SetVisible(false);
@@ -54,7 +56,7 @@ void MainCharacter::CreateMainCharacter()
 	inventory->AddItem(2);*/
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
-	mSprite->setScale(2.0);
+	mSprite->setScale(1.8);
 
 	// CREATE ACTION
 	mAction[FRONT_IDLE] = ResourceManager::GetInstance()->GetActionById(3);

@@ -5,7 +5,7 @@
 
 SpearMoblin::SpearMoblin(){}
 
-SpearMoblin::SpearMoblin(Layer* layer, int id)
+SpearMoblin::SpearMoblin(Layer* layer)
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(24));
 	mSprite->setScale(1.5);
@@ -25,13 +25,13 @@ SpearMoblin::SpearMoblin(Layer* layer, int id)
 	pierce->AddToLayer(layer);
 
 	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
-	hpBar->retain();
 	layer->addChild(hpBar);
-	hpLoadingBar = ResourceManager::GetInstance()->GetLoadingbar(id);
-	hpLoadingBar->retain();
+	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
 	layer->addChild(hpLoadingBar);
-	hpBar->setScale(0.3);
-	hpLoadingBar->setScale(0.3);
+	hpBar->setScale(0.2);
+	hpLoadingBar->setScale(0.2);
+	hpBar->retain();
+	hpLoadingBar->retain();
 
 	mAction[FRONT_IDLE] = ResourceManager::GetInstance()->GetActionById(22)->clone();
 	mAction[BACK_IDLE] = ResourceManager::GetInstance()->GetActionById(23)->clone();
@@ -58,7 +58,7 @@ SpearMoblin::SpearMoblin(Layer* layer, int id)
 
 	maxHP = 100;
 	currentHP = maxHP;
-	speed = 3;
+	speed = 1;
 
 	countingTime = 0;
 	coolDownAttack = 0;
@@ -88,21 +88,23 @@ void SpearMoblin::Update(float deltaTime)
 	{
 		hpLoadingBar->setPercent(GetPercentHP());
 		Idle();
-		if (Detect())
+		if (Target())
 		{
-			//Attack();
-			coolDownAttack = 0;
-			Run();
+			coolDownAttack += deltaTime;
+			if (coolDownAttack >= 2)
+			{
+				coolDownAttack = 0;
+				Attack();
+			}
 		}
 		else if (Detect())
 		{
-			Idle();
+			
 		}
 		else
 		{
 			Auto(deltaTime);
 		}
-		coolDownAttack += deltaTime;
 	}
 }
 
@@ -147,7 +149,6 @@ void SpearMoblin::SetState(int nextState)
 
 void SpearMoblin::Auto(float deltaTime)
 {
-
 	Run();
 }
 
@@ -174,8 +175,8 @@ void SpearMoblin::Run()
 {
 	if (currentState != LEFT_ATTACK || currentState != FRONT_ATTACK || currentState != BACK_ATTACK)
 	{
-		hpBar->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() + 40));
-		hpLoadingBar->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() + 40));
+		hpBar->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() + 20));
+		hpLoadingBar->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() + 20));
 		switch (direction)
 		{
 		case 1:
@@ -241,6 +242,7 @@ bool SpearMoblin::Detect()
 	auto smPos = mSprite->getPosition();
 
 	float dis = std::sqrt((mcPos.x - smPos.x)*(mcPos.x - smPos.x) + (mcPos.y - smPos.y)*(mcPos.y - smPos.y));
+	
 	if (dis <= 100)
 	{
 		if (std::abs(mcPos.x - smPos.x) < std::abs(mcPos.y - smPos.y))
@@ -265,7 +267,7 @@ bool SpearMoblin::Detect()
 				SetDirection(4);
 			}
 		}
-		onTarget = true;
+		Run();
 		return true;
 	}
 	return false;
@@ -278,23 +280,56 @@ void SpearMoblin::CollideObstacle()
 
 void SpearMoblin::SetDirection(int dir)
 {
-	if (!onTarget)
+	if (direction != dir)
 	{
-		if (direction != dir)
+		if (dir == 4)
 		{
-			if (dir == 4)
-			{
-				mSprite->setFlipX(true);
-			}
-			else if (direction == 4)
-			{
-				mSprite->setFlipX(false);
-			}
-			direction = dir;
+			mSprite->setFlipX(true);
 		}
-		if (preventRun != dir)
+		else if (direction == 4)
 		{
-			preventRun = 0;
+			mSprite->setFlipX(false);
 		}
+		direction = dir;
 	}
+	if (preventRun != dir)
+	{
+		preventRun = 0;
+	}
+}
+
+bool SpearMoblin::Target()
+{
+	auto mcPos = MainCharacter::GetInstance()->GetSprite()->getPosition();
+	auto smPos = mSprite->getPosition();
+
+	float dis = std::sqrt((mcPos.x - smPos.x)*(mcPos.x - smPos.x) + (mcPos.y - smPos.y)*(mcPos.y - smPos.y));
+
+	if (dis <= 40)
+	{
+		if (std::abs(mcPos.x - smPos.x) < std::abs(mcPos.y - smPos.y))
+		{
+			if (mcPos.y < smPos.y)
+			{
+				SetDirection(2);
+			}
+			else
+			{
+				SetDirection(1);
+			}
+		}
+		else
+		{
+			if (mcPos.x < smPos.x)
+			{
+				SetDirection(3);
+			}
+			else
+			{
+				SetDirection(4);
+			}
+		}
+		return true;
+	}
+	return false;
 }

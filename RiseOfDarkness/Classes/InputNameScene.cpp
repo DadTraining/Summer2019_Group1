@@ -47,6 +47,35 @@ bool InputNameScene::init()
 			origin.y + visibleSize.height / 1.5-10));
 	label->enableOutline(Color4B::RED, 1);
 	this->addChild(label, 1);
+
+	note = ResourceManager::GetInstance()->GetSpriteById(27);
+	note->removeFromParent();
+	addChild(note, 5);
+	note->setPosition(visibleSize / 2);
+	note->setVisible(false);
+
+	warning = ResourceManager::GetInstance()->GetLabelById(1);
+	warning->removeFromParent();
+	warning->setPosition(visibleSize / 2);
+	warning->setString("Please enter your name!");
+	addChild(warning, 6);
+	warning->setVisible(false);
+
+	close = ResourceManager::GetInstance()->GetButtonById(22);
+	close->removeFromParent();
+	close->setScale(0.2);
+	addChild(close, 6);
+	close->setPosition(visibleSize / 2 + note->getBoundingBox().size / 2);
+	close->setVisible(false);
+	close->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			note->setVisible(false);
+			warning->setVisible(false);
+			close->setVisible(false);
+		}
+	});
 	
 	textField = ui::TextField::create("enter here.. ", "fonts/Marker Felt.ttf", 30);
 	
@@ -76,9 +105,15 @@ bool InputNameScene::init()
 			if (MainCharacter::GetInstance()->GetName() != "")
 			{
 				auto gotoNext = CallFunc::create([]() {
-					Director::getInstance()->replaceScene(Level1Scene::CreateScene());
+					Director::getInstance()->replaceScene(HomeScene::CreateScene());
 				});
 				runAction(gotoNext);
+			}
+			else
+			{
+				note->setVisible(true);
+				close->setVisible(true);
+				warning->setVisible(true);
 			}
 		}
 	});

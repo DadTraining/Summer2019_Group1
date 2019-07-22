@@ -46,16 +46,6 @@ bool SelectScene::init()
 		}
 	});
 	this->addChild(buttonnewgame,1);
-	buttonnewgame->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type)
-	{
-		if (type == ui::Widget::TouchEventType::ENDED)
-		{
-			auto gotoNext = CallFunc::create([]() {
-				Director::getInstance()->replaceScene(InputNameScene::CreateScene());
-			});
-			runAction(gotoNext);
-		}
-	});
 
 	auto btcont = ResourceManager::GetInstance()->GetButtonById(4)->clone();//Button::create("/res/buttons/continue.png");
 	btcont->setPosition(Vec2(visibleSize.width / 4 + origin.x, visibleSize.height / 1.6 + origin.y));
@@ -133,12 +123,12 @@ bool SelectScene::init()
 	buttondelete3->setScale(0.75);
 	this->addChild(buttondelete3);
 	//=============
-	auto text = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(4));//Sprite::create("/res/sprites/h.png");
-	text->setAnchorPoint(Vec2(0, 0));
-	text->setPosition(Vec2(visibleSize.width / 8 + origin.x, visibleSize.height / 30+ origin.y));
-	text->setScaleX(1.5);
-	text->setScaleY(0.4);
-	this->addChild(text);
+	//auto text = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(4));//Sprite::create("/res/sprites/h.png");
+	//text->setAnchorPoint(Vec2(0, 0));
+	//text->setPosition(Vec2(visibleSize.width / 8 + origin.x, visibleSize.height / 30+ origin.y));
+	//text->setScaleX(1.5);
+	//text->setScaleY(0.4);
+	//this->addChild(text);
 	return true;
 }
 

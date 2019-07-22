@@ -21,7 +21,7 @@ public:
 	static const int NORMAL_ARROW_BITMASK = 5;
 
 	// STATUS
-	static const int SPEED = 2;
+	static const int SPEED = 5;
 	static const int ATTACK = 20;
 	static const int DEFEND = 10;
 
@@ -52,6 +52,21 @@ public:
 	static const int LEFT_GET_DAMAGE = 20;
 	static const int DEAD = 21;
 
+
+private:
+	int stageLevel;
+	int speed;
+	int attack;
+	int defend;
+	std::string mName;
+	float maxHP, currentHP, maxMP, currentMP;
+
+public:
+	int GetSpeed();
+	int GetAttack();
+	std::string GetName();
+	int GetStageLevel();
+
 public:
 	static MainCharacter* GetInstance();
 	void Init(std::string name);
@@ -61,10 +76,7 @@ public:
 	int GetCurrentState();
 	void Update(float deltaTime);
 	void SetState(int nextStage);
-	int GetSpeed();
-	std::string GetName();
 	Inventory *GetInventory();
-	int GetStageLevel();
 	int GetDirection();
 	void SetDirection(int direction);
 	void Idle();
@@ -80,7 +92,6 @@ public:
 	void StopDefend();
 	float GetPercentHP();
 	float GetPercentMP();
-	int GetAttack();
 	void AutoRevive(float deltaTime);
 	void AddToLayer(Layer* layer);
 	void GetDamage(int damage);
@@ -95,17 +106,10 @@ private:
 	std::vector<int> mAllItems;
 	std::vector<Item*> mItems;
 	Inventory *inventory;
-
-	int stageLevel;
 	int currentState;
 	int direction;
-	int speed;
-	int attack;
-	int defend;
-	int preventRun;
-	float maxHP, currentHP, maxMP, currentMP;
+	int preventRun;	
 	float countingTime;
-	std::string mName;
 	Slash* slash;
 	MainCharacter();
 	~MainCharacter();
