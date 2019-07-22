@@ -13,12 +13,12 @@ class MainCharacter
 {
 public:
 	// BIT MASK
-	static const int MAIN_CHARACTER_BITMASK = 0;
-	static const int OBSTACLE_BITMASK = 1;
-	static const int SLASH_BITMASK = 2;
-	static const int SPEARMOBLIN_BITMASK = 3;
-	static const int PIERCE_BITMASK = 4;
-	static const int NORMAL_ARROW_BITMASK = 5;
+	static const int MAIN_CHARACTER_BITMASK = 100;
+	static const int OBSTACLE_BITMASK = 101;
+	static const int SLASH_BITMASK = 102;
+	static const int SPEARMOBLIN_BITMASK = 103;
+	static const int PIERCE_BITMASK = 104;
+	static const int NORMAL_ARROW_BITMASK = 105;
 
 	// STATUS
 	static const int SPEED = 5;

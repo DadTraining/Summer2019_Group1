@@ -158,12 +158,9 @@ void MainCharacter::SetState(int nextState)
 			case GO_UP:
 			case GO_DOWN:
 			case GO_LEFT:
-				if ((currentState == FRONT_IDLE || currentState == BACK_IDLE || currentState == LEFT_IDLE))
-				{
-					mSprite->stopAllActions();
-					mSprite->runAction(mAction[nextState]);
-					currentState = nextState;
-				}
+				mSprite->stopAllActions();
+				mSprite->runAction(mAction[nextState]);
+				currentState = nextState;
 				break;
 			case FRONT_SLASH:
 			case BACK_SLASH:
@@ -397,7 +394,8 @@ void MainCharacter::SetPreventRun(int prevent)
 
 void MainCharacter::Run()
 {
-	if (currentState != FRONT_SHIELD && currentState != BACK_SHIELD && currentState != LEFT_SHIELD && currentHP > 0)
+	if ((currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD || currentState == FRONT_IDLE
+		|| currentState == LEFT_IDLE || currentState == BACK_IDLE || currentState == GO_UP || currentState == GO_LEFT || currentState == GO_DOWN) && currentHP > 0)
 	{
 		switch (direction)
 		{

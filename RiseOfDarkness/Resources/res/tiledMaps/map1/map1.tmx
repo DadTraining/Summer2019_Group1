@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="68" height="88" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="27">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="68" height="88" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="31">
  <tileset firstgid="1" source="map1.tsx"/>
  <tileset firstgid="6161" source="obstacles.tsx"/>
  <tileset firstgid="6161" source="obstacle.tsx"/>
@@ -193,7 +193,13 @@
 </data>
  </layer>
  <objectgroup id="8" name="SpearMoblin">
-  <object id="23" name="01" x="696" y="1093">
+  <object id="23" name="01" x="666" y="1101">
+   <point/>
+  </object>
+  <object id="27" name="02" x="752" y="1037">
+   <point/>
+  </object>
+  <object id="28" name="03" x="789" y="974">
    <point/>
   </object>
  </objectgroup>
