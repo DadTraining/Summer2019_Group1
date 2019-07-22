@@ -34,6 +34,7 @@ public:
 	virtual void CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* layer);
 	virtual void SetCamera(Vec2 pos);
 	void OpenInventory(cocos2d::Ref * sender);
+	void ShowInventoryGrid();
 	virtual void AddListener() = 0;
 	virtual void UpdateController();
 };

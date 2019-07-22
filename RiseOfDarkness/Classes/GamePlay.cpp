@@ -313,9 +313,35 @@ void GamePlay::SetCamera(Vec2 pos)
 
 void GamePlay::OpenInventory(cocos2d::Ref * sender)
 {
+	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	);
+}
+
+void GamePlay::ShowInventoryGrid()
+{
+	auto items = MainCharacter::GetInstance()->GetInventory()->GetItems();
+	int cols = 0, rows = 0;
+	for (int i = 0; i < items.size(); i++)
+	{
+		if (items[i]->GetIcon()!=NULL)
+		{
+			if (cols == 6)
+			{
+				rows++;
+				cols = 0;
+			}
+			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->removeFromParent();
+			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(items[i]->GetIcon(), 22);
+			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->setPosition(
+				Vec2(64 * cols + 32,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
+			);
+			cols++;
+		}
+		
+	}
 }
 
 void GamePlay::DisablePressed()

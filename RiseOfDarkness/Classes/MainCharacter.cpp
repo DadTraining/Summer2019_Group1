@@ -24,14 +24,9 @@ void MainCharacter::AddToLayer(Layer* layer)
 	{
 		layer->addChild(mArrows[i]->GetSprite(), 7);
 	}
-	//inventory->SetSpritePosition(Vec2(500, 250));
+	
 	inventory->AddToLayer(layer);
 	inventory->SetVisible(false);
-	auto items = inventory->GetItems();
-	for (int i = 0; i < items.size(); i++)
-	{
-		items[i]->AddToScene(inventory->GetTab(1),Vec2(64*i+32,inventory->GetSize().y-32)-Vec2(0,69));
-	}
 }
 
 void MainCharacter::Init(std::string name)
@@ -48,10 +43,11 @@ void MainCharacter::CreateMainCharacter()
 	auto grid = Sprite::create("res/sprites/item/InventoryGrid.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	mAllItems.push_back(1);
-	mAllItems.push_back(2);
+	
 	inventory->AddItem(1);
 	inventory->AddItem(2);
+	inventory->AddItem(3);
+	
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
 	mSprite->setScale(2.0);

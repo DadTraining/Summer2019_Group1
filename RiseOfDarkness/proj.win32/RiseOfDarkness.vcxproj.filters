@@ -50,12 +50,12 @@
     <ClCompile Include="..\Classes\Enemy.cpp" />
     <ClCompile Include="..\Classes\SpearMoblin.cpp" />
     <ClCompile Include="..\Classes\Pierce.cpp" />
-    <ClCompile Include="..\Classes\Armor.cpp" />
     <ClCompile Include="..\Classes\Arrow.cpp" />
     <ClCompile Include="..\Classes\Inventory.cpp" />
     <ClCompile Include="..\Classes\Item.cpp" />
-    <ClCompile Include="..\Classes\Potion.cpp" />
-    <ClCompile Include="..\Classes\Weapon.cpp" />
+    <ClCompile Include="..\Classes\ItemDatabase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -107,12 +107,12 @@
     <ClInclude Include="..\Classes\Enemy.h" />
     <ClInclude Include="..\Classes\SpearMoblin.h" />
     <ClInclude Include="..\Classes\Pierce.h" />
-    <ClInclude Include="..\Classes\Armor.h" />
     <ClInclude Include="..\Classes\Arrow.h" />
     <ClInclude Include="..\Classes\Inventory.h" />
     <ClInclude Include="..\Classes\Item.h" />
-    <ClInclude Include="..\Classes\Potion.h" />
-    <ClInclude Include="..\Classes\Weapon.h" />
+    <ClInclude Include="..\Classes\ItemDatabase.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

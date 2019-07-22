@@ -149,7 +149,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
-    <ClCompile Include="..\Classes\Armor.cpp" />
     <ClCompile Include="..\Classes\Arrow.cpp" />
     <ClCompile Include="..\Classes\Enemy.cpp" />
     <ClCompile Include="..\Classes\GamePlay.cpp" />
@@ -157,6 +156,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\HomeScene.cpp" />
     <ClCompile Include="..\Classes\Inventory.cpp" />
     <ClCompile Include="..\Classes\Item.cpp" />
+    <ClCompile Include="..\Classes\ItemDatabase.cpp" />
     <ClCompile Include="..\Classes\Level2Scene.cpp" />
     <ClCompile Include="..\Classes\MainCharacter.cpp" />
     <ClCompile Include="..\Classes\Level1Scene.cpp" />
@@ -166,17 +166,14 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\MainMenuScene.cpp" />
     <ClCompile Include="..\Classes\Pierce.cpp" />
     <ClCompile Include="..\Classes\Monster.cpp" />
-    <ClCompile Include="..\Classes\Potion.cpp" />
     <ClCompile Include="..\Classes\ResourceManager.cpp" />
     <ClCompile Include="..\Classes\SelectScene.cpp" />
     <ClCompile Include="..\Classes\Slash.cpp" />
     <ClCompile Include="..\Classes\SpearMoblin.cpp" />
-    <ClCompile Include="..\Classes\Weapon.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
-    <ClInclude Include="..\Classes\Armor.h" />
     <ClInclude Include="..\Classes\Arrow.h" />
     <ClInclude Include="..\Classes\Enemy.h" />
     <ClInclude Include="..\Classes\GamePlay.h" />
@@ -184,6 +181,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\HomeScene.h" />
     <ClInclude Include="..\Classes\Inventory.h" />
     <ClInclude Include="..\Classes\Item.h" />
+    <ClInclude Include="..\Classes\ItemDatabase.h" />
     <ClInclude Include="..\Classes\Level2Scene.h" />
     <ClInclude Include="..\Classes\MainCharacter.h" />
     <ClInclude Include="..\Classes\Level1Scene.h" />
@@ -193,12 +191,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\MainMenuScene.h" />
     <ClInclude Include="..\Classes\Pierce.h" />
     <ClInclude Include="..\Classes\Monster.h" />
-    <ClInclude Include="..\Classes\Potion.h" />
     <ClInclude Include="..\Classes\ResourceManager.h" />
     <ClInclude Include="..\Classes\SelectScene.h" />
     <ClInclude Include="..\Classes\Slash.h" />
     <ClInclude Include="..\Classes\SpearMoblin.h" />
-    <ClInclude Include="..\Classes\Weapon.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
