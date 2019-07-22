@@ -369,12 +369,10 @@ void HomeScene::CreateAllButton(Layer* layer)
 
 	hpLoadingBar = get->GetLoadingbar(1);
 	hpLoadingBar->removeFromParent();
-	hpLoadingBar->setPercent(50);
 	layer->addChild(hpLoadingBar, 10);
 
 	mpLoadingBar = get->GetLoadingbar(2);
 	mpLoadingBar->removeFromParent();
-	mpLoadingBar->setPercent(50);
 	layer->addChild(mpLoadingBar, 10);
 
 	SetCamera(mainCharacter->getPosition());

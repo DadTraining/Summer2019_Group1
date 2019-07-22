@@ -235,7 +235,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	auto infoBar = get->GetSpriteById(20);
 	infoBar->setAnchorPoint(Vec2(0, 1));
 	infoBar->removeFromParent();
-	layer->addChild(infoBar, 12);
+	layer->addChild(infoBar, 8);
 	m_sprites.push_back(infoBar);
 
 	auto hpBar = get->GetSpriteById(21);
@@ -250,11 +250,11 @@ void GamePlay::CreateAllButton(Layer* layer)
 
 	hpLoadingBar = get->GetLoadingbar(1);
 	hpLoadingBar->removeFromParent();
-	layer->addChild(hpLoadingBar, 12);
+	layer->addChild(hpLoadingBar, 10);
 
 	mpLoadingBar = get->GetLoadingbar(2);
 	mpLoadingBar->removeFromParent();
-	layer->addChild(mpLoadingBar, 12);
+	layer->addChild(mpLoadingBar, 10);
 
 	SetCamera(mainCharacter->getPosition());
 }
