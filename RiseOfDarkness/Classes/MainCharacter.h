@@ -71,6 +71,7 @@ public:
 	int GetAttack();
 	std::string GetName();
 	int GetStageLevel();
+	Inventory *GetInventory();
 
 public:
 	static MainCharacter* GetInstance();
@@ -81,7 +82,6 @@ public:
 	int GetCurrentState();
 	void Update(float deltaTime);
 	void SetState(int nextStage);
-	Inventory *GetInventory();
 	int GetDirection();
 	void SetDirection(int direction);
 	void Idle();

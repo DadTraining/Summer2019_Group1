@@ -79,6 +79,8 @@ void HomeScene::AddListener()
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(HomeScene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+	m_buttons[6]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));
 }
 
 bool HomeScene::OnTouchBegan(Touch* touch, Event* event)
@@ -427,7 +429,6 @@ void HomeScene::SetCamera(Vec2 pos)
 
 	m_buttons[4]->setPosition(Vec2(pos.x, pos.y - visibleSize.height / 2));
 	m_buttons[6]->setPosition(Vec2(pos.x+visibleSize.width/8, pos.y - visibleSize.height / 2));
-	m_buttons[6]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));
 	m_buttons[5]->setPosition(Vec2(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2));
 	mName->setPosition(pos.x - visibleSize.width / 2 + m_buttons[5]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_buttons[5]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
 	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_buttons[5]->getBoundingBox().size.height);

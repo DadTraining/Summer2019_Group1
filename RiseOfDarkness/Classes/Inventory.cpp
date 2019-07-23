@@ -68,10 +68,6 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 		inventory.push_back(new Item());
 		slots.push_back(new Item());
 	}
-	/*AddItem(1);
-	AddItem(11);
-	AddItem(4);
-	AddItem(7);*/
 }
 
 void Inventory::AddItem(int id)  //,Layer* layer

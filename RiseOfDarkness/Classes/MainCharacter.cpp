@@ -1,6 +1,6 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
-#include "Arrow.h"
+
 MainCharacter* MainCharacter::m_instance = nullptr;
 
 MainCharacter::MainCharacter() {}
@@ -25,15 +25,8 @@ void MainCharacter::AddToLayer(Layer* layer)
 		mArrows[i]->AddToScene(layer);
 	}
 
-
-	//inventory->SetSpritePosition(Vec2(500, 250));
-	/*inventory->AddToLayer(layer);
+	inventory->AddToLayer(layer);
 	inventory->SetVisible(false);
-	auto items = inventory->GetItems();
-	for (int i = 0; i < items.size(); i++)
-	{
-		items[i]->AddToScene(inventory->GetTab(1),Vec2(64*i+32,inventory->GetSize().y-32)-Vec2(0,69));
-	}*/
 }
 
 void MainCharacter::Init(std::string name)
