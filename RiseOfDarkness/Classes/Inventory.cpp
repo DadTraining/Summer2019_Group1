@@ -89,11 +89,11 @@ void Inventory::SellItem(int)
 {
 }
 
-void Inventory::RemoveItem(int id)
+void Inventory::RemoveItem(int id,int index)
 {
 	for (int i = 0; i < inventory.size(); i++)
 	{
-		if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL)
+		if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL && i==index)
 		{
 			slots[i] = new Item();
 			log("removed item %d", i);
@@ -235,6 +235,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 	log("item %d clicked!", id);
 	menu->setVisible(!menu->isVisible());
 	menu->setPosition(0-btnBack->getContentSize().width/2,GetSize().y);
+	menu->setAnchorPoint(Vec2(0, 0));
 	menu->removeFromParent();
 	GetTab(1)->addChild(menu, 99);
 }
@@ -244,10 +245,10 @@ void Inventory::btnBackInventory(cocos2d::Ref *)
 	menu->setVisible(!menu->isVisible());
 }
 
-void Inventory::btnEquipInventory(cocos2d::Ref *, int id)
+void Inventory::btnEquipInventory(cocos2d::Ref *, int i)
 {
 	log("equip item");
-	GetTab(1)->removeChild(slots[id]->GetIcon());
-	RemoveItem(slots[id]->GetID());
+	GetTab(1)->removeChild(slots[i]->GetIcon());
+	RemoveItem(slots[i]->GetID(),i);
 	menu->setVisible(!menu->isVisible());
 }

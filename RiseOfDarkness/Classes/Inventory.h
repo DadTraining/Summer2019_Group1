@@ -11,7 +11,7 @@ public:
 	void Init(cocos2d::Sprite* sprite);
 	void AddItem(int);
 	void SellItem(int);
-	void RemoveItem(int);
+	void RemoveItem(int,int);
 	void SetCapacity(int);
 	cocos2d::Sprite* GetClickBox();
 	int GetCapacity();
