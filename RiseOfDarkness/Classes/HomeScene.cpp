@@ -215,6 +215,7 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 
 void HomeScene::OpenInventory(cocos2d::Ref * sender)
 {
+	HomeScene::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	);
