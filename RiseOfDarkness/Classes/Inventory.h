@@ -9,10 +9,11 @@ public:
 	Inventory(cocos2d::Sprite*);
 	~Inventory();
 	void Init(cocos2d::Sprite* sprite);
-	void AddItem(int);  //, cocos2d::Layer*
+	void AddItem(int);
 	void SellItem(int);
 	void RemoveItem(int);
 	void SetCapacity(int);
+	cocos2d::Sprite* GetClickBox();
 	int GetCapacity();
 	void SetVisible(bool b);
 	bool IsVisible();
@@ -24,7 +25,7 @@ public:
 	cocos2d::Vec2 GetSize();
 	std::vector<Item*> inventory;
 	std::vector<Item*> slots;
-	cocos2d::Sprite* clickBox;
+	
 	bool InventoryContains(int id);
 	void ItemClick(cocos2d::Ref * pSender, int id);  //, cocos2d::Layer*
 	int slotX, slotY;
@@ -32,6 +33,7 @@ public:
 	void btnEquipInventory(cocos2d::Ref*, int);
 	cocos2d::Menu *menu;
 private:
+	cocos2d::Sprite* clickBox;
 	cocos2d::Sprite* mSprite;
 	cocos2d::ui::TabControl *tab;
 	cocos2d::ui::TabHeader *weapon, *potion, *armor;

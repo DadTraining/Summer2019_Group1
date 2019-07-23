@@ -43,9 +43,9 @@ void MainCharacter::CreateMainCharacter()
 	auto grid = Sprite::create("res/sprites/item/InventoryGrid.png");
 	grid->retain();
 	inventory = new Inventory(grid);
+	inventory->AddItem(0);
 	inventory->AddItem(1);
-	inventory->AddItem(2);
-	inventory->AddItem(3);
+	inventory->AddItem(1);
 
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);

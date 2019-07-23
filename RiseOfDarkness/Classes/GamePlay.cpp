@@ -411,6 +411,8 @@ void GamePlay::ShowInventoryGrid()
 {
 	auto items = MainCharacter::GetInstance()->GetInventory()->GetItems();
 	int cols = 0, rows = 0;
+	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
+	MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
 	for (int i = 0; i < items.size(); i++)
 	{
 		if (items[i]->GetIcon() != NULL)
@@ -421,7 +423,8 @@ void GamePlay::ShowInventoryGrid()
 				cols = 0;
 			}
 			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->removeFromParent();
-			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(items[i]->GetIcon(), 22);
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(items[i]->GetIcon(), 21);
 			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)

@@ -17,6 +17,7 @@ Inventory::~Inventory()
 void Inventory::Init(cocos2d::Sprite* sprite)
 {
 	clickBox = Sprite::create("res/sprites/item/click.png");
+	clickBox->setPosition(-500, -500);
 	clickBox->retain();
 	slotX = 6;
 	slotY = 4;
@@ -57,7 +58,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	tab->insertTab(1, potion, container2);
 	tab->insertTab(2, armor, container3);
 
-	tab->setSelectTab(0);
+	tab->setSelectTab(1);
 	CC_SAFE_RETAIN(tab);
 	CC_SAFE_RETAIN(container1);
 	CC_SAFE_RETAIN(container2);
@@ -70,7 +71,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	}
 }
 
-void Inventory::AddItem(int id)  //,Layer* layer
+void Inventory::AddItem(int id)
 {
 	for (int i = 0; i < inventory.size(); i++)
 	{
@@ -101,10 +102,13 @@ void Inventory::RemoveItem(int id)
 	}
 }
 
-
-
 void Inventory::SetCapacity(int)
 {
+}
+
+cocos2d::Sprite * Inventory::GetClickBox()
+{
+	return clickBox;
 }
 
 int Inventory::GetCapacity()
@@ -114,6 +118,7 @@ int Inventory::GetCapacity()
 
 void Inventory::SetVisible(bool b)
 {
+
 	tab->setVisible(b);
 	mSprite->setVisible(b);
 }
@@ -136,8 +141,11 @@ cocos2d::Vec2 Inventory::GetSpritePosition()
 
 void Inventory::AddToLayer(cocos2d::Layer *layer)
 {
+	mSprite->removeFromParent();
+	tab->removeFromParent();
 	layer->addChild(mSprite, 16);
 	layer->addChild(tab, 17);
+	
 }
 
 cocos2d::ui::Layout *Inventory::GetTab(int tabIndex)
@@ -187,13 +195,13 @@ bool Inventory::InventoryContains(int id)
 
 void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 {
-	log("item %d clicked", id + 1);
+	clickBox->setPosition(slots[id]->GetIcon()->getPosition());
 	auto btnEquip = MenuItemImage::create("res/sprites/item/btnEquip.png", "res/sprites/item/btnEquip.png",
 		CC_CALLBACK_1(Inventory::btnEquipInventory, this, id));
 	auto btnDrop = MenuItemImage::create("res/sprites/item/btnDrop.png", "res/sprites/item/btnDrop.png");
 	auto btnBack = MenuItemImage::create("res/sprites/item/btnClose.png", "res/sprites/item/btnClose.png",
 		CC_CALLBACK_1(Inventory::btnBackInventory, this));
-
+	
 	btnDrop->setScale(0.5);
 	btnEquip->setScale(0.5);
 	btnDrop->setPositionY(btnEquip->getPositionY() - btnEquip->getContentSize().height / 2);
@@ -207,12 +215,18 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 	log("item %d clicked!", id);
 	menu->setVisible(!menu->isVisible());
 	menu->setPosition(slots[id]->GetIcon()->getPosition());
+	menu->removeFromParent();
+	GetTab(1)->addChild(menu, 22);
 }
 
 void Inventory::btnBackInventory(cocos2d::Ref *)
 {
+	menu->setVisible(!menu->isVisible());
 }
 
-void Inventory::btnEquipInventory(cocos2d::Ref *, int)
+void Inventory::btnEquipInventory(cocos2d::Ref *, int id)
 {
+	log("equip item");
+	GetTab(1)->removeChild(slots[id]->GetIcon());
+	RemoveItem(slots[id]->GetID());
 }
