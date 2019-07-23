@@ -401,6 +401,7 @@ void GamePlay::UpdateController()
 
 void GamePlay::OpenInventory(cocos2d::Ref * sender)
 {
+	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())

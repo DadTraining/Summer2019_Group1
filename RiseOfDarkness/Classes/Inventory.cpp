@@ -174,6 +174,25 @@ cocos2d::Vec2 Inventory::GetSize()
 	return tab->getContentSize();
 }
 
+void Inventory::AutoArrange()
+{
+	log("arrange");
+	for (int i = 0; i < slots.size()-1; i++)
+	{
+		if (slots[i]->GetIcon()==NULL)
+		{
+			for (int j = i+1; j < slots.size(); j++)
+			{
+				if (slots[j]->GetIcon()!=NULL)
+				{
+					swap(slots[i], slots[j]);
+					break;
+				}
+			}
+		}
+	}
+}
+
 bool Inventory::InventoryContains(int id)
 {
 	for (int i = 0; i < inventory.size(); i++)
@@ -195,6 +214,7 @@ bool Inventory::InventoryContains(int id)
 
 void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 {
+	
 	clickBox->setPosition(slots[id]->GetIcon()->getPosition());
 	auto btnEquip = MenuItemImage::create("res/sprites/item/btnEquip.png", "res/sprites/item/btnEquip.png",
 		CC_CALLBACK_1(Inventory::btnEquipInventory, this, id));
@@ -214,9 +234,9 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	log("item %d clicked!", id);
 	menu->setVisible(!menu->isVisible());
-	menu->setPosition(slots[id]->GetIcon()->getPosition());
+	menu->setPosition(0-btnBack->getContentSize().width/2,GetSize().y);
 	menu->removeFromParent();
-	GetTab(1)->addChild(menu, 22);
+	GetTab(1)->addChild(menu, 99);
 }
 
 void Inventory::btnBackInventory(cocos2d::Ref *)
@@ -229,4 +249,5 @@ void Inventory::btnEquipInventory(cocos2d::Ref *, int id)
 	log("equip item");
 	GetTab(1)->removeChild(slots[id]->GetIcon());
 	RemoveItem(slots[id]->GetID());
+	menu->setVisible(!menu->isVisible());
 }

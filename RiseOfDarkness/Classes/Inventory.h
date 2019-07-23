@@ -25,7 +25,7 @@ public:
 	cocos2d::Vec2 GetSize();
 	std::vector<Item*> inventory;
 	std::vector<Item*> slots;
-	
+	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id);
 	void ItemClick(cocos2d::Ref * pSender, int id);  //, cocos2d::Layer*
 	int slotX, slotY;
