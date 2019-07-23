@@ -47,13 +47,13 @@ void MainCharacter::CreateMainCharacter()
 {
 	auto get = ResourceManager::GetInstance();
 	//CREATE ALL ITEM ID
-	/*auto grid = Sprite::create("res/sprites/item/InventoryGrid.png");
+	auto grid = Sprite::create("res/sprites/item/InventoryGrid.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	mAllItems.push_back(1);
-	mAllItems.push_back(2);
 	inventory->AddItem(1);
-	inventory->AddItem(2);*/
+	inventory->AddItem(2);
+	inventory->AddItem(3);
+
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
 	mSprite->setScale(1.8);

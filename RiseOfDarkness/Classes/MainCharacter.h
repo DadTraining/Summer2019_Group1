@@ -62,7 +62,10 @@ private:
 	int defend;
 	std::string mName;
 	float maxHP, currentHP, maxMP, currentMP;
-
+	std::vector<Arrow*>mArrows;
+	std::vector<int> mAllItems;
+	std::vector<Item*> mItems;
+	Inventory *inventory;
 public:
 	int GetSpeed();
 	int GetAttack();
@@ -104,10 +107,6 @@ private:
 	Sprite* mSprite;
 	Action* mAction[22];
 	PhysicsBody* mPhysicsBody;
-	std::vector<Arrow*>mArrows;
-	std::vector<int> mAllItems;
-	std::vector<Item*> mItems;
-	Inventory *inventory;
 	int currentState;
 	int direction;
 	int preventRun;	
