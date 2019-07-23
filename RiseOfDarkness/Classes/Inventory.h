@@ -22,9 +22,12 @@ public:
 	void AddToLayer(cocos2d::Layer*);
 	cocos2d::ui::Layout *GetTab(int tabIndex);
 	std::vector<Item*> GetItems();
+	std::vector<int> GetItemAmount();
+	std::vector<cocos2d::Label*> GetAmountLabel();
 	cocos2d::Vec2 GetSize();
 	std::vector<Item*> inventory;
 	std::vector<Item*> slots;
+	void StackItem(int id);
 	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id);
 	void ItemClick(cocos2d::Ref * pSender, int id);  //, cocos2d::Layer*
@@ -44,5 +47,6 @@ private:
 	bool showTooltip;
 	std::string toolTip;
 	int count = 0;
-	std::vector<int> targetID;
+	std::vector<int> itemAmount;
+	std::vector<cocos2d::Label*> amountLabels;
 };

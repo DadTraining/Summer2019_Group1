@@ -68,19 +68,31 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	{
 		inventory.push_back(new Item());
 		slots.push_back(new Item());
+		itemAmount.push_back(0);
+		auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 14);
+		label->retain();
+		amountLabels.push_back(label);
 	}
 }
 
 void Inventory::AddItem(int id)
 {
-	for (int i = 0; i < inventory.size(); i++)
+	if (InventoryContains(id))
 	{
-		if (slots[i]->GetIcon() == NULL)
+		StackItem(id);
+	}
+	else
+	{
+		for (int i = 0; i < inventory.size(); i++)
 		{
-			log("add item %d", id + 1);
-			slots[i] = new Item(database->items[id]);
-			slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i));
-			break;
+			if (slots[i]->GetIcon() == NULL)
+			{
+				log("add item %d", id + 1);
+				slots[i] = new Item(database->items[id]);
+				slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i));
+				itemAmount[i]++;
+				break;
+			}
 		}
 	}
 }
@@ -95,7 +107,17 @@ void Inventory::RemoveItem(int id,int index)
 	{
 		if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL && i==index)
 		{
-			slots[i] = new Item();
+			itemAmount[i]--;
+			if (itemAmount[i]==0)
+			{
+				amountLabels[i]->setString("");
+				GetTab(1)->removeChild(slots[i]->GetIcon());
+				slots[i] = new Item();
+			}
+			else
+			{
+				amountLabels[i]->setString(to_string(itemAmount[i]));
+			}
 			log("removed item %d", i);
 			break;
 		}
@@ -118,7 +140,6 @@ int Inventory::GetCapacity()
 
 void Inventory::SetVisible(bool b)
 {
-
 	tab->setVisible(b);
 	mSprite->setVisible(b);
 }
@@ -145,7 +166,6 @@ void Inventory::AddToLayer(cocos2d::Layer *layer)
 	tab->removeFromParent();
 	layer->addChild(mSprite, 16);
 	layer->addChild(tab, 17);
-	
 }
 
 cocos2d::ui::Layout *Inventory::GetTab(int tabIndex)
@@ -169,9 +189,31 @@ std::vector<Item*> Inventory::GetItems()
 	return slots;
 }
 
+std::vector<int> Inventory::GetItemAmount()
+{
+	return itemAmount;
+}
+
+std::vector<Label*> Inventory::GetAmountLabel()
+{
+	return amountLabels;
+}
+
 cocos2d::Vec2 Inventory::GetSize()
 {
 	return tab->getContentSize();
+}
+
+void Inventory::StackItem(int id)
+{
+	for (int i = 0; i < slots.size(); i++)
+	{
+		if (slots[i]->GetID() == id)
+		{
+			itemAmount[i]++;
+			break;
+		}
+	}
 }
 
 void Inventory::AutoArrange()
@@ -186,6 +228,7 @@ void Inventory::AutoArrange()
 				if (slots[j]->GetIcon()!=NULL)
 				{
 					swap(slots[i], slots[j]);
+					swap(itemAmount[i], itemAmount[j]);
 					break;
 				}
 			}
@@ -195,15 +238,10 @@ void Inventory::AutoArrange()
 
 bool Inventory::InventoryContains(int id)
 {
-	for (int i = 0; i < inventory.size(); i++)
-	{
-		log("%d  ", slots[i]->GetID());
-	}
-
 	bool result = false;
 	for (int i = 0; i < slots.size(); i++)
 	{
-		result = slots[i]->GetID() == id;
+		result = (slots[i]->GetID() == id && slots[i]->GetIcon()!=NULL);
 		if (result)
 		{
 			break;
@@ -214,7 +252,6 @@ bool Inventory::InventoryContains(int id)
 
 void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 {
-	
 	clickBox->setPosition(slots[id]->GetIcon()->getPosition());
 	auto btnEquip = MenuItemImage::create("res/sprites/item/btnEquip.png", "res/sprites/item/btnEquip.png",
 		CC_CALLBACK_1(Inventory::btnEquipInventory, this, id));
@@ -224,18 +261,19 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 	
 	btnDrop->setScale(0.5);
 	btnEquip->setScale(0.5);
-	btnDrop->setPositionY(btnEquip->getPositionY() - btnEquip->getContentSize().height / 2);
+	btnDrop->setPositionX(btnEquip->getPositionX() + btnEquip->getContentSize().width / 2);
 	menu = Menu::create(btnEquip, btnDrop, btnBack, NULL);
 	menu->setAnchorPoint(Vec2(0, 1));
 	menu->setVisible(false);
 
-	btnBack->setPositionY(btnDrop->getPositionY() - btnDrop->getContentSize().height / 2);
+	btnBack->setPositionX(btnDrop->getPositionX() + btnDrop->getContentSize().width / 2);
 	btnBack->setScale(0.5);
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	log("item %d clicked!", id);
 	menu->setVisible(!menu->isVisible());
-	menu->setPosition(0-btnBack->getContentSize().width/2,GetSize().y);
-	menu->setAnchorPoint(Vec2(0, 0));
+	menu->setPosition(btnEquip->getContentSize().width/2-btnEquip->getContentSize().width/4,
+		0-btnEquip->getContentSize().height/4);
+	menu->setAnchorPoint(Vec2(0.5, 1));
 	menu->removeFromParent();
 	GetTab(1)->addChild(menu, 99);
 }
@@ -248,7 +286,6 @@ void Inventory::btnBackInventory(cocos2d::Ref *)
 void Inventory::btnEquipInventory(cocos2d::Ref *, int i)
 {
 	log("equip item");
-	GetTab(1)->removeChild(slots[i]->GetIcon());
 	RemoveItem(slots[i]->GetID(),i);
 	menu->setVisible(!menu->isVisible());
 }

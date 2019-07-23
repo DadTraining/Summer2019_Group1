@@ -411,6 +411,8 @@ void GamePlay::OpenInventory(cocos2d::Ref * sender)
 void GamePlay::ShowInventoryGrid()
 {
 	auto items = MainCharacter::GetInstance()->GetInventory()->GetItems();
+	std::vector<int> itemAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount();
+	std::vector<Label*> amountLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel();
 	int cols = 0, rows = 0;
 	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
 	MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
@@ -430,6 +432,13 @@ void GamePlay::ShowInventoryGrid()
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
 			);
+			amountLabel[i]->removeFromParent();
+			if (itemAmount[i]>1)
+			{
+				amountLabel[i]->setString(std::to_string(itemAmount[i]));
+			}
+			amountLabel[i]->setPosition(items[i]->GetIcon()->getPosition() + Vec2(16, -16));
+			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(amountLabel[i], 22);
 			cols++;
 		}
 
