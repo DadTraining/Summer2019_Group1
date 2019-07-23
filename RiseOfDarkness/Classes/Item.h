@@ -1,21 +1,34 @@
 #pragma once
 #include "cocos2d.h"
 #include "ui\CocosGUI.h"
-#define WEAPON 1
-#define ARMOR 2
-#define POTION 3
-#define BOOT 4
-#define BOW 5
+
+enum ItemType
+{
+	weapon,
+	potion,
+	armor
+};
+
 class Item {
-protected:
-	cocos2d::ui::Button* itemButton;
-	int id;
-	int kind;
-	int amount;
+private:
+	std::string itemName;
+	int itemID;
+	std::string itemDesc;
+	int itemPower;
+	int itemSpeed;
+	cocos2d::ui::Widget* itemIcon;
+	ItemType itemType;
 public:
+	Item(std::string name, int id, std::string desc, int power, int speed, ItemType type);
+	Item(std::string name);
+	cocos2d::ui::Widget* GetIcon();
+	int GetID();
+	Item(const Item*);
+	std::string GetDesc();
 	int GetKind();
 	void CreateSprite(int);
 	void AddToScene(cocos2d::ui::Layout *layout, cocos2d::Vec2 pos);
+	void RemoveFromScene();
 	Item();
 	~Item();
 };
