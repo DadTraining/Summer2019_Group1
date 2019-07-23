@@ -136,6 +136,8 @@ cocos2d::Vec2 Inventory::GetSpritePosition()
 
 void Inventory::AddToLayer(cocos2d::Layer *layer)
 {
+	mSprite->removeFromParent();
+	tab->removeFromParent();
 	layer->addChild(mSprite, 16);
 	layer->addChild(tab, 17);
 }

@@ -5,7 +5,7 @@
 
 BowMoblin::BowMoblin() {}
 
-BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos)
+BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos, int group)
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(31));
 	mSprite->setScale(1.5);
@@ -66,17 +66,13 @@ BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos)
 	coolDownAttack = 0;
 	preventRun = 0;
 
-	for (int i = 0; i < 5; i++)
-	{
-		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
-		sprite->setScaleX(0.6f);
-		Arrow *arrow = new Arrow(sprite, MainCharacter::BOWMOBLIN_ARROW_BITMASK);
-		arrow->SetVisible(false);
-		arrow->SetDistance(0);
-		layer->addChild(sprite, 7);
-		m_arrows.push_back(arrow);
-	}
-
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+	sprite->setScaleX(0.6f);
+	arrow = new Arrow(sprite, MainCharacter::BOWMOBLIN_ARROW_BITMASK);
+	arrow->SetVisible(false);
+	arrow->GetSprite()->getPhysicsBody()->setGroup(group);
+	arrow->SetDistance(0);
+	layer->addChild(sprite, 7);
 }
 
 BowMoblin::~BowMoblin()
@@ -103,7 +99,6 @@ void BowMoblin::Update(float deltaTime)
 		Idle();
 		if (Target(ATTACK_RANGE))
 		{
-			coolDownAttack += deltaTime;
 			if (coolDownAttack >= ATTACK_COOLDOWN)
 			{
 				coolDownAttack = 0;
@@ -118,17 +113,15 @@ void BowMoblin::Update(float deltaTime)
 		{
 			Run();
 		}
+		coolDownAttack += deltaTime;
 		countingTime += deltaTime;
 		if (countingTime >= REVIVE_TIME)
 		{
 			AutoRevive(HP_REVIVE);
 		}
-		for (int i = 0; i < m_arrows.size(); i++)
+		if (arrow->IsVisible())
 		{
-			if (m_arrows[i]->IsVisible())
-			{
-				m_arrows[i]->update(deltaTime);
-			}
+			arrow->update(deltaTime);
 		}
 	}
 }
@@ -230,57 +223,76 @@ void BowMoblin::Run()
 
 void BowMoblin::Attack()
 {
-	for (int i = 0; i < m_arrows.size(); i++)
+
+	if (!arrow->IsVisible())
 	{
-		if (!m_arrows[i]->IsVisible())
+		arrow->SetRotate(180);
+		arrow->SetPosition(mSprite->getPosition());
+		arrow->SetVisible(true);
+		switch (direction)
 		{
-			m_arrows[i]->SetRotate(180);
-			m_arrows[i]->SetPosition(mSprite->getPosition());
-			m_arrows[i]->SetVisible(true);
-			switch (direction)
-			{
-			case 1:
-				m_arrows[i]->SetDirection(2);
-				SetState(BACK_ATTACK);
-				break;
-			case 2:
-				m_arrows[i]->SetDirection(3);
-				SetState(FRONT_ATTACK);
-				break;
-			case 3:
-				m_arrows[i]->SetDirection(0);
-				SetState(LEFT_ATTACK);
-				break;
-			case 4:
-				m_arrows[i]->SetDirection(1);
-				SetState(LEFT_ATTACK);
-			}
+		case 1:
+			arrow->SetDirection(2);
+			SetState(BACK_ATTACK);
 			break;
+		case 2:
+			arrow->SetDirection(3);
+			SetState(FRONT_ATTACK);
+			break;
+		case 3:
+			arrow->SetDirection(0);
+			SetState(LEFT_ATTACK);
+			break;
+		case 4:
+			arrow->SetDirection(1);
+			SetState(LEFT_ATTACK);
 		}
-	}
-	switch (direction)
-	{
-	case 1:
-
-		SetState(BACK_ATTACK);
-		break;
-	case 2:
-
-		SetState(FRONT_ATTACK);
-		break;
-	case 3:
-
-		SetState(LEFT_ATTACK);
-		break;
-	case 4:
-
-		SetState(LEFT_ATTACK);
 	}
 }
 
-std::vector<Arrow*> BowMoblin::GetListArrow()
+Arrow* BowMoblin::GetArrow()
 {
-	return m_arrows;
+	return arrow;
+}
+
+bool BowMoblin::Detect(float detectRange)
+{
+	auto mcPos = MainCharacter::GetInstance()->GetSprite()->getPosition();
+	auto ePos = mSprite->getPosition();
+
+	float dis = std::sqrt((mcPos.x - ePos.x)*(mcPos.x - ePos.x) + (mcPos.y - ePos.y)*(mcPos.y - ePos.y));
+
+	if (dis <= detectRange)
+	{
+		if (countingTime > 1)
+		{
+			countingTime = 0;
+			if (std::abs(mcPos.x - ePos.x) > std::abs(mcPos.y - ePos.y))
+			{
+				if (mcPos.y < ePos.y)
+				{
+					SetDirection(2);
+				}
+				else
+				{
+					SetDirection(1);
+				}
+			}
+			else
+			{
+				if (mcPos.x < ePos.x)
+				{
+					SetDirection(3);
+				}
+				else
+				{
+					SetDirection(4);
+				}
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 

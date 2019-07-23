@@ -26,10 +26,10 @@ private:
 	static const int HP_REVIVE = 10;
 
 	Action* mAction[9];
-	std::vector<Arrow*> m_arrows;
+	Arrow* arrow;
 public:
 	BowMoblin();
-	BowMoblin(Layer* layer, int direction, Vec2 pos);
+	BowMoblin(Layer* layer, int direction, Vec2 pos, int group);
 	~BowMoblin();
 
 	void Update(float deltaTime);
@@ -42,7 +42,9 @@ public:
 
 	void Attack();
 
-	std::vector<Arrow*> GetListArrow();
+	Arrow* GetArrow();
+
+	bool Detect(float detectRange);
 };
 
 #endif

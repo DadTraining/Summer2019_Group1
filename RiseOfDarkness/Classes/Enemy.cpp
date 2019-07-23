@@ -56,7 +56,6 @@ void Enemy::AutoRevive(int HP)
 	}
 }
 
-
 void Enemy::SetPreventRun()
 {
 	switch (direction)
@@ -195,4 +194,9 @@ bool Enemy::Target(float attackRange)
 		return true;
 	}
 	return false;
+}
+
+Arrow* Enemy::GetArrow()
+{
+	return nullptr;
 }

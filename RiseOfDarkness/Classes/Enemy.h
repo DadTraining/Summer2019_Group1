@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "Arrow.h"
 
 using namespace cocos2d;
 
@@ -37,6 +38,7 @@ public:
 	virtual void SetDirection(int dir);
 	virtual bool Detect(float detectRange);
 	virtual bool Target(float attackRange);
+	virtual Arrow* GetArrow();
 };
 
 #endif

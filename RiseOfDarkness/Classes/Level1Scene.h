@@ -9,7 +9,7 @@ using namespace cocos2d;
 class Level1Scene : public Layer, GamePlay
 {
 private:
-	std::vector<Enemy*> m_SpearMoblins;
+	std::vector<Enemy*> m_enemies;
 public:
     static cocos2d::Scene* CreateScene();
 

@@ -93,7 +93,6 @@ void SpearMoblin::Update(float deltaTime)
 		Idle();
 		if (Target(ATTACK_RANGE))
 		{
-			coolDownAttack += deltaTime;
 			if (coolDownAttack >= ATTACK_COOLDOWN)
 			{
 				coolDownAttack = 0;
@@ -108,6 +107,7 @@ void SpearMoblin::Update(float deltaTime)
 		{
 			Run();
 		}
+		coolDownAttack += deltaTime;
 		countingTime += deltaTime;
 		if (countingTime >= REVIVE_TIME)
 		{

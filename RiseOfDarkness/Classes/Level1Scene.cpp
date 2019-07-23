@@ -13,7 +13,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -21,6 +21,7 @@ Scene* Level1Scene::CreateScene()
 
 	return scene;
 }
+
 bool Level1Scene::init()
 {
 	if (!Layer::init())
@@ -58,11 +59,11 @@ void Level1Scene::update(float deltaTime)
 
 	SetCamera(mainCharacter->getPosition());
 
-	for (int i = 0; i < m_SpearMoblins.size(); i++)
+	for (int i = 0; i < m_enemies.size(); i++)
 	{
-		if (m_SpearMoblins[i]->GetSprite()->isVisible())
+		if (m_enemies[i]->GetSprite()->isVisible())
 		{
-			m_SpearMoblins[i]->Update(deltaTime);
+			m_enemies[i]->Update(deltaTime);
 		}
 	}
 	if (!MainCharacter::GetInstance()->IsAlive())
@@ -88,7 +89,7 @@ void Level1Scene::CreateMonster()
 		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
 		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1));
 		spearMoblin->GetPhysicsBody()->setGroup(i - 1);
-		m_SpearMoblins.push_back(spearMoblin);
+		m_enemies.push_back(spearMoblin);
 	}
 
 	float x2, y2;
@@ -102,9 +103,9 @@ void Level1Scene::CreateMonster()
 		direction2 = bowGoblinGroup->getObject(str2)["direction"].asInt();
 		x2 = bowGoblinGroup->getObject(str2)["x"].asFloat();
 		y2 = bowGoblinGroup->getObject(str2)["y"].asFloat();
-		BowMoblin *bowMoblin = new BowMoblin(this, direction2, Vec2(x2, y2));
+		BowMoblin *bowMoblin = new BowMoblin(this, direction2, Vec2(x2, y2), i - 1 + amount1);
 		bowMoblin->GetPhysicsBody()->setGroup(i - 1 + amount1);
-		m_SpearMoblins.push_back(bowMoblin);
+		m_enemies.push_back(bowMoblin);
 	}
 }
 
@@ -140,7 +141,7 @@ void Level1Scene::AddListener()
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(false);
 		Director::getInstance()->resume();
-		m_SpearMoblins.clear();
+		m_enemies.clear();
 
 		auto gotoMap = CallFunc::create([] {
 			Director::getInstance()->replaceScene(MapScene::CreateScene());
@@ -149,7 +150,7 @@ void Level1Scene::AddListener()
 	});
 
 	m_buttons[7]->addClickEventListener([&](Ref* event) {
-		m_SpearMoblins.clear();
+		m_enemies.clear();
 		auto gotoMap = CallFunc::create([] {
 			Director::getInstance()->replaceScene(HomeScene::CreateScene());
 		});
@@ -157,7 +158,7 @@ void Level1Scene::AddListener()
 	});
 
 	m_buttons[8]->addClickEventListener([&](Ref* event) {
-		m_SpearMoblins.clear();
+		m_enemies.clear();
 		auto gotoMap = CallFunc::create([] {
 			Director::getInstance()->replaceScene(Level1Scene::CreateScene());
 		});
@@ -251,11 +252,11 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	{
 		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_SpearMoblins[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
 		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_SpearMoblins[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
 	}
 	
@@ -265,12 +266,12 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	{
 		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_SpearMoblins[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
 			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
 		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_SpearMoblins[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
 			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
 		}
 	}
@@ -287,7 +288,14 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
 	{
 		MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
-		
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
+		}
 	}
 
 	// SPEARMOBLIN COLLIDE OBSTACLES
@@ -296,13 +304,27 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	{
 		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_SpearMoblins[a->getGroup()]->SetPreventRun();
-			m_SpearMoblins[a->getGroup()]->ReverseDirection();
+			m_enemies[a->getGroup()]->SetPreventRun();
+			m_enemies[a->getGroup()]->ReverseDirection();
 		}
 		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_SpearMoblins[b->getGroup()]->SetPreventRun();
-			m_SpearMoblins[b->getGroup()]->ReverseDirection();
+			m_enemies[b->getGroup()]->SetPreventRun();
+			m_enemies[b->getGroup()]->ReverseDirection();
+		}
+	}
+
+	//// BOWMOBLIN ARROW COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
 		}
 	}
 
