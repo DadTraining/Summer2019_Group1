@@ -299,8 +299,20 @@
   </object>
  </objectgroup>
  <objectgroup id="18" name="mt">
-  <object id="20" name="mt1" type="2" x="112" y="240"/>
-  <object id="22" name="mt2" type="2" x="499" y="144"/>
-  <object id="23" name="mt3" type="2" x="370" y="816"/>
+  <object id="20" name="01" type="2" x="112" y="240">
+   <properties>
+    <property name="direction" value="3"/>
+   </properties>
+  </object>
+  <object id="22" name="02" type="2" x="499" y="144">
+   <properties>
+    <property name="direction" value="3"/>
+   </properties>
+  </object>
+  <object id="23" name="03" type="2" x="370" y="816">
+   <properties>
+    <property name="direction" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
