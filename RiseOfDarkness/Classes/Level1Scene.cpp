@@ -13,7 +13,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -170,13 +170,14 @@ void Level1Scene::AddListener()
 	});
 
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		// hp
-
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
 	});
 
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		// mp
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
 	});
+
+	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level1Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level1Scene::onContactBegin, this);
@@ -379,4 +380,13 @@ void Level1Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		MainCharacter::GetInstance()->StopDefend();
 	}
+}
+
+void Level1Scene::OpenInventory(cocos2d::Ref * sender)
+{
+	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
+	GamePlay::ShowInventoryGrid();
+	MainCharacter::GetInstance()->GetInventory()->SetVisible(
+		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	);
 }

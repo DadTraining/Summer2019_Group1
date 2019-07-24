@@ -289,6 +289,12 @@ void GamePlay::CreateAllButton(Layer* layer)
 	layer->addChild(mpButton, 11);
 	m_buttons.push_back(mpButton);
 
+	//BUTTON OPEN INVENTORY 11
+	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
+	buttonOpenInventory->retain();
+	layer->addChild(buttonOpenInventory, 11);
+	m_buttons.push_back(buttonOpenInventory);
+
 	SetCamera(mainCharacter->getPosition());
 }
 
@@ -366,6 +372,9 @@ void GamePlay::SetCamera(Vec2 pos)
 
 	m_buttons[9]->setPosition(Vec2(pos.x + visibleSize.width / 7, pos.y - visibleSize.height / 2 + m_buttons[9]->getBoundingBox().size.height / 2));
 	m_buttons[10]->setPosition(Vec2(m_buttons[9]->getPositionX() + m_buttons[10]->getBoundingBox().size.width + 5, m_buttons[9]->getPositionY()));
+
+	m_buttons[11]->setPosition(Vec2(m_buttons[9]->getPositionX() - m_buttons[9]->getBoundingBox().size.width, m_buttons[9]->getPositionY()));
+	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
 }
 
 void GamePlay::DisablePressed()
@@ -444,6 +453,7 @@ void GamePlay::UpdateController()
 
 void GamePlay::OpenInventory(cocos2d::Ref * sender)
 {
+	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
@@ -453,7 +463,11 @@ void GamePlay::OpenInventory(cocos2d::Ref * sender)
 void GamePlay::ShowInventoryGrid()
 {
 	auto items = MainCharacter::GetInstance()->GetInventory()->GetItems();
+	std::vector<int> itemAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount();
+	std::vector<Label*> amountLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel();
 	int cols = 0, rows = 0;
+	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
+	MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
 	for (int i = 0; i < items.size(); i++)
 	{
 		if (items[i]->GetIcon() != NULL)
@@ -464,14 +478,21 @@ void GamePlay::ShowInventoryGrid()
 				cols = 0;
 			}
 			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->removeFromParent();
-			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(items[i]->GetIcon(), 22);
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(items[i]->GetIcon(), 21);
 			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
 			);
+			amountLabel[i]->removeFromParent();
+			if (itemAmount[i]>1)
+			{
+				amountLabel[i]->setString(std::to_string(itemAmount[i]));
+			}
+			amountLabel[i]->setPosition(items[i]->GetIcon()->getPosition() + Vec2(16, -16));
+			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(amountLabel[i], 22);
 			cols++;
 		}
-
 	}
 }
 

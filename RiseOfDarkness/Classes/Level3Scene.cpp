@@ -13,7 +13,7 @@ USING_NS_CC;
 Scene* Level3Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level3Scene::create();
 
@@ -31,7 +31,7 @@ bool Level3Scene::init()
 
 	MainCharacter::GetInstance()->Refresh();
 
-	currentStage = 3;
+	currentStage = 1;
 
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(7);
 	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(8);
@@ -170,13 +170,14 @@ void Level3Scene::AddListener()
 	});
 
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		// hp
-
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
 	});
 
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		// mp
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
 	});
+
+	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level3Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level3Scene::onContactBegin, this);
@@ -379,4 +380,13 @@ void Level3Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		MainCharacter::GetInstance()->StopDefend();
 	}
+}
+
+void Level3Scene::OpenInventory(cocos2d::Ref * sender)
+{
+	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
+	GamePlay::ShowInventoryGrid();
+	MainCharacter::GetInstance()->GetInventory()->SetVisible(
+		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	);
 }

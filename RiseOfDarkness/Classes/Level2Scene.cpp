@@ -1,16 +1,19 @@
 #include "Level2Scene.h"
-#include "ResourceManager.h"
 #include "MainCharacter.h"
+#include "ResourceManager.h"
 #include "MapScene.h"
+#include "HomeScene.h"
+#include "Monster.h"
+
+using namespace std;
 
 USING_NS_CC;
-using namespace std;
 
 Scene* Level2Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
 	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-
+	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level2Scene::create();
 
 	scene->addChild(layer);
@@ -32,26 +35,13 @@ bool Level2Scene::init()
 
 	CreatePhysicsWorld("obstacles", "mc", this);
 
-	for (int i = 0; i < 3; i++)
-	{
-		auto mt = new Monster(this);
-		m_monster.push_back(mt);
-	}
-
-	for (int j = 0; j < 3; j++)
-	{
-		string nameObj = "mt" + to_string(j + 1);
-		m_listSprite[j] = m_monster[j]->GetSprite();
-		auto obj = tileMap->objectGroupNamed("mt");
-		float x = obj->getObject(nameObj)["x"].asFloat();
-		float y = obj->getObject(nameObj)["y"].asFloat();
-		m_listSprite[j]->setPosition(x, y);
-		m_monster[j]->Run();
-	}
-
 	CreateAllButton(this);
 
 	AddListener();
+
+	CreateMonster();
+
+
 
 	scheduleUpdate();
 
@@ -61,9 +51,45 @@ bool Level2Scene::init()
 void Level2Scene::update(float deltaTime)
 {
 	UpdateController();
+
 	UpdateInfoBar();
-	m_maincharacter->GetInstance()->Update(deltaTime);
+
+	MainCharacter::GetInstance()->Update(deltaTime);
+
 	SetCamera(mainCharacter->getPosition());
+
+	for (int i = 0; i < m_enemies.size(); i++)
+	{
+		if (m_enemies[i]->GetSprite()->isVisible())
+		{
+			m_enemies[i]->Update(deltaTime);
+		}
+	}
+	if (!MainCharacter::GetInstance()->IsAlive())
+	{
+		m_buttons[7]->setVisible(true);
+		m_buttons[8]->setVisible(true);
+		gameover->setVisible(true);
+	}
+}
+
+void Level2Scene::CreateMonster()
+{
+	float x2, y2;
+	int direction2;
+	auto rope = tileMap->getObjectGroup("rope");
+	int amount2 = 4;
+	char str2[10];
+	for (int i = 1; i <= amount2; i++)
+	{
+		sprintf(str2, "%02d", i);
+		direction2 = rope->getObject(str2)["direction"].asInt();
+		x2 = rope->getObject(str2)["x"].asFloat();
+		y2 = rope->getObject(str2)["y"].asFloat();
+		Monster *monster = new Monster(this, direction2, Vec2(x2, y2), i - 1);
+		monster->GetPhysicsBody()->setGroup(i - 1);
+		m_enemies.push_back(monster);
+	}
 }
 
 void Level2Scene::AddListener()
@@ -78,6 +104,51 @@ void Level2Scene::AddListener()
 	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Evade, this));
 	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::NormalAttack, this));
 	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Defend, this));
+
+	m_buttons[4]->addClickEventListener([&](Ref* event) {
+		if (!m_buttons[5]->isVisible())
+		{
+			m_buttons[4]->setVisible(false);
+			m_buttons[5]->setVisible(true);
+			m_buttons[6]->setVisible(true);
+			m_buttons[7]->setVisible(true);
+			Director::getInstance()->pause();
+		}
+	});
+
+	m_buttons[5]->addClickEventListener([&](Ref* event) {
+		m_buttons[4]->setVisible(true);
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(false);
+		m_buttons[7]->setVisible(false);
+		Director::getInstance()->resume();
+	});
+
+	m_buttons[6]->addClickEventListener([&](Ref* event) {
+		Director::getInstance()->resume();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(HomeScene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
+
+	m_buttons[7]->addClickEventListener([&](Ref* event) {
+		Director::getInstance()->resume();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(Level2Scene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
+
+	m_buttons[9]->addClickEventListener([&](Ref* event) {
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
+	});
+
+	m_buttons[10]->addClickEventListener([&](Ref* event) {
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
+	});
+
+	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level2Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level2Scene::onContactBegin, this);
@@ -110,47 +181,12 @@ void Level2Scene::OnTouchMoved(Touch* touch, Event* event)
 	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 }
 
-void Level2Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
-{
-	if (type == ui::Widget::TouchEventType::BEGAN)
-	{
-		m_maincharacter->GetInstance()->SpecialAttack();
-	}
-}
-
-void Level2Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
-{
-	if (type == ui::Widget::TouchEventType::BEGAN)
-	{
-		m_maincharacter->GetInstance()->NormalAttack();
-	}
-}
-
-void Level2Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
-{
-	if (type == ui::Widget::TouchEventType::BEGAN)
-	{
-		m_maincharacter->GetInstance()->Evade();
-	}
-}
-
-void Level2Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
-{
-	if (type == ui::Widget::TouchEventType::BEGAN)
-	{
-		m_maincharacter->GetInstance()->Defend();
-	}
-	if (type == ui::Widget::TouchEventType::ENDED)
-	{
-		m_maincharacter->GetInstance()->StopDefend();
-	}
-}
-
 bool Level2Scene::onContactBegin(PhysicsContact& contact)
 {
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
 
+	// MAIN CHARACTER WITH OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
 	{
@@ -181,29 +217,209 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
-	/*if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK) 
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == Monster::MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == Monster::MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	// ARROW COLLIDE WITH OBSTACLE
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
 	{
-		if (MainCharacter::GetInstance()->GetDirection() == 1)
+		if (a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
 		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() - 15);
+			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
 		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 2)
+		else if (b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
 		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() + 15);
+			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 3)
+	}
+
+	// MAIN CHARACTER SLASH SPEARMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() + 15);
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 4)
+		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() - 15);
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
-	}*/
+	}
+
+	// MAIN CHARACTER'S ARROW COLLIDE SPEARMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+		}
+	}
+
+	// MAIN CHARACTER'S ARROW COLLIDE ROPE MONSTER
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+		}
+	}
+
+	// SPEARMOBLIN PIERCE MAIN CHARACTER
+	if ((a->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
+	}
+
+	// BOWMOBLIN ARROW DAMAGE MAIN CHARACTER
+	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
+		}
+	}
+
+	// BULLET ROPE DAMAGE MAIN CHARACTER
+	if ((a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
+		if (a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
+		}
+	}
+
+	// SPEARMOBLIN COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		{
+			m_enemies[a->getGroup()]->SetPreventRun();
+			m_enemies[a->getGroup()]->ReverseDirection();
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		{
+			m_enemies[b->getGroup()]->SetPreventRun();
+			m_enemies[b->getGroup()]->ReverseDirection();
+		}
+	}
+
+	// ROPE MONSTER COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[a->getGroup()]->SetPreventRun();
+			m_enemies[a->getGroup()]->ReverseDirection();
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[b->getGroup()]->SetPreventRun();
+			m_enemies[b->getGroup()]->ReverseDirection();
+		}
+	}
+
+	//// BOWMOBLIN ARROW COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
+		}
+	}
+
+	//  BULLET MONSTER COLLIDE OBSTACLES
+
+	if ((a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
+		}
+	}
+
 	return true;
 }
 
+void Level2Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
+{
+	if (type == ui::Widget::TouchEventType::BEGAN)
+	{
+		MainCharacter::GetInstance()->NormalAttack();
 
+	}
+}
+
+void Level2Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
+{
+	if (type == ui::Widget::TouchEventType::BEGAN)
+	{
+		MainCharacter::GetInstance()->SpecialAttack();
+	}
+}
+
+void Level2Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
+{
+	if (type == ui::Widget::TouchEventType::BEGAN)
+	{
+		MainCharacter::GetInstance()->Evade();
+	}
+}
+
+void Level2Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
+{
+	if (type == ui::Widget::TouchEventType::BEGAN)
+	{
+		MainCharacter::GetInstance()->Defend();
+	}
+	if (type == ui::Widget::TouchEventType::ENDED)
+	{
+		MainCharacter::GetInstance()->StopDefend();
+	}
+}
+
+void Level2Scene::OpenInventory(cocos2d::Ref * sender)
+{
+	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
+	GamePlay::ShowInventoryGrid();
+	MainCharacter::GetInstance()->GetInventory()->SetVisible(
+		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	);
+}

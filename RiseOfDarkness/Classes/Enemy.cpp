@@ -200,3 +200,8 @@ Arrow* Enemy::GetArrow()
 {
 	return nullptr;
 }
+
+Bullet* Enemy::GetBullet() 
+{
+	return nullptr;
+}

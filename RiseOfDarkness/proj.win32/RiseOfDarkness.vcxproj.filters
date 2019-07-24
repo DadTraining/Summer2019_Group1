@@ -56,6 +56,7 @@
     <ClCompile Include="..\Classes\Item.cpp" />
     <ClCompile Include="..\Classes\ItemDatabase.cpp" />
     <ClCompile Include="..\Classes\Level3Scene.cpp" />
+    <ClCompile Include="..\Classes\Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -113,6 +114,7 @@
     <ClInclude Include="..\Classes\Item.h" />
     <ClInclude Include="..\Classes\ItemDatabase.h" />
     <ClInclude Include="..\Classes\Level3Scene.h" />
+    <ClInclude Include="..\Classes\Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

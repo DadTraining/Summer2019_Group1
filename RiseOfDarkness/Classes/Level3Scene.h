@@ -27,6 +27,7 @@ public:
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
 	bool onContactBegin(PhysicsContact& contact);
+	void OpenInventory(cocos2d::Ref * sender);
 
 	CREATE_FUNC(Level3Scene);
 };

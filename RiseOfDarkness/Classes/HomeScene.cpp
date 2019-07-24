@@ -354,17 +354,20 @@ void HomeScene::CreateAllButton(Layer* layer)
 	layer->addChild(buttonOpenInventory, 7);
 	m_buttons.push_back(buttonOpenInventory);
 
+	//SPRITE ID 10
 	auto infoBar = get->GetSpriteById(20);
 	infoBar->setAnchorPoint(Vec2(0, 1));
 	infoBar->removeFromParent();
 	layer->addChild(infoBar, 8);
 	m_sprites.push_back(infoBar);
 
+	//SPRITE ID 11
 	auto hpBar = get->GetSpriteById(21);
 	hpBar->removeFromParent();
 	layer->addChild(hpBar, 9);
 	m_sprites.push_back(hpBar);
 
+	//SPRITE ID 12
 	auto mpBar = get->GetSpriteById(22);
 	mpBar->removeFromParent();
 	layer->addChild(mpBar, 9);
@@ -377,6 +380,21 @@ void HomeScene::CreateAllButton(Layer* layer)
 	mpLoadingBar = get->GetLoadingbar(2);
 	mpLoadingBar->removeFromParent();
 	layer->addChild(mpLoadingBar, 10);
+
+	//GOLD FRAME SPRITE ID 13 
+	auto goldFrame = get->GetSpriteById(25);
+	goldFrame->setAnchorPoint(Vec2(1, 1));
+	goldFrame->removeFromParent();
+	layer->addChild(goldFrame, 10);
+	m_sprites.push_back(goldFrame);
+
+	// AMOUNT OF GOLD'S MAINCHARACTER
+	gold = get->GetLabelById(3);
+	gold->removeFromParent();
+	gold->setAnchorPoint(Vec2(1, 1));
+	gold->setColor(Color3B::YELLOW);
+	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
+	layer->addChild(gold, 10);
 
 	SetCamera(mainCharacter->getPosition());
 }
@@ -439,6 +457,9 @@ void HomeScene::SetCamera(Vec2 pos)
 	m_sprites[12]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
 	hpLoadingBar->setPosition(m_sprites[11]->getPosition());
 	mpLoadingBar->setPosition(m_sprites[12]->getPosition());
+
+	m_sprites[13]->setPosition(Vec2(pos.x + visibleSize.width / 3.5, pos.y + visibleSize.height / 2));
+	gold->setPosition(Vec2(pos.x + visibleSize.width / 3.5, pos.y + visibleSize.height / 2 - (m_sprites[13]->getBoundingBox().size.height / 2 - gold->getBoundingBox().size.height / 2)));
 
 	//AddChild inventory
 	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));

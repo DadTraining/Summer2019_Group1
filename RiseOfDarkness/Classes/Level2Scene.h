@@ -1,26 +1,25 @@
 #ifndef __LEVEL2_SCENE_H__
 #define __LEVEL2_SCENE_H__
 
-#include "Monster.h"
-#include "MainCharacter.h"
 #include "GamePlay.h"
 #include "cocos2d.h"
-#include <vector>
+#include "Enemy.h"
+using namespace cocos2d;
 
-using namespace std;
- 
 class Level2Scene : public Layer, GamePlay
 {
 private:
-	MainCharacter *m_maincharacter;
-	vector<Monster*> m_monster;
-	Sprite* m_listSprite[3];
-
+	std::vector<Enemy*> m_enemies;
 public:
-	static Scene* CreateScene();
+	static cocos2d::Scene* CreateScene();
+
 	virtual bool init();
+
 	void update(float deltaTime);
+
 	void AddListener();
+
+	void CreateMonster();
 
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);
@@ -30,6 +29,7 @@ public:
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
 	bool onContactBegin(PhysicsContact& contact);
+	void OpenInventory(cocos2d::Ref * sender);
 
 	CREATE_FUNC(Level2Scene);
 };
