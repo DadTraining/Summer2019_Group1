@@ -275,6 +275,22 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	// MAIN CHARACTER'S ARROW COLLIDE ROPE MONSTER
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+		}
+	}
+
 	// SPEARMOBLIN PIERCE MAIN CHARACTER
 	if ((a->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK))

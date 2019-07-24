@@ -67,7 +67,7 @@ Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 	preventRun = 0;
 
 	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(33));
-	sprite->setScaleX(0.6f);
+	sprite->setScaleX(0.4f);
 	bullet = new Bullet(sprite, MainCharacter::BULLET_ROPE_BITMASK);
 	bullet->SetVisible(false);
 	bullet->GetSprite()->getPhysicsBody()->setGroup(group);
