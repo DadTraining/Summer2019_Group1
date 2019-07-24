@@ -75,26 +75,10 @@ void Level2Scene::update(float deltaTime)
 
 void Level2Scene::CreateMonster()
 {
-	/*float x1, y1;
-	int direction1;
-	auto spearGoblinGroup = tileMap->getObjectGroup("mt");
-	int amount1 = 4;
-	char str1[10];
-	for (int i = 1; i <= amount1; i++)
-	{
-		sprintf(str1, "%02d", i);
-		direction1 = spearGoblinGroup->getObject(str1)["direction"].asInt();
-		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
-		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
-		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1));
-		spearMoblin->GetPhysicsBody()->setGroup(i - 1);
-		m_enemies.push_back(spearMoblin);
-	}*/
-
 	float x2, y2;
 	int direction2;
-	auto rope = tileMap->getObjectGroup("mt");
-	int amount2 = 3;
+	auto rope = tileMap->getObjectGroup("rope");
+	int amount2 = 4;
 	char str2[10];
 	for (int i = 1; i <= amount2; i++)
 	{

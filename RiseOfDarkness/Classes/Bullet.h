@@ -7,7 +7,7 @@ class Bullet
 {
 private:
 
-	const int RUN_STEP = 1;
+	const int RUN_STEP = 7;
 
 	cocos2d::Sprite *mSprite;
 	cocos2d::PhysicsBody* mPhysicsBody;
