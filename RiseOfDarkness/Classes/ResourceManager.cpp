@@ -110,7 +110,7 @@ void ResourceManager::Init(const std::string &path)
 		for (int i = 0; i < amount; i++)
 		{
 			istr >> tempStr1 >> tempStr1;
-			m_labels.insert(std::pair<int, Label*>(i, Label::createWithTTF("", tempStr1, 30)));
+			m_labels.insert(std::pair<int, Label*>(i, Label::createWithTTF(std::to_string(random(0, 30)), tempStr1, 30)));
 			m_labels[i]->retain();
 		}
 
@@ -154,6 +154,12 @@ void ResourceManager::Init(const std::string &path)
 
 	auto mpLoadingBar = m_loadingbar[2];
 	mpLoadingBar->setScale((Director::getInstance()->getVisibleSize().width / mpLoadingBar->getBoundingBox().size.width) / 8);
+
+	m_buttons[10]->setScale(0.8);
+	m_buttons[11]->setScale(0.8);
+	m_buttons[13]->setScale(0.8);
+	m_buttons[20]->setScale(0.8);
+	m_buttons[21]->setScale(0.8);
 }
 
 Sprite* ResourceManager::GetSpriteById(int id)

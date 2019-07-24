@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "Enemy.h"
 
 using namespace cocos2d;
 
@@ -19,9 +20,10 @@ protected:
 	Point mCurrentTouchPoint;
 	Point mNextTouchPoint;
 	Size distance;
-	Label* mName, *gameover;
+	Label* mName, *gameover, *clear, *gold;
 	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
-
+	std::vector<Enemy*> m_enemies;
+	int currentStage;
 public:
 	GamePlay();
 	virtual ~GamePlay();
@@ -38,6 +40,9 @@ public:
 
 	virtual void OpenInventory(cocos2d::Ref * sender);
 	virtual void ShowInventoryGrid();
+
+	virtual bool CheckClear();
+	virtual void EnemyUpdate(float deltaTime);
 };
 
 #endif

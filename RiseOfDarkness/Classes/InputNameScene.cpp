@@ -6,6 +6,8 @@
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include "Level1Scene.h"
+#include "Level3Scene.h"
+
 USING_NS_CC;
 
 Scene* InputNameScene::CreateScene()

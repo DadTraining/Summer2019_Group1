@@ -114,6 +114,10 @@ void SpearMoblin::Update(float deltaTime)
 			AutoRevive(HP_REVIVE);
 		}
 	}
+	else
+	{
+		MainCharacter::GetInstance()->AddGold(MainCharacter::SPEARMOBLIN_GOLD);
+	}
 }
 
 void SpearMoblin::SetState(int nextState)

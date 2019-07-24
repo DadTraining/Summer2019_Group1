@@ -88,17 +88,18 @@ void MainCharacter::CreateMainCharacter()
 	mSprite->setPhysicsBody(mPhysicsBody);
 
 	// CREATE ALL STATUS
-	stageLevel = 1;
+	stageLevel = 3;
 	direction = 2;
 	currentState = FRONT_IDLE;
 	speed = SPEED;
 	attack = ATTACK;
 	defend = DEFEND;
 	countingTime = 0;
-	maxHP = 200;
+	maxHP = 500;
 	maxMP = 100;
 	currentHP = maxHP;
 	currentMP = maxMP;
+	gold = 2000;
 	preventRun = 0;
 
 	slash = new Slash();
@@ -299,7 +300,8 @@ std::vector<Arrow*> MainCharacter::GetListArrow()
 
 void MainCharacter::SpecialAttack()
 {
-	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE
+		|| currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD)
 	{
 		switch (direction)
 		{
@@ -325,7 +327,8 @@ void MainCharacter::SpecialAttack()
 
 void MainCharacter::NormalAttack()
 {
-	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE 
+		|| currentState == BACK_IDLE || currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD)
 	{
 		switch (direction)
 		{
@@ -355,7 +358,8 @@ void MainCharacter::NormalAttack()
 
 void MainCharacter::Evade()
 {
-	if ((currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	if ((currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE 
+		|| currentState == BACK_IDLE || currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD)
 		&& currentMP >= 30)
 	{
 		switch (direction)
@@ -376,7 +380,7 @@ void MainCharacter::Evade()
 			SetState(ROLL_LEFT);
 			mSprite->runAction(MoveBy::create(1.0f, Vec2(Director::getInstance()->getVisibleSize().width / 12, 0)));
 		}
-		currentMP -= 30;
+		currentMP -= 10;
 	}
 }
 
@@ -481,7 +485,7 @@ void MainCharacter::AutoRevive(float deltaTime)
 		if (countingTime >= 0.5)
 		{
 			countingTime = 0;
-			currentMP += 5;
+			currentMP += 2;
 			if (currentMP > maxMP)
 			{
 				currentMP = maxMP;
@@ -548,4 +552,53 @@ int MainCharacter::GetAttack()
 void MainCharacter::SetDirection(int direction)
 {
 	this->direction = direction;
+}
+
+bool MainCharacter::TakePotion(int index)
+{
+	switch (index)
+	{
+	case 0:
+		if (currentHP < maxHP)
+		{
+			currentHP += HP;
+			if (currentHP > maxHP)
+			{
+				currentHP = maxHP;
+			}
+			return true;
+		}
+		return false;
+	case 1:
+		if (currentMP < maxMP)
+		{
+			currentMP += MP;
+			if (currentMP > maxMP)
+			{
+				currentMP = maxMP;
+			}
+		}
+	default:
+		break;
+	}
+}
+
+void MainCharacter::IncreaseStage()
+{
+	stageLevel += 1;
+}
+
+int MainCharacter::GetGold()
+{
+	return gold;
+}
+
+void MainCharacter::AddGold(int numb)
+{
+	gold += numb;
+}
+
+void MainCharacter::SubGold(int numb)
+{
+	gold -= numb;
 }

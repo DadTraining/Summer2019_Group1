@@ -1,4 +1,4 @@
-#include "Level1Scene.h"
+#include "Level3Scene.h"
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 #include "SpearMoblin.h"
@@ -10,19 +10,19 @@ using namespace std;
 
 USING_NS_CC;
 
-Scene* Level1Scene::CreateScene()
+Scene* Level3Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
-	auto layer = Level1Scene::create();
+	auto layer = Level3Scene::create();
 
 	scene->addChild(layer);
 
 	return scene;
 }
 
-bool Level1Scene::init()
+bool Level3Scene::init()
 {
 	if (!Layer::init())
 	{
@@ -31,10 +31,10 @@ bool Level1Scene::init()
 
 	MainCharacter::GetInstance()->Refresh();
 
-	currentStage = 1;
+	currentStage = 3;
 
-	tileMap = ResourceManager::GetInstance()->GetTileMapById(3);
-	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(4);
+	tileMap = ResourceManager::GetInstance()->GetTileMapById(7);
+	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(8);
 
 	CreatePhysicsWorld("obstacles", "mc", this);
 
@@ -51,7 +51,7 @@ bool Level1Scene::init()
 	return true;
 }
 
-void Level1Scene::update(float deltaTime)
+void Level3Scene::update(float deltaTime)
 {
 	UpdateController();
 
@@ -86,7 +86,7 @@ void Level1Scene::update(float deltaTime)
 	}
 }
 
-void Level1Scene::CreateMonster()
+void Level3Scene::CreateMonster()
 {
 	float x1, y1;
 	int direction1;
@@ -121,18 +121,18 @@ void Level1Scene::CreateMonster()
 	}
 }
 
-void Level1Scene::AddListener()
+void Level3Scene::AddListener()
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->onTouchBegan = CC_CALLBACK_2(Level1Scene::OnTouchBegan, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(Level1Scene::OnTouchEnded, this);
-	touchListener->onTouchMoved = CC_CALLBACK_2(Level1Scene::OnTouchMoved, this);
+	touchListener->onTouchBegan = CC_CALLBACK_2(Level3Scene::OnTouchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(Level3Scene::OnTouchEnded, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(Level3Scene::OnTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level1Scene::SpecialAttack, this));
-	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level1Scene::Evade, this));
-	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level1Scene::NormalAttack, this));
-	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level1Scene::Defend, this));
+	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::SpecialAttack, this));
+	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::Evade, this));
+	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::NormalAttack, this));
+	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::Defend, this));
 
 	m_buttons[4]->addClickEventListener([&](Ref* event) {
 		if (!m_buttons[5]->isVisible())
@@ -164,7 +164,7 @@ void Level1Scene::AddListener()
 	m_buttons[7]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
-			Director::getInstance()->replaceScene(Level1Scene::CreateScene());
+			Director::getInstance()->replaceScene(Level3Scene::CreateScene());
 		});
 		runAction(gotoMap);
 	});
@@ -179,11 +179,11 @@ void Level1Scene::AddListener()
 	});
 
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(Level1Scene::onContactBegin, this);
+	contactListener->onContactBegin = CC_CALLBACK_1(Level3Scene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
-bool Level1Scene::OnTouchBegan(Touch* touch, Event* event)
+bool Level3Scene::OnTouchBegan(Touch* touch, Event* event)
 {
 	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
 	mCurrentTouchPoint = touch->getLocation();
@@ -193,14 +193,14 @@ bool Level1Scene::OnTouchBegan(Touch* touch, Event* event)
 	return true;
 }
 
-bool Level1Scene::OnTouchEnded(Touch* touch, Event* event)
+bool Level3Scene::OnTouchEnded(Touch* touch, Event* event)
 {
 	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	mCurrentTouchPoint = Point(-1, -1);
 	return true;
 }
 
-void Level1Scene::OnTouchMoved(Touch* touch, Event* event)
+void Level3Scene::OnTouchMoved(Touch* touch, Event* event)
 {
 	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
 	mCurrentTouchPoint = touch->getLocation();
@@ -209,7 +209,7 @@ void Level1Scene::OnTouchMoved(Touch* touch, Event* event)
 	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 }
 
-bool Level1Scene::onContactBegin(PhysicsContact& contact)
+bool Level3Scene::onContactBegin(PhysicsContact& contact)
 {
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
@@ -258,7 +258,7 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
 	}
-	
+
 	// MAIN CHARACTER SLASH SPEARMOBLIN
 	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
@@ -272,7 +272,7 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
 	}
-	
+
 	// MAIN CHARACTER'S ARROW COLLIDE SPEARMOBLIN
 	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
@@ -344,7 +344,7 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	return true;
 }
 
-void Level1Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
@@ -353,7 +353,7 @@ void Level1Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void Level1Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
@@ -361,7 +361,7 @@ void Level1Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void Level1Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
@@ -369,7 +369,7 @@ void Level1Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void Level1Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{

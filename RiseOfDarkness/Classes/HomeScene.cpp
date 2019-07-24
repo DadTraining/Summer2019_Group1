@@ -302,28 +302,28 @@ void HomeScene::CreateAllButton(Layer* layer)
 	// SPECIAL ATTACK BUTTON ID 0
 	auto specialAttack = get->GetButtonById(10);
 	specialAttack->removeFromParent();
-	specialAttack->setAnchorPoint(Vec2(0.5, 1));
+	specialAttack->setAnchorPoint(Vec2(0, 1));
 	layer->addChild(specialAttack, 6);
 	m_buttons.push_back(specialAttack);
 
 	// EVDAE BUTTON ID 1
 	auto evade = get->GetButtonById(11);
 	evade->removeFromParent();
-	evade->setAnchorPoint(Vec2(0.5, 0));
+	evade->setAnchorPoint(Vec2(0, 0));
 	layer->addChild(evade, 6);
 	m_buttons.push_back(evade);
 
 	// NORMAL ATTACK BUTTON ID 2
 	auto normalAttack = get->GetButtonById(12);
 	normalAttack->removeFromParent();
-	normalAttack->setAnchorPoint(Vec2(0, 0.5));
+	normalAttack->setAnchorPoint(Vec2(1, 0));
 	layer->addChild(normalAttack, 6);
 	m_buttons.push_back(normalAttack);
 
 	// DEFEND BUTTON ID 3
 	auto defend = get->GetButtonById(13);
 	defend->removeFromParent();
-	defend->setAnchorPoint(Vec2(1, 0.5));
+	defend->setAnchorPoint(Vec2(1, 1));
 	layer->addChild(defend, 6);
 	m_buttons.push_back(defend);
 
@@ -408,25 +408,25 @@ void HomeScene::SetCamera(Vec2 pos)
 	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
 	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 
-	m_sprites[0]->setPosition(Vec2(pos.x - visibleSize.width / 3, pos.y - visibleSize.height / 5));
-	auto frameButtonPosition = m_sprites[0]->getPosition();
 	auto frameButtonSize = m_sprites[0]->getBoundingBox().size;
-	m_sprites[1]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 1.5));
-	m_sprites[2]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 1.5));
-	m_sprites[3]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 1.5));
-	m_sprites[4]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 1.5));
-	m_sprites[5]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 1.5, frameButtonPosition.y));
-	m_sprites[6]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 1.5, frameButtonPosition.y));
-	m_sprites[7]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 1.5, frameButtonPosition.y));
-	m_sprites[8]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 1.5, frameButtonPosition.y));
+	m_sprites[0]->setPosition(Vec2(pos.x - visibleSize.width / 2 + frameButtonSize.width / 2 + 10, pos.y - visibleSize.height / 2 + frameButtonSize.height / 2 + 10));
+	auto frameButtonPosition = m_sprites[0]->getPosition();
+	m_sprites[1]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
+	m_sprites[2]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
+	m_sprites[3]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
+	m_sprites[4]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
+	m_sprites[5]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
+	m_sprites[6]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
+	m_sprites[7]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
+	m_sprites[8]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
 
-	m_sprites[9]->setPosition(Vec2(pos.x + visibleSize.width / 3, pos.y - visibleSize.height / 5));
-	auto frameSkillButtonPosition = m_sprites[9]->getPosition();
 	auto frameSkillButtonSize = m_sprites[9]->getBoundingBox().size;
-	m_buttons[0]->setPosition(Vec2(frameSkillButtonPosition.x, frameSkillButtonPosition.y + frameSkillButtonSize.height / 1.5));
-	m_buttons[1]->setPosition(Vec2(frameSkillButtonPosition.x, frameSkillButtonPosition.y - frameSkillButtonSize.height / 1.5));
-	m_buttons[2]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
-	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 1.5, frameSkillButtonPosition.y));
+	m_sprites[9]->setPosition(Vec2(pos.x + visibleSize.width / 2 - frameSkillButtonSize.width / 2 - 10, pos.y - visibleSize.height / 2 + frameSkillButtonSize.height / 2 + 10));
+	auto frameSkillButtonPosition = m_sprites[9]->getPosition();
+	m_buttons[0]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 3, frameSkillButtonPosition.y + frameSkillButtonSize.height / 3));
+	m_buttons[1]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 2, frameSkillButtonPosition.y - frameSkillButtonSize.height / 2));
+	m_buttons[2]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 2, frameSkillButtonPosition.y - frameSkillButtonSize.height / 2));
+	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 2, frameSkillButtonPosition.y + frameSkillButtonSize.height / 2));
 
 	m_buttons[4]->setPosition(Vec2(pos.x, pos.y - visibleSize.height / 2));
 	m_buttons[6]->setPosition(Vec2(pos.x+visibleSize.width/8, pos.y - visibleSize.height / 2));

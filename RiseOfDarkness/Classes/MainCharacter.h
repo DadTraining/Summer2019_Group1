@@ -22,6 +22,10 @@ public:
 	static const int BOWMOBLIN_BITMASK = 106;
 	static const int BOWMOBLIN_ARROW_BITMASK = 107;
 
+	// POTION
+	static const int HP = 50;
+	static const int MP = 20;
+
 	// STATUS
 	static const int SPEED = 5;
 	static const int ATTACK = 20;
@@ -31,6 +35,10 @@ public:
 	static const int SPEARMOBLIN_DAMAGE = 40;
 	static const int NORMAL_ARROW = 10;
 	static const int BOWMOBLIN_DAMAGE = 30;
+
+	// GOLD RECEIVE FROM KILL ENEMY
+	static const int BOWMOBLIN_GOLD = 50;
+	static const int SPEARMOBLIN_GOLD = 50;
 
 	static const int FRONT_IDLE = 0;
 	static const int BACK_IDLE = 1;
@@ -62,6 +70,7 @@ private:
 	int defend;
 	std::string mName;
 	float maxHP, currentHP, maxMP, currentMP;
+	int gold;
 	std::vector<Arrow*>mArrows;
 	std::vector<int> mAllItems;
 	std::vector<Item*> mItems;
@@ -72,6 +81,9 @@ public:
 	std::string GetName();
 	int GetStageLevel();
 	Inventory *GetInventory();
+	int GetGold();
+	void AddGold(int numb);
+	void SubGold(int numb);
 
 public:
 	static MainCharacter* GetInstance();
@@ -102,6 +114,8 @@ public:
 	void GetDamage(int damage);
 	bool IsAlive();
 	void SetPreventRun(int prevent);
+	bool TakePotion(int index);
+	void IncreaseStage();
 private:
 	static MainCharacter* m_instance;
 	Sprite* mSprite;

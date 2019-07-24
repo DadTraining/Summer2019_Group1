@@ -124,6 +124,10 @@ void BowMoblin::Update(float deltaTime)
 			arrow->update(deltaTime);
 		}
 	}
+	else
+	{
+		MainCharacter::GetInstance()->AddGold(MainCharacter::BOWMOBLIN_GOLD);
+	}
 }
 
 void BowMoblin::SetState(int nextState)
