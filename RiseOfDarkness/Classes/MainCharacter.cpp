@@ -40,12 +40,14 @@ void MainCharacter::CreateMainCharacter()
 {
 	auto get = ResourceManager::GetInstance();
 	//CREATE ALL ITEM ID
-	auto grid = Sprite::create("res/sprites/item/InventoryGrid.png");
+	auto grid = Sprite::create("res/sprites/item/gridInventory.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	inventory->AddItem(0);
-	inventory->AddItem(1);
-	inventory->AddItem(1);
+	for (int i = 0; i < 10; i++)
+	{
+		inventory->AddItem(0);
+		inventory->AddItem(1);
+	}
 
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);

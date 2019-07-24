@@ -21,7 +21,7 @@ protected:
 	Size distance;
 	Label* mName, *gameover;
 	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
-
+	cocos2d::Menu *menu;
 public:
 	GamePlay();
 	virtual ~GamePlay();
@@ -38,6 +38,7 @@ public:
 
 	virtual void OpenInventory(cocos2d::Ref * sender);
 	virtual void ShowInventoryGrid();
+	
 };
 
 #endif

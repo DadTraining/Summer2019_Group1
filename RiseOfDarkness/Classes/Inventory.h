@@ -3,6 +3,7 @@
 #include "cocos2d.h"
 #include "ui\CocosGUI.h"
 #include "ItemDatabase.h"
+
 class Inventory
 {
 public:
@@ -12,9 +13,7 @@ public:
 	void AddItem(int);
 	void SellItem(int);
 	void RemoveItem(int,int);
-	void SetCapacity(int);
 	cocos2d::Sprite* GetClickBox();
-	int GetCapacity();
 	void SetVisible(bool b);
 	bool IsVisible();
 	void SetSpritePosition(cocos2d::Vec2 pos);
@@ -31,10 +30,10 @@ public:
 	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id);
 	void ItemClick(cocos2d::Ref * pSender, int id);  //, cocos2d::Layer*
+	void btnBackInventory(cocos2d::Ref *);
+	void btnEquipInventory(cocos2d::Ref *);
 	int slotX, slotY;
-	void btnBackInventory(cocos2d::Ref*);
-	void btnEquipInventory(cocos2d::Ref*, int);
-	cocos2d::Menu *menu;
+	int targetID;
 private:
 	cocos2d::Sprite* clickBox;
 	cocos2d::Sprite* mSprite;
@@ -49,4 +48,6 @@ private:
 	int count = 0;
 	std::vector<int> itemAmount;
 	std::vector<cocos2d::Label*> amountLabels;
+	cocos2d::Menu* menu;
+	cocos2d::ui::Button *btnUse,*btnSell;
 };

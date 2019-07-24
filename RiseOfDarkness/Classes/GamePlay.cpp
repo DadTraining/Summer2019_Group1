@@ -441,6 +441,5 @@ void GamePlay::ShowInventoryGrid()
 			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(amountLabel[i], 22);
 			cols++;
 		}
-
 	}
 }
