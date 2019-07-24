@@ -124,6 +124,10 @@ void Monster::Update(float deltaTime)
 			bullet->update(deltaTime);
 		}
 	}
+	else
+	{
+		bullet->SetVisible(false);
+	}
 }
 
 void Monster::SetState(int nextState)
