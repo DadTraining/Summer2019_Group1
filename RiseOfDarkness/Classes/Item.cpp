@@ -1,6 +1,6 @@
 #include "Item.h"
 
-int Item::GetKind()
+int Item::GetType()
 {
 	return itemType;
 }
@@ -21,7 +21,7 @@ void Item::RemoveFromScene()
 Item::Item()
 {
 	itemID = NULL;
-
+	itemStackable = false;
 	itemIcon = nullptr;
 }
 
@@ -37,6 +37,7 @@ Item::Item(std::string name, int id, std::string desc, int power, int speed, Ite
 	itemPower = power;
 	itemSpeed = speed;
 	itemType = type;
+	itemStackable = (type == potion ? true : false);
 	itemIcon = cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
 	itemIcon->retain();
 }
@@ -57,6 +58,11 @@ int Item::GetID()
 	return itemID;
 }
 
+bool Item::IsStackable()
+{
+	return itemStackable;
+}
+
 Item::Item(const Item *item)
 {
 	itemID = item->itemID;
@@ -65,6 +71,7 @@ Item::Item(const Item *item)
 	itemPower = item->itemPower;
 	itemSpeed = item->itemSpeed;
 	itemType = item->itemType;
+	itemStackable = item->itemStackable;
 	itemIcon = item->itemIcon->clone();
 	itemIcon->retain();
 }

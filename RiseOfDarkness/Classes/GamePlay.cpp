@@ -462,11 +462,13 @@ void GamePlay::OpenInventory(cocos2d::Ref * sender)
 
 void GamePlay::ShowInventoryGrid()
 {
+	auto weapons = MainCharacter::GetInstance()->GetInventory()->GetItemsWeapon();
 	auto items = MainCharacter::GetInstance()->GetInventory()->GetItems();
 	std::vector<int> itemAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount();
 	std::vector<Label*> amountLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel();
 	int cols = 0, rows = 0;
 	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
+	// SHOW TAB POTION
 	MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
 	for (int i = 0; i < items.size(); i++)
 	{
@@ -491,6 +493,27 @@ void GamePlay::ShowInventoryGrid()
 			}
 			amountLabel[i]->setPosition(items[i]->GetIcon()->getPosition() + Vec2(16, -16));
 			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(amountLabel[i], 22);
+			cols++;
+		}
+	}
+	//SHOW TAB WEAPON
+	cols = rows = 0;
+	for (int i = 0; i < weapons.size(); i++)
+	{
+		if (weapons[i]->GetIcon() != NULL)
+		{
+			if (cols == 6)
+			{
+				rows++;
+				cols = 0;
+			}
+			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->removeFromParent();
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(weapons[i]->GetIcon(), 21);
+			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->setPosition(
+				Vec2(64 * cols + 32,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
+			);
 			cols++;
 		}
 	}

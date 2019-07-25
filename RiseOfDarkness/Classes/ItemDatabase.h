@@ -7,4 +7,5 @@ public:
 	~ItemDatabase();
 	void Init();
 	std::vector<Item*> items;
+	//std::vector<Item*> weapons;
 };

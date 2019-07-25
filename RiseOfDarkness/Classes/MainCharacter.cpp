@@ -47,7 +47,12 @@ void MainCharacter::CreateMainCharacter()
 	{
 		inventory->AddItem(0);
 		inventory->AddItem(1);
+		inventory->AddItem(2);
 	}
+	inventory->AddItem(3);
+	inventory->AddItem(9);
+	inventory->AddItem(11);
+	inventory->AddItem(4);
 
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);

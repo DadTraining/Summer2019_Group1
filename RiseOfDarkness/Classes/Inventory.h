@@ -12,7 +12,7 @@ public:
 	void Init(cocos2d::Sprite* sprite);
 	void AddItem(int);
 	void SellItem(int);
-	void RemoveItem(int,int);
+	void RemoveItem(int,int,ItemType);
 	cocos2d::Sprite* GetClickBox();
 	void SetVisible(bool b);
 	bool IsVisible();
@@ -21,17 +21,19 @@ public:
 	void AddToLayer(cocos2d::Layer*);
 	cocos2d::ui::Layout *GetTab(int tabIndex);
 	std::vector<Item*> GetItems();
+	std::vector<Item*> GetItemsWeapon();
 	std::vector<int> GetItemAmount();
 	std::vector<cocos2d::Label*> GetAmountLabel();
 	cocos2d::Vec2 GetSize();
 	std::vector<Item*> inventory;
 	std::vector<Item*> slots;
-	int GetIdByIcon(int);
+	std::vector<Item*> weapons;
+	int GetIdByIcon(int, ItemType);
 	void StackItem(int id);
 	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id);
-	void ItemClick(cocos2d::Ref * pSender, int id);  //, cocos2d::Layer*
-	void btnBackInventory(cocos2d::Ref *);
+	void ItemClick(cocos2d::Ref * pSender, int id, ItemType);
+	void EquipItem(cocos2d::Ref *);
 	void btnEquipInventory(cocos2d::Ref *);
 	int slotX, slotY;
 	int targetID;
