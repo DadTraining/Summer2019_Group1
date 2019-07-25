@@ -26,6 +26,7 @@ public:
 	cocos2d::Vec2 GetSize();
 	std::vector<Item*> inventory;
 	std::vector<Item*> slots;
+	int GetIdByIcon(int);
 	void StackItem(int id);
 	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id);

@@ -110,7 +110,7 @@ void Inventory::RemoveItem(int id,int index)
 	{
 		if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL && i==index)
 		{
-			if (MainCharacter::GetInstance()->TakePotion(i))
+			if (MainCharacter::GetInstance()->TakePotion(id))
 			{
 				itemAmount[i]--;
 				if (itemAmount[i] == 0)
@@ -119,6 +119,7 @@ void Inventory::RemoveItem(int id,int index)
 					GetTab(1)->removeChild(slots[i]->GetIcon());
 					targetID = -1;
 					slots[i] = new Item();
+					AutoArrange();
 				}
 				else
 				{
@@ -202,6 +203,18 @@ cocos2d::Vec2 Inventory::GetSize()
 	return tab->getContentSize();
 }
 
+int Inventory::GetIdByIcon(int id)
+{
+	for (int i = 0; i < slots.size(); i++)
+	{
+		if ((slots[i]->GetID() == id && slots[i]->GetIcon() != NULL))
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 void Inventory::StackItem(int id)
 {
 	for (int i = 0; i < slots.size(); i++)
@@ -227,6 +240,7 @@ void Inventory::AutoArrange()
 				{
 					swap(slots[i], slots[j]);
 					swap(itemAmount[i], itemAmount[j]);
+					swap(amountLabels[i], amountLabels[j]);
 					break;
 				}
 			}
@@ -248,10 +262,14 @@ bool Inventory::InventoryContains(int id)
 	return result;
 }
 
-void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
+void Inventory::ItemClick(cocos2d::Ref *pSender, int id)
 {
-	clickBox->setPosition(slots[id]->GetIcon()->getPosition());
-	targetID = id;
+	int index = GetIdByIcon(id);
+	if (slots[index]->GetIcon()!=NULL)
+	{
+		clickBox->setPosition(slots[index]->GetIcon()->getPosition());
+	}
+	targetID = index;
 	if (targetID >= 0)
 	{
 		btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::btnEquipInventory, this));

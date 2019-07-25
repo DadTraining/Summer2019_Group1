@@ -43,7 +43,7 @@ void MainCharacter::CreateMainCharacter()
 	auto grid = Sprite::create("res/sprites/item/gridInventory.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		inventory->AddItem(0);
 		inventory->AddItem(1);
@@ -579,8 +579,11 @@ bool MainCharacter::TakePotion(int index)
 			{
 				currentMP = maxMP;
 			}
+			return true;
 		}
+		return false;
 	default:
+		return false;
 		break;
 	}
 }
