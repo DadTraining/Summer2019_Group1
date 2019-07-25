@@ -45,6 +45,8 @@ public:
 	Bullet* GetBullet();
 
 	bool Detect(float detectRange);
+
+	void SetDirection(int dir);
 };
 
 #endif // !__MONSTER_H__

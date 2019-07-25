@@ -221,7 +221,7 @@ Arrow* Enemy::GetArrow()
 	return nullptr;
 }
 
-Bullet* Enemy::GetBullet()
+Bullet* Enemy::GetBullet() 
 {
 	return nullptr;
 }

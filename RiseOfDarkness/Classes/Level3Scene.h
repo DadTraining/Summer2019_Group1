@@ -1,15 +1,13 @@
-#ifndef __LEVEL2_SCENE_H__
-#define __LEVEL2_SCENE_H__
+#ifndef LEVEL3_SCENE_SCENE_H
+#define LEVEL3_SCENE_SCENE_H
 
 #include "GamePlay.h"
 #include "cocos2d.h"
 #include "Enemy.h"
 using namespace cocos2d;
 
-class Level2Scene : public Layer, GamePlay
+class Level3Scene : public Layer, GamePlay
 {
-private:
-	std::vector<Enemy*> m_enemies;
 public:
 	static cocos2d::Scene* CreateScene();
 
@@ -31,8 +29,7 @@ public:
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
 
-	CREATE_FUNC(Level2Scene);
+	CREATE_FUNC(Level3Scene);
 };
 
-#endif // !__LEVEL2_SCENE_H__
-
+#endif

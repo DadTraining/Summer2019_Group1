@@ -2,12 +2,19 @@
 #include "Inventory.h"
 #include "ui/CocosGUI.h"
 #include "cocos2d.h"
+#include "MainCharacter.h"
 
 USING_NS_CC;
 using namespace std;
 Inventory::Inventory(cocos2d::Sprite* sprite)
 {
 	Init(sprite);
+	btnUse->removeFromParent();
+	btnUse->setPosition(Vec2(btnUse->getContentSize().width / 2 - btnUse->getContentSize().width / 4,
+		0 - btnUse->getContentSize().height / 4));
+	btnSell->setPosition(Vec2(btnUse->getPositionX() + btnUse->getContentSize().width / 2, btnUse->getPositionY()));
+	GetTab(1)->addChild(btnUse, 99);
+	GetTab(1)->addChild(btnSell, 99);
 }
 
 Inventory::~Inventory()
@@ -17,6 +24,12 @@ Inventory::~Inventory()
 void Inventory::Init(cocos2d::Sprite* sprite)
 {
 	clickBox = Sprite::create("res/sprites/item/click.png");
+	btnUse = ui::Button::create("res/sprites/item/buttonUse1.png", "res/sprites/item/buttonUse.png");
+	btnUse->setScale(0.5);
+	btnSell = ui::Button::create("res/sprites/item/buttonSell1.png", "res/sprites/item/buttonSell.png");
+	btnSell->setScale(0.5);
+
+	clickBox->setPosition(-500, -500);
 	clickBox->retain();
 	slotX = 6;
 	slotY = 4;
@@ -39,25 +52,16 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	capacity = 24;
 	container1 = ui::Layout::create();
 	container1->setOpacity(255);
-	container1->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
-	container1->setBackGroundColor(Color3B::GRAY);
-	container1->setBackGroundColorOpacity(50);
 	container2 = ui::Layout::create();
 	container2->setOpacity(50);
-	container2->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
-	container2->setBackGroundColor(Color3B::BLUE);
-	container2->setBackGroundColorOpacity(50);
 	container3 = ui::Layout::create();
 	container3->setOpacity(50);
-	container3->setBackGroundColorType(ui::Layout::BackGroundColorType::SOLID);
-	container3->setBackGroundColor(Color3B::RED);
-	container3->setBackGroundColorOpacity(50);
 
 	tab->insertTab(0, weapon, container1);
 	tab->insertTab(1, potion, container2);
 	tab->insertTab(2, armor, container3);
 
-	tab->setSelectTab(0);
+	tab->setSelectTab(1);
 	CC_SAFE_RETAIN(tab);
 	CC_SAFE_RETAIN(container1);
 	CC_SAFE_RETAIN(container2);
@@ -67,19 +71,31 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	{
 		inventory.push_back(new Item());
 		slots.push_back(new Item());
+		itemAmount.push_back(0);
+		auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 14);
+		label->retain();
+		amountLabels.push_back(label);
 	}
 }
 
-void Inventory::AddItem(int id)  //,Layer* layer
+void Inventory::AddItem(int id)
 {
-	for (int i = 0; i < inventory.size(); i++)
+	if (InventoryContains(id))
 	{
-		if (slots[i]->GetIcon() == NULL)
+		StackItem(id);
+	}
+	else
+	{
+		for (int i = 0; i < inventory.size(); i++)
 		{
-			log("add item %d", id + 1);
-			slots[i] = new Item(database->items[id]);
-			slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i));
-			break;
+			if (slots[i]->GetIcon() == NULL)
+			{
+				log("add item %d", id + 1);
+				slots[i] = new Item(database->items[id]);
+				slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i));
+				itemAmount[i]++;
+				break;
+			}
 		}
 	}
 }
@@ -88,28 +104,36 @@ void Inventory::SellItem(int)
 {
 }
 
-void Inventory::RemoveItem(int id)
+void Inventory::RemoveItem(int id,int index)
 {
 	for (int i = 0; i < inventory.size(); i++)
 	{
-		if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL)
+		if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL && i==index)
 		{
-			slots[i] = new Item();
-			log("removed item %d", i);
-			break;
+			if (MainCharacter::GetInstance()->TakePotion(i))
+			{
+				itemAmount[i]--;
+				if (itemAmount[i] == 0)
+				{
+					amountLabels[i]->setString("");
+					GetTab(1)->removeChild(slots[i]->GetIcon());
+					targetID = -1;
+					slots[i] = new Item();
+				}
+				else
+				{
+					amountLabels[i]->setString(to_string(itemAmount[i]));
+				}
+				log("removed item %d", i);
+				break;
+			}
 		}
 	}
 }
 
-
-
-void Inventory::SetCapacity(int)
+cocos2d::Sprite * Inventory::GetClickBox()
 {
-}
-
-int Inventory::GetCapacity()
-{
-	return capacity;
+	return clickBox;
 }
 
 void Inventory::SetVisible(bool b)
@@ -163,22 +187,59 @@ std::vector<Item*> Inventory::GetItems()
 	return slots;
 }
 
+std::vector<int> Inventory::GetItemAmount()
+{
+	return itemAmount;
+}
+
+std::vector<Label*> Inventory::GetAmountLabel()
+{
+	return amountLabels;
+}
+
 cocos2d::Vec2 Inventory::GetSize()
 {
 	return tab->getContentSize();
 }
 
+void Inventory::StackItem(int id)
+{
+	for (int i = 0; i < slots.size(); i++)
+	{
+		if (slots[i]->GetID() == id)
+		{
+			itemAmount[i]++;
+			break;
+		}
+	}
+}
+
+void Inventory::AutoArrange()
+{
+	log("arrange");
+	for (int i = 0; i < slots.size()-1; i++)
+	{
+		if (slots[i]->GetIcon()==NULL)
+		{
+			for (int j = i+1; j < slots.size(); j++)
+			{
+				if (slots[j]->GetIcon()!=NULL)
+				{
+					swap(slots[i], slots[j]);
+					swap(itemAmount[i], itemAmount[j]);
+					break;
+				}
+			}
+		}
+	}
+}
+
 bool Inventory::InventoryContains(int id)
 {
-	for (int i = 0; i < inventory.size(); i++)
-	{
-		log("%d  ", slots[i]->GetID());
-	}
-
 	bool result = false;
 	for (int i = 0; i < slots.size(); i++)
 	{
-		result = slots[i]->GetID() == id;
+		result = (slots[i]->GetID() == id && slots[i]->GetIcon()!=NULL);
 		if (result)
 		{
 			break;
@@ -189,32 +250,24 @@ bool Inventory::InventoryContains(int id)
 
 void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
 {
-	log("item %d clicked", id + 1);
-	auto btnEquip = MenuItemImage::create("res/sprites/item/btnEquip.png", "res/sprites/item/btnEquip.png",
-		CC_CALLBACK_1(Inventory::btnEquipInventory, this, id));
-	auto btnDrop = MenuItemImage::create("res/sprites/item/btnDrop.png", "res/sprites/item/btnDrop.png");
-	auto btnBack = MenuItemImage::create("res/sprites/item/btnClose.png", "res/sprites/item/btnClose.png",
-		CC_CALLBACK_1(Inventory::btnBackInventory, this));
-
-	btnDrop->setScale(0.5);
-	btnEquip->setScale(0.5);
-	btnDrop->setPositionY(btnEquip->getPositionY() - btnEquip->getContentSize().height / 2);
-	menu = Menu::create(btnEquip, btnDrop, btnBack, NULL);
-	menu->setAnchorPoint(Vec2(0, 1));
-	menu->setVisible(false);
-
-	btnBack->setPositionY(btnDrop->getPositionY() - btnDrop->getContentSize().height / 2);
-	btnBack->setScale(0.5);
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	log("item %d clicked!", id);
-	menu->setVisible(!menu->isVisible());
-	menu->setPosition(slots[id]->GetIcon()->getPosition());
+	clickBox->setPosition(slots[id]->GetIcon()->getPosition());
+	targetID = id;
+	if (targetID >= 0)
+	{
+		btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::btnEquipInventory, this));
+	}
+	
 }
 
-void Inventory::btnBackInventory(cocos2d::Ref *)
+void Inventory::btnBackInventory(cocos2d::Ref *pSender)
 {
 }
 
-void Inventory::btnEquipInventory(cocos2d::Ref *, int)
+void Inventory::btnEquipInventory(cocos2d::Ref *pSender)
 {
+	log("equip item");
+	if (targetID>=0)
+	{
+		RemoveItem(slots[targetID]->GetID(), targetID);
+	}
 }

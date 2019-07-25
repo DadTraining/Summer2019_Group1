@@ -29,6 +29,7 @@ bool LoadingScene::init()
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height / 2.6 - label->getContentSize().height));
 	label->enableOutline(Color4B::RED, 1);
+	label->setString("Loading");
 	this->addChild(label, 1);
 	
 

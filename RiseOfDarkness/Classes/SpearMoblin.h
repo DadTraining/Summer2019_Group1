@@ -18,10 +18,10 @@ private:
 	static const int LEFT_ATTACK = 8;
 
 	static const int HP = 100;
-	static const int DETECT_RANGE = 100;
+	static const int DETECT_RANGE = 80;
 	static const int ATTACK_RANGE = 30;
 	static const int ATTACK_COOLDOWN = 1;
-	static const int REVIVE_TIME = 5;
+	static const int REVIVE_TIME = 10;
 	static const int HP_REVIVE = 10;
 
 	Action* mAction[9];

@@ -13,7 +13,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -30,6 +30,8 @@ bool Level1Scene::init()
 	}
 
 	MainCharacter::GetInstance()->Refresh();
+
+	currentStage = 1;
 
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(3);
 	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(4);
@@ -59,17 +61,27 @@ void Level1Scene::update(float deltaTime)
 
 	SetCamera(mainCharacter->getPosition());
 
-	for (int i = 0; i < m_enemies.size(); i++)
+	EnemyUpdate(deltaTime);
+
+	if (CheckClear())
 	{
-		if (m_enemies[i]->GetSprite()->isVisible())
+		if (MainCharacter::GetInstance()->GetStageLevel() == currentStage)
 		{
-			m_enemies[i]->Update(deltaTime);
+			Director::getInstance()->pause();
+			MainCharacter::GetInstance()->IncreaseStage();
+			clear->setVisible(true);
+			m_buttons[4]->setVisible(false);
+			m_buttons[5]->setVisible(false);
+			m_buttons[6]->setVisible(true);
+			m_buttons[7]->setVisible(true);
 		}
 	}
 	if (!MainCharacter::GetInstance()->IsAlive())
 	{
+		m_buttons[4]->setVisible(false);
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(true);
 		m_buttons[7]->setVisible(true);
-		m_buttons[8]->setVisible(true);
 		gameover->setVisible(true);
 	}
 }
@@ -125,45 +137,47 @@ void Level1Scene::AddListener()
 	m_buttons[4]->addClickEventListener([&](Ref* event) {
 		if (!m_buttons[5]->isVisible())
 		{
+			m_buttons[4]->setVisible(false);
 			m_buttons[5]->setVisible(true);
 			m_buttons[6]->setVisible(true);
+			m_buttons[7]->setVisible(true);
 			Director::getInstance()->pause();
 		}
 	});
 
 	m_buttons[5]->addClickEventListener([&](Ref* event) {
+		m_buttons[4]->setVisible(true);
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(false);
+		m_buttons[7]->setVisible(false);
 		Director::getInstance()->resume();
 	});
 
 	m_buttons[6]->addClickEventListener([&](Ref* event) {
-		m_buttons[5]->setVisible(false);
-		m_buttons[6]->setVisible(false);
 		Director::getInstance()->resume();
-		m_enemies.clear();
-
-		auto gotoMap = CallFunc::create([] {
-			Director::getInstance()->replaceScene(MapScene::CreateScene());
-		});
-		runAction(gotoMap);
-	});
-
-	m_buttons[7]->addClickEventListener([&](Ref* event) {
-		m_enemies.clear();
 		auto gotoMap = CallFunc::create([] {
 			Director::getInstance()->replaceScene(HomeScene::CreateScene());
 		});
 		runAction(gotoMap);
 	});
 
-	m_buttons[8]->addClickEventListener([&](Ref* event) {
-		m_enemies.clear();
+	m_buttons[7]->addClickEventListener([&](Ref* event) {
+		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
 			Director::getInstance()->replaceScene(Level1Scene::CreateScene());
 		});
 		runAction(gotoMap);
 	});
+
+	m_buttons[9]->addClickEventListener([&](Ref* event) {
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
+	});
+
+	m_buttons[10]->addClickEventListener([&](Ref* event) {
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
+	});
+
+	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level1Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level1Scene::onContactBegin, this);
@@ -366,4 +380,13 @@ void Level1Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		MainCharacter::GetInstance()->StopDefend();
 	}
+}
+
+void Level1Scene::OpenInventory(cocos2d::Ref * sender)
+{
+	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
+	GamePlay::ShowInventoryGrid();
+	MainCharacter::GetInstance()->GetInventory()->SetVisible(
+		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	);
 }

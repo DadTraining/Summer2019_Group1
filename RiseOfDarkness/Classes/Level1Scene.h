@@ -3,13 +3,11 @@
 
 #include "GamePlay.h"
 #include "cocos2d.h"
-#include "Enemy.h"
+
 using namespace cocos2d;
 
 class Level1Scene : public Layer, GamePlay
 {
-private:
-	std::vector<Enemy*> m_enemies;
 public:
     static cocos2d::Scene* CreateScene();
 
@@ -29,7 +27,8 @@ public:
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
 	bool onContactBegin(PhysicsContact& contact);
-	
+	void OpenInventory(cocos2d::Ref * sender);
+
     CREATE_FUNC(Level1Scene);
 };
 

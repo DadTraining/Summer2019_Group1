@@ -126,6 +126,7 @@ void Monster::Update(float deltaTime)
 	}
 	else
 	{
+		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
 		bullet->SetVisible(false);
 	}
 }
@@ -281,26 +282,46 @@ bool Monster::Detect(float detectRange)
 			{
 				if (mcPos.y < ePos.y)
 				{
-					SetDirectionRopeMonster(2);
+					SetDirection(2);
 				}
 				else
 				{
-					SetDirectionRopeMonster(1);
+					SetDirection(1);
 				}
 			}
 			else
 			{
 				if (mcPos.x < ePos.x)
 				{
-					SetDirectionRopeMonster(3);
+					SetDirection(3);
 				}
 				else
 				{
-					SetDirectionRopeMonster(4);
+					SetDirection(4);
 				}
 			}
 		}
 		return true;
 	}
 	return false;
+}
+
+void Monster::SetDirection(int dir)
+{
+	if (direction != dir)
+	{
+		if (dir == 3)
+		{
+			mSprite->setFlipX(true);
+		}
+		else if (direction == 3)
+		{
+			mSprite->setFlipX(false);
+		}
+		direction = dir;
+	}
+	if (preventRun != dir)
+	{
+		preventRun = 0;
+	}
 }

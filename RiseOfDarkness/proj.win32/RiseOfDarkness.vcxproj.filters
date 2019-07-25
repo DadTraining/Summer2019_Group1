@@ -55,9 +55,14 @@
     <ClCompile Include="..\Classes\Inventory.cpp" />
     <ClCompile Include="..\Classes\Item.cpp" />
     <ClCompile Include="..\Classes\ItemDatabase.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="..\Classes\Bullet.cpp">
       <Filter>src</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="..\Classes\Level3Scene.cpp" />
+    <ClCompile Include="..\Classes\Bullet.cpp" />
+>>>>>>> Shop
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -114,9 +119,14 @@
     <ClInclude Include="..\Classes\Inventory.h" />
     <ClInclude Include="..\Classes\Item.h" />
     <ClInclude Include="..\Classes\ItemDatabase.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\Classes\Bullet.h">
       <Filter>src</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="..\Classes\Level3Scene.h" />
+    <ClInclude Include="..\Classes\Bullet.h" />
+>>>>>>> Shop
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

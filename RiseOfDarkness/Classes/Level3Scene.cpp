@@ -1,27 +1,28 @@
-#include "Level2Scene.h"
+#include "Level3Scene.h"
 #include "MainCharacter.h"
 #include "ResourceManager.h"
+#include "SpearMoblin.h"
+#include "BowMoblin.h"
 #include "MapScene.h"
 #include "HomeScene.h"
-#include "Monster.h"
 
 using namespace std;
 
 USING_NS_CC;
 
-Scene* Level2Scene::CreateScene()
+Scene* Level3Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
 	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
-	auto layer = Level2Scene::create();
+	auto layer = Level3Scene::create();
 
 	scene->addChild(layer);
 
 	return scene;
 }
 
-bool Level2Scene::init()
+bool Level3Scene::init()
 {
 	if (!Layer::init())
 	{
@@ -30,8 +31,10 @@ bool Level2Scene::init()
 
 	MainCharacter::GetInstance()->Refresh();
 
-	tileMap = ResourceManager::GetInstance()->GetTileMapById(5);
-	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(6);
+	currentStage = 1;
+
+	tileMap = ResourceManager::GetInstance()->GetTileMapById(7);
+	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(8);
 
 	CreatePhysicsWorld("obstacles", "mc", this);
 
@@ -48,7 +51,7 @@ bool Level2Scene::init()
 	return true;
 }
 
-void Level2Scene::update(float deltaTime)
+void Level3Scene::update(float deltaTime)
 {
 	UpdateController();
 
@@ -58,54 +61,78 @@ void Level2Scene::update(float deltaTime)
 
 	SetCamera(mainCharacter->getPosition());
 
-	for (int i = 0; i < m_enemies.size(); i++)
+	EnemyUpdate(deltaTime);
+
+	if (CheckClear())
 	{
-		if (m_enemies[i]->GetSprite()->isVisible())
+		if (MainCharacter::GetInstance()->GetStageLevel() == currentStage)
 		{
-			m_enemies[i]->Update(deltaTime);
+			Director::getInstance()->pause();
+			MainCharacter::GetInstance()->IncreaseStage();
+			clear->setVisible(true);
+			m_buttons[4]->setVisible(false);
+			m_buttons[5]->setVisible(false);
+			m_buttons[6]->setVisible(true);
+			m_buttons[7]->setVisible(true);
 		}
 	}
-
 	if (!MainCharacter::GetInstance()->IsAlive())
 	{
+		m_buttons[4]->setVisible(false);
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(true);
 		m_buttons[7]->setVisible(true);
-		m_buttons[8]->setVisible(true);
 		gameover->setVisible(true);
 	}
-	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }
 
-void Level2Scene::CreateMonster()
+void Level3Scene::CreateMonster()
 {
+	float x1, y1;
+	int direction1;
+	auto spearGoblinGroup = tileMap->getObjectGroup("spearMoblin");
+	int amount1 = 4;
+	char str1[10];
+	for (int i = 1; i <= amount1; i++)
+	{
+		sprintf(str1, "%02d", i);
+		direction1 = spearGoblinGroup->getObject(str1)["direction"].asInt();
+		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
+		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
+		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1));
+		spearMoblin->GetPhysicsBody()->setGroup(i - 1);
+		m_enemies.push_back(spearMoblin);
+	}
+
 	float x2, y2;
 	int direction2;
-	auto rope = tileMap->getObjectGroup("rope");
-	int amount2 = 4;
+	auto bowGoblinGroup = tileMap->getObjectGroup("bowMoblin");
+	int amount2 = 3;
 	char str2[10];
 	for (int i = 1; i <= amount2; i++)
 	{
 		sprintf(str2, "%02d", i);
-		direction2 = rope->getObject(str2)["direction"].asInt();
-		x2 = rope->getObject(str2)["x"].asFloat();
-		y2 = rope->getObject(str2)["y"].asFloat();
-		Monster *monster = new Monster(this, direction2, Vec2(x2, y2), i - 1);
-		monster->GetPhysicsBody()->setGroup(i - 1);
-		m_enemies.push_back(monster);
+		direction2 = bowGoblinGroup->getObject(str2)["direction"].asInt();
+		x2 = bowGoblinGroup->getObject(str2)["x"].asFloat();
+		y2 = bowGoblinGroup->getObject(str2)["y"].asFloat();
+		BowMoblin *bowMoblin = new BowMoblin(this, direction2, Vec2(x2, y2), i - 1 + amount1);
+		bowMoblin->GetPhysicsBody()->setGroup(i - 1 + amount1);
+		m_enemies.push_back(bowMoblin);
 	}
 }
 
-void Level2Scene::AddListener()
+void Level3Scene::AddListener()
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->onTouchBegan = CC_CALLBACK_2(Level2Scene::OnTouchBegan, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(Level2Scene::OnTouchEnded, this);
-	touchListener->onTouchMoved = CC_CALLBACK_2(Level2Scene::OnTouchMoved, this);
+	touchListener->onTouchBegan = CC_CALLBACK_2(Level3Scene::OnTouchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(Level3Scene::OnTouchEnded, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(Level3Scene::OnTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::SpecialAttack, this));
-	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Evade, this));
-	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::NormalAttack, this));
-	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Defend, this));
+	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::SpecialAttack, this));
+	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::Evade, this));
+	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::NormalAttack, this));
+	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::Defend, this));
 
 	m_buttons[4]->addClickEventListener([&](Ref* event) {
 		if (!m_buttons[5]->isVisible())
@@ -137,7 +164,7 @@ void Level2Scene::AddListener()
 	m_buttons[7]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
-			Director::getInstance()->replaceScene(Level2Scene::CreateScene());
+			Director::getInstance()->replaceScene(Level3Scene::CreateScene());
 		});
 		runAction(gotoMap);
 	});
@@ -150,14 +177,14 @@ void Level2Scene::AddListener()
 		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
 	});
 
-	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level2Scene::OpenInventory, this));
+	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level3Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(Level2Scene::onContactBegin, this);
+	contactListener->onContactBegin = CC_CALLBACK_1(Level3Scene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
-bool Level2Scene::OnTouchBegan(Touch* touch, Event* event)
+bool Level3Scene::OnTouchBegan(Touch* touch, Event* event)
 {
 	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
 	mCurrentTouchPoint = touch->getLocation();
@@ -167,14 +194,14 @@ bool Level2Scene::OnTouchBegan(Touch* touch, Event* event)
 	return true;
 }
 
-bool Level2Scene::OnTouchEnded(Touch* touch, Event* event)
+bool Level3Scene::OnTouchEnded(Touch* touch, Event* event)
 {
 	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	mCurrentTouchPoint = Point(-1, -1);
 	return true;
 }
 
-void Level2Scene::OnTouchMoved(Touch* touch, Event* event)
+void Level3Scene::OnTouchMoved(Touch* touch, Event* event)
 {
 	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
 	mCurrentTouchPoint = touch->getLocation();
@@ -183,7 +210,7 @@ void Level2Scene::OnTouchMoved(Touch* touch, Event* event)
 	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 }
 
-bool Level2Scene::onContactBegin(PhysicsContact& contact)
+bool Level3Scene::onContactBegin(PhysicsContact& contact)
 {
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
@@ -233,88 +260,92 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
-
-	// MAIN CHARACTER SLASH ROPE MONSTER
-	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	// MAIN CHARACTER SLASH SPEARMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
 	{
-		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
-		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
 	}
 
-	// MAIN CHARACTER'S ARROW COLLIDE ROPE MONSTER
-	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
+	// MAIN CHARACTER'S ARROW COLLIDE SPEARMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
 	{
-		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
 			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
-		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
 			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
 		}
 	}
 
-	
-	// BULLET ROPE DAMAGE MAIN CHARACTER
-	if ((a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK))
+	// SPEARMOBLIN PIERCE MAIN CHARACTER
+	if ((a->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK))
 	{
-		MainCharacter::GetInstance()->GetDamage(MainCharacter::ROPE_MONSTER_DAMAGE);
-		if (a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
+	}
+
+	// BOWMOBLIN ARROW DAMAGE MAIN CHARACTER
+	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
 		{
-			m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
+			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
 		}
-		else if (b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
 		{
-			m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
+			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
 		}
 	}
 
-	// ROPE MONSTER COLLIDE OBSTACLES
-	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
+	// SPEARMOBLIN COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
 	{
-		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[a->getGroup()]->SetPreventRun();
 			m_enemies[a->getGroup()]->ReverseDirection();
 		}
-		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[b->getGroup()]->SetPreventRun();
 			m_enemies[b->getGroup()]->ReverseDirection();
 		}
 	}
 
-	//  BULLET MONSTER COLLIDE OBSTACLES
-
-	if ((a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK))
+	//// BOWMOBLIN ARROW COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
 	{
-		if (a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
 		{
-			m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
+			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
 		}
-		else if (b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
 		{
-			m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
+			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
 		}
 	}
 
 	return true;
 }
 
-void Level2Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
@@ -323,7 +354,7 @@ void Level2Scene::NormalAttack(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void Level2Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
@@ -331,7 +362,7 @@ void Level2Scene::SpecialAttack(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void Level2Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
@@ -339,7 +370,7 @@ void Level2Scene::Evade(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void Level2Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
+void Level3Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 {
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
@@ -351,7 +382,7 @@ void Level2Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void Level2Scene::OpenInventory(cocos2d::Ref * sender)
+void Level3Scene::OpenInventory(cocos2d::Ref * sender)
 {
 	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
 	GamePlay::ShowInventoryGrid();

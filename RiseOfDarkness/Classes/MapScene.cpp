@@ -5,6 +5,7 @@
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include "Level2Scene.h"
+#include "Level3Scene.h"
 
 using namespace std;
 USING_NS_CC;
@@ -91,6 +92,9 @@ void MapScene::LoadLevel(Ref *pSender,int level)
 		break;
 	case 2:
 		Director::getInstance()->replaceScene(Level2Scene::CreateScene());
+		break;
+	case 3:
+		Director::getInstance()->replaceScene(Level3Scene::CreateScene());
 		break;
 	}
 }
