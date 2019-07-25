@@ -21,7 +21,6 @@ BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos, int group)
 	mSprite->setPhysicsBody(mPhysicsBody);
 	layer->addChild(mSprite);
 
-
 	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
 	layer->addChild(hpBar);
 	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
@@ -172,7 +171,6 @@ void BowMoblin::Idle()
 {
 	if (mSprite->getNumberOfRunningActions() == 0)
 	{
-
 		switch (direction)
 		{
 		case 1:

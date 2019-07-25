@@ -33,7 +33,7 @@ bool Level2Scene::init()
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(5);
 	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(6);
 
-	CreatePhysicsWorld("obstacles", "mc", this);
+	CreatePhysicsWorld("obstacles", "mc", "river", this);
 
 	CreateAllButton(this);
 
@@ -66,10 +66,26 @@ void Level2Scene::update(float deltaTime)
 		}
 	}
 
+	if (CheckClear())
+	{
+		if (MainCharacter::GetInstance()->GetStageLevel() == currentStage)
+		{
+			Director::getInstance()->pause();
+			MainCharacter::GetInstance()->IncreaseStage();
+			clear->setVisible(true);
+			m_buttons[4]->setVisible(false);
+			m_buttons[5]->setVisible(false);
+			m_buttons[6]->setVisible(true);
+			m_buttons[7]->setVisible(true);
+		}
+	}
+
 	if (!MainCharacter::GetInstance()->IsAlive())
 	{
+		m_buttons[4]->setVisible(false);
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(true);
 		m_buttons[7]->setVisible(true);
-		m_buttons[8]->setVisible(true);
 		gameover->setVisible(true);
 	}
 	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
@@ -92,6 +108,84 @@ void Level2Scene::CreateMonster()
 		monster->GetPhysicsBody()->setGroup(i - 1);
 		m_enemies.push_back(monster);
 	}
+}
+
+void Level2Scene::CreatePhysicsWorld(const char * obstacle, const char * mc, const char * river, Layer * layer)
+{
+	// Create camera
+	camera = Camera::create();
+	layer->addChild(camera, 10);
+
+	// Add tile map
+	tileMap->removeFromParent();
+	tileMap->setPosition(Vec2(0, 0));
+	layer->addChild(tileMap, 0);
+
+	// Create physics body world
+	auto edgeBody = PhysicsBody::createEdgeBox(tileMap->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+	edgeBody->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
+	edgeBody->setContactTestBitmask(true);
+	auto edgeNode = Node::create();
+	edgeNode->setPosition(tileMap->getContentSize() / 2);
+	edgeNode->setPhysicsBody(edgeBody);
+	layer->addChild(edgeNode);
+
+	// Create box 2d for obstacles
+	auto ob = tileMap->getLayer(obstacle);
+	ob->setVisible(false);
+	Size layerSize = ob->getLayerSize();
+	for (int i = 0; i < layerSize.width; i++)
+	{
+		for (int j = 0; j < layerSize.height; j++)
+		{
+			auto tileSet = ob->getTileAt(Vec2(i, j));
+			if (tileSet != NULL)
+			{
+				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+				physics->setDynamic(false);
+				physics->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
+				physics->setContactTestBitmask(true);
+				tileSet->setPhysicsBody(physics);
+			}
+		}
+	}
+
+	// Create box 2d for river
+	auto rv = tileMap->getLayer(river);
+	rv->setVisible(false);
+	Size layerRVSize = rv->getLayerSize();
+	for (int i = 0; i < layerRVSize.width; i++)
+	{
+		for (int j = 0; j < layerRVSize.height; j++)
+		{
+			auto tileSet = rv->getTileAt(Vec2(i, j));
+			if (tileSet != NULL)
+			{
+				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
+				physics->setDynamic(false);
+				physics->setCollisionBitmask(MainCharacter::RIVER_BITMASK);
+				physics->setContactTestBitmask(true);
+				tileSet->setPhysicsBody(physics);
+			}
+		}
+	}
+
+	// Add upper tile map
+	upperTileMap->removeFromParent();
+	upperTileMap->setPosition(Vec2(0, 0));
+	layer->addChild(upperTileMap, 3);
+
+	// Add main character
+	mainCharacter = MainCharacter::GetInstance()->GetSprite();
+	mainCharacter->removeFromParent();
+	MainCharacter::GetInstance()->AddToLayer(layer);
+	auto obj = tileMap->objectGroupNamed(mc);
+	float x = obj->getObject(mc)["x"].asFloat();
+	float y = obj->getObject(mc)["y"].asFloat();
+	mainCharacter->setPosition(x, y);
+
+	// Get body
+	body = MainCharacter::GetInstance()->GetPhysicsBody();
 }
 
 void Level2Scene::AddListener()
@@ -219,6 +313,68 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	// MAIN CHARACTER WITH MONSTER
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
+			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
+		{
+			mainCharacter->stopAllActions();
+		}
+		if (MainCharacter::GetInstance()->GetDirection() == 1)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(1);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 2)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(2);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 3)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(3);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 4)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(4);
+		}
+	}
+
+	// MAIN CHARACTER WITH RIVER
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::RIVER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::RIVER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
+			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
+		{
+			mainCharacter->stopAllActions();
+		}
+		if (MainCharacter::GetInstance()->GetDirection() == 1)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(1);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 2)
+		{
+			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(2);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 3)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(3);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 4)
+		{
+			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
+			MainCharacter::GetInstance()->SetPreventRun(4);
+		}
+	}
+
 	// ARROW COLLIDE WITH OBSTACLE
 	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
@@ -283,6 +439,22 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	// ROPE MONSTER COLLIDE OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[a->getGroup()]->SetPreventRun();
+			m_enemies[a->getGroup()]->ReverseDirection();
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[b->getGroup()]->SetPreventRun();
+			m_enemies[b->getGroup()]->ReverseDirection();
+		}
+	}
+
+	// ROPE MONSTER COLLIDE RIVER
+	if ((a->getCollisionBitmask() == MainCharacter::RIVER_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::RIVER_BITMASK))
 	{
 		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
 		{
