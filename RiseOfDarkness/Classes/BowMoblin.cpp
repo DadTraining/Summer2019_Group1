@@ -127,6 +127,7 @@ void BowMoblin::Update(float deltaTime)
 	else
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::BOWMOBLIN_GOLD);
+		arrow->SetVisible(false);
 	}
 }
 

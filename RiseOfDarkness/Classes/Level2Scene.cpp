@@ -65,12 +65,14 @@ void Level2Scene::update(float deltaTime)
 			m_enemies[i]->Update(deltaTime);
 		}
 	}
+
 	if (!MainCharacter::GetInstance()->IsAlive())
 	{
 		m_buttons[7]->setVisible(true);
 		m_buttons[8]->setVisible(true);
 		gameover->setVisible(true);
 	}
+	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }
 
 void Level2Scene::CreateMonster()
@@ -231,33 +233,18 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
-	// MAIN CHARACTER SLASH SPEARMOBLIN
-	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+
+	// MAIN CHARACTER SLASH ROPE MONSTER
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
 	{
-		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
 		{
 			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
-		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
 		{
 			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
-		}
-	}
-
-	// MAIN CHARACTER'S ARROW COLLIDE SPEARMOBLIN
-	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
-			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
-			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
 		}
 	}
 
@@ -277,33 +264,12 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
-	// SPEARMOBLIN PIERCE MAIN CHARACTER
-	if ((a->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK))
-	{
-		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
-	}
-
-	// BOWMOBLIN ARROW DAMAGE MAIN CHARACTER
-	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
-	{
-		MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
-		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
-		}
-	}
-
+	
 	// BULLET ROPE DAMAGE MAIN CHARACTER
 	if ((a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK))
 	{
-		MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
+		MainCharacter::GetInstance()->GetDamage(MainCharacter::ROPE_MONSTER_DAMAGE);
 		if (a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
 		{
 			m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
@@ -311,22 +277,6 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		else if (b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
 		{
 			m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
-		}
-	}
-
-	// SPEARMOBLIN COLLIDE OBSTACLES
-	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		{
-			m_enemies[a->getGroup()]->SetPreventRun();
-			m_enemies[a->getGroup()]->ReverseDirection();
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
-		{
-			m_enemies[b->getGroup()]->SetPreventRun();
-			m_enemies[b->getGroup()]->ReverseDirection();
 		}
 	}
 
@@ -343,20 +293,6 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		{
 			m_enemies[b->getGroup()]->SetPreventRun();
 			m_enemies[b->getGroup()]->ReverseDirection();
-		}
-	}
-
-	//// BOWMOBLIN ARROW COLLIDE OBSTACLES
-	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetArrow()->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
 		}
 	}
 

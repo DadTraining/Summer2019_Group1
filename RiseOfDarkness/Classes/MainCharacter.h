@@ -37,10 +37,12 @@ public:
 	static const int SPEARMOBLIN_DAMAGE = 40;
 	static const int NORMAL_ARROW = 10;
 	static const int BOWMOBLIN_DAMAGE = 30;
+	static const int ROPE_MONSTER_DAMAGE = 35;
 
 	// GOLD RECEIVE FROM KILL ENEMY
 	static const int BOWMOBLIN_GOLD = 50;
 	static const int SPEARMOBLIN_GOLD = 50;
+	static const int ROPE_MONSTER_GOLD = 40;
 
 	static const int FRONT_IDLE = 0;
 	static const int BACK_IDLE = 1;

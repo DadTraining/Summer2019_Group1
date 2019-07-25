@@ -126,6 +126,7 @@ void Monster::Update(float deltaTime)
 	}
 	else
 	{
+		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
 		bullet->SetVisible(false);
 	}
 }
