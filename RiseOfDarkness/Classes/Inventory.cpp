@@ -107,7 +107,6 @@ void Inventory::AddItem(int id)
 			{
 				if (slots[i]->GetID() == 99)
 				{
-					log("add item %d", id);
 					slots[i] = new Item(database->items[id]);
 					slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::potion));
 					itemAmount[i]++;
@@ -127,7 +126,6 @@ void Inventory::AddItem(int id)
 			{
 				if (arrows[i]->GetID() == 99)
 				{
-					log("add item %d", id);
 					arrows[i] = new Item(database->items[id]);
 					arrows[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::arrow));
 					arrowAmount[i]++;
@@ -141,7 +139,6 @@ void Inventory::AddItem(int id)
 		{
 			if (weapons[i]->GetID() == 99)
 			{
-				log("add item %d", id);
 				weapons[i] = new Item(database->items[id]);
 				weapons[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::weapon));
 				break;
@@ -380,7 +377,7 @@ int Inventory::GetIdByIcon(int id, ItemType type)
 	case ItemType::potion:
 		for (int i = 0; i < slots.size(); i++)
 		{
-			if ((slots[i]->GetID() == id && slots[i]->GetIcon() != NULL))
+			if (slots[i]->GetID() == id)
 			{
 				return i;
 			}

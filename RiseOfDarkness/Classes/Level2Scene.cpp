@@ -141,11 +141,13 @@ void Level2Scene::AddListener()
 	});
 
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(0, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, index, ItemType::potion);
 	});
 
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(1, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, index, ItemType::potion);
 	});
 
 	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level2Scene::OpenInventory, this));
