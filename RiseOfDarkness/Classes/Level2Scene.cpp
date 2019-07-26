@@ -13,7 +13,7 @@ USING_NS_CC;
 Scene* Level2Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level2Scene::create();
 
@@ -295,239 +295,41 @@ void Level2Scene::OnTouchMoved(Touch* touch, Event* event)
 
 bool Level2Scene::onContactBegin(PhysicsContact& contact)
 {
-	PhysicsBody* a = contact.getShapeA()->getBody();
-	PhysicsBody* b = contact.getShapeB()->getBody();
-
 	// MAIN CHARACTER WITH OBSTACLES
-	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
-	{
-		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
-			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
-		{
-			mainCharacter->stopAllActions();
-		}
-		if (MainCharacter::GetInstance()->GetDirection() == 1)
-		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(1);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 2)
-		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(2);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 3)
-		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(3);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 4)
-		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(4);
-		}
-	}
-
+	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::OBSTACLE_BITMASK, 1);
+	
 	// MAIN CHARACTER WITH MONSTER
-	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
-	{
-		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
-			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
-		{
-			mainCharacter->stopAllActions();
-		}
-		if (MainCharacter::GetInstance()->GetDirection() == 1)
-		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(1);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 2)
-		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(2);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 3)
-		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(3);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 4)
-		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(4);
-		}
-	}
+	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 1);
 
 	// MAIN CHARACTER WITH RIVER
-	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::RIVER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::RIVER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
-	{
-		if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
-			MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
-		{
-			mainCharacter->stopAllActions();
-		}
-		if (MainCharacter::GetInstance()->GetDirection() == 1)
-		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(1);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 2)
-		{
-			mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(2);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 3)
-		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(3);
-		}
-		else if (MainCharacter::GetInstance()->GetDirection() == 4)
-		{
-			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
-			MainCharacter::GetInstance()->SetPreventRun(4);
-		}
-	}
+	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::RIVER_BITMASK, 1);
 
 	// ARROW COLLIDE WITH OBSTACLE
-	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
-		{
-			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK)
-		{
-			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
-		}
-	}
-
+	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::OBSTACLE_BITMASK, 2);
 
 	// MAIN CHARACTER SLASH ROPE MONSTER
-	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
-		}
-	}
-
+	Collision(contact, MainCharacter::SLASH_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 3);
+	
 	// MAIN CHARACTER SLASH NOKKEN MONSTER
-	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
-		}
-	}
+	Collision(contact, MainCharacter::SLASH_BITMASK, MainCharacter::NOKKEN_MONSTER_BITMASK, 3);
 
 	// MAIN CHARACTER'S ARROW COLLIDE ROPE MONSTER
-	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
-			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
-			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
-		}
-	}
+	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 4);
 
 	// MAIN CHARACTER'S ARROW COLLIDE NOKKEN MONSTER
-	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
-			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
-			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
-		}
-	}
-
+	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::NOKKEN_MONSTER_BITMASK, 4);
 	
-	// BULLET ROPE DAMAGE MAIN CHARACTER
-	if ((a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK))
-	{
-		MainCharacter::GetInstance()->GetDamage(MainCharacter::ROPE_MONSTER_DAMAGE);
-		if (a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
-		}
-	}
-
+	// BULLET DAMAGE MAIN CHARACTER
+	Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
+	
 	// ROPE MONSTER COLLIDE OBSTACLES
-	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[a->getGroup()]->SetPreventRun();
-			m_enemies[a->getGroup()]->ReverseDirection();
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[b->getGroup()]->SetPreventRun();
-			m_enemies[b->getGroup()]->ReverseDirection();
-		}
-	}
+	Collision(contact, MainCharacter::OBSTACLE_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 5);
 
 	// ROPE MONSTER COLLIDE RIVER
-	if ((a->getCollisionBitmask() == MainCharacter::RIVER_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::RIVER_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[a->getGroup()]->SetPreventRun();
-			m_enemies[a->getGroup()]->ReverseDirection();
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
-		{
-			m_enemies[b->getGroup()]->SetPreventRun();
-			m_enemies[b->getGroup()]->ReverseDirection();
-		}
-	}
+	Collision(contact, MainCharacter::RIVER_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 5);
 
-	//  BULLET MONSTER COLLIDE OBSTACLES
-
-	if ((a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
-		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK))
-	{
-		if (a->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
-		{
-			m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
-		}
-		else if (b->getCollisionBitmask() == MainCharacter::BULLET_ROPE_BITMASK)
-		{
-			m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
-		}
-	}
+	// BULLET COLLIDE OBSTACLES
+	Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
 
 	return true;
 }
@@ -566,6 +368,145 @@ void Level2Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	if (type == ui::Widget::TouchEventType::ENDED)
 	{
 		MainCharacter::GetInstance()->StopDefend();
+	}
+}
+
+void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2, int type)
+{
+	PhysicsBody* a = contact.getShapeA()->getBody();
+	PhysicsBody* b = contact.getShapeB()->getBody();
+
+	switch (type)
+	{
+	case 1:
+		// MAINCHARACTER COLLISION
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			if (MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_BACK || MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_LEFT ||
+				MainCharacter::GetInstance()->GetCurrentState() == MainCharacter::ROLL_FRONT)
+			{
+				mainCharacter->stopAllActions();
+			}
+			if (MainCharacter::GetInstance()->GetDirection() == 1)
+			{
+				mainCharacter->setPositionY(mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetSpeed());
+				MainCharacter::GetInstance()->SetPreventRun(1);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 2)
+			{
+				mainCharacter->setPositionY(mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetSpeed());
+				MainCharacter::GetInstance()->SetPreventRun(2);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 3)
+			{
+				mainCharacter->setPositionX(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetSpeed());
+				MainCharacter::GetInstance()->SetPreventRun(3);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 4)
+			{
+				mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
+				MainCharacter::GetInstance()->SetPreventRun(4);
+			}
+		}
+		break;
+	case 2:
+		// MAIN CHARACTER'S ARROW COLLIDE WITH OBSTACLE
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			if (a->getCollisionBitmask() == bitmask1)
+			{
+				MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+			}
+			else if (b->getCollisionBitmask() == bitmask1)
+			{
+				MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+			}
+		}
+		break;
+	case 3:
+		// MAIN CHARACTER SLASH COLLIDE WITH MONSTER
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			if (a->getCollisionBitmask() == bitmask2)
+			{
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+			}
+			else if (b->getCollisionBitmask() == bitmask2)
+			{
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+			}
+		}
+		break;
+	case 4:
+		// MAIN CHARACTER'S ARROW COLLIDE MONSTER
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			if (a->getCollisionBitmask() == bitmask2)
+			{
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+				MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+			}
+			else if (b->getCollisionBitmask() == bitmask2)
+			{
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+				MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+			}
+		}
+		break;
+	case 5:
+		// MONSTERS COLLIDE OBSTACLES
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			if (a->getCollisionBitmask() == bitmask2)
+			{
+				m_enemies[a->getGroup()]->SetPreventRun();
+				m_enemies[a->getGroup()]->ReverseDirection();
+			}
+			else if (b->getCollisionBitmask() == bitmask2)
+			{
+				m_enemies[b->getGroup()]->SetPreventRun();
+				m_enemies[b->getGroup()]->ReverseDirection();
+			}
+		}
+		break;
+	case 6:
+		// BULLET DAMAGE MAIN CHARACTER
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
+			if (a->getCollisionBitmask() == bitmask1)
+			{
+				m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
+			}
+			else if (b->getCollisionBitmask() == bitmask1)
+			{
+				m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
+			}
+		}
+		break;
+	case 7:
+		//// BULLET COLLIDE OBSTACLES
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			if (a->getCollisionBitmask() == bitmask1)
+			{
+				m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
+			}
+			else if (b->getCollisionBitmask() == bitmask1)
+			{
+				m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
+			}
+		}
+		break;
+	default:
+		break;
 	}
 }
 

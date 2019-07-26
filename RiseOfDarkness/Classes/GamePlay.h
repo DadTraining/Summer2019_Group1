@@ -40,6 +40,7 @@ public:
 
 	virtual void OpenInventory(cocos2d::Ref * sender);
 	virtual void ShowInventoryGrid();
+	virtual void Collision(PhysicsContact& contact, int bitmask1, int bitmask2, int type);
 
 	virtual bool CheckClear();
 	virtual void EnemyUpdate(float deltaTime);

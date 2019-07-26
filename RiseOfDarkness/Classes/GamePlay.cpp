@@ -496,6 +496,10 @@ void GamePlay::ShowInventoryGrid()
 	}
 }
 
+void GamePlay::Collision(PhysicsContact & contact, int bitmask1, int bitmask2, int type)
+{
+}
+
 bool GamePlay::CheckClear()
 {
 	for (int i = 0; i < m_enemies.size(); i++)

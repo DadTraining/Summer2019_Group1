@@ -30,6 +30,7 @@ public:
 	void SpecialAttack(Ref* sender, ui::Widget::TouchEventType type);
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
+	virtual void Collision(PhysicsContact& contact, int bitmask1, int bitmask2, int type);
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
 
