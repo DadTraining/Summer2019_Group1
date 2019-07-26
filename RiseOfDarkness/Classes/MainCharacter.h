@@ -24,6 +24,7 @@ public:
 	static const int BULLET_ROPE_BITMASK = 108;
 	static const int ROPE_MONSTER_BITMASK = 109;
 	static const int RIVER_BITMASK = 110;
+	static const int NOKKEN_MONSTER_BITMASK = 111;
 
 	// POTION
 	static const int HP = 50;

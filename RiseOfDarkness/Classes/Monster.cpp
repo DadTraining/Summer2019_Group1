@@ -8,7 +8,7 @@ Monster::Monster() {}
 Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(32));
-	mSprite->setScale(1.5);
+	mSprite->setScale(1.7f);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
 	box.height = mSprite->getContentSize().height / 2.2;
@@ -67,7 +67,7 @@ Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 	preventRun = 0;
 
 	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(33));
-	sprite->setScaleX(0.4f);
+	sprite->setScale(0.7f);
 	bullet = new Bullet(sprite, MainCharacter::BULLET_ROPE_BITMASK);
 	bullet->SetVisible(false);
 	bullet->GetSprite()->getPhysicsBody()->setGroup(group);

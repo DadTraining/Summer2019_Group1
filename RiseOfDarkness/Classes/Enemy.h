@@ -37,7 +37,6 @@ public:
 	virtual void SetPreventRun();
 	virtual void ReverseDirection();
 	virtual void SetDirection(int dir);
-	virtual void SetDirectionRopeMonster(int dir);
 	virtual bool Detect(float detectRange);
 	virtual bool Target(float attackRange);
 	virtual Arrow* GetArrow();

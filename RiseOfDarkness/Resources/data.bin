@@ -1,5 +1,5 @@
 #SPRITE
-34
+36
 0
 res/sprites/character/mainCharacter.png
 1
@@ -68,6 +68,10 @@ res/sprites/character/bowMoblin.png
 res/sprites/character/monster.png
 33
 res/sprites/gameplay/bullet.png
+34
+res/sprites/character/nokken.png
+35
+res/sprites/gameplay/bullet2.png
 #BUTTON
 26
 0
@@ -149,7 +153,7 @@ res/buttons/gameplay/homeButtonPressed.png
 res/buttons/gameplay/mainCharacterFaceButtonNormal.png
 res/buttons/gameplay/mainCharacterFaceButtonPressed.png
 #ANIMATE
-52
+54
 0
 0.1f
 10
@@ -358,6 +362,14 @@ res/animates/RopeMonster/backAttack/backAttack.plist
 0.1f
 1
 res/animates/RopeMonster/rightAttack/rightAttack.plist
+52
+0.1f
+1
+res/animates/NokkenMonster/idle/idle.plist
+53
+0.1f
+3
+res/animates/NokkenMonster/attack/attack.plist
 #TILEMAP
 9
 0

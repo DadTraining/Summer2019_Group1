@@ -4,6 +4,7 @@
 #include "MapScene.h"
 #include "HomeScene.h"
 #include "Monster.h"
+#include "Nokken.h"
 
 using namespace std;
 
@@ -93,6 +94,21 @@ void Level2Scene::update(float deltaTime)
 
 void Level2Scene::CreateMonster()
 {
+	float x1, y1;
+	int direction1;
+	auto spearGoblinGroup = tileMap->getObjectGroup("nokken");
+	int amount1 = 3;
+	char str1[10];
+	for (int i = 1; i <= amount1; i++)
+	{
+		sprintf(str1, "%02d", i);
+		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
+		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
+		Nokken *nokken = new Nokken(this, Vec2(x1, y1), i - 1);
+		nokken->GetPhysicsBody()->setGroup(i - 1);
+		m_enemies.push_back(nokken);
+	}
+
 	float x2, y2;
 	int direction2;
 	auto rope = tileMap->getObjectGroup("rope");
@@ -104,8 +120,8 @@ void Level2Scene::CreateMonster()
 		direction2 = rope->getObject(str2)["direction"].asInt();
 		x2 = rope->getObject(str2)["x"].asFloat();
 		y2 = rope->getObject(str2)["y"].asFloat();
-		Monster *monster = new Monster(this, direction2, Vec2(x2, y2), i - 1);
-		monster->GetPhysicsBody()->setGroup(i - 1);
+		Monster *monster = new Monster(this, direction2, Vec2(x2, y2), i - 1 + amount1);
+		monster->GetPhysicsBody()->setGroup(i - 1 + amount1);
 		m_enemies.push_back(monster);
 	}
 }
@@ -404,6 +420,20 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	// MAIN CHARACTER SLASH NOKKEN MONSTER
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+		}
+	}
+
 	// MAIN CHARACTER'S ARROW COLLIDE ROPE MONSTER
 	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
@@ -414,6 +444,22 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
 		else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+		}
+	}
+
+	// MAIN CHARACTER'S ARROW COLLIDE NOKKEN MONSTER
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::NOKKEN_MONSTER_BITMASK)
 		{
 			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
 			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);

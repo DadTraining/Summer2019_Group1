@@ -167,6 +167,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\InputNameScene.cpp" />
     <ClCompile Include="..\Classes\LoadingScene.cpp" />
     <ClCompile Include="..\Classes\MainMenuScene.cpp" />
+    <ClCompile Include="..\Classes\Nokken.cpp" />
     <ClCompile Include="..\Classes\Pierce.cpp" />
     <ClCompile Include="..\Classes\Monster.cpp" />
     <ClCompile Include="..\Classes\ResourceManager.cpp" />
@@ -195,6 +196,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\InputNameScene.h" />
     <ClInclude Include="..\Classes\LoadingScene.h" />
     <ClInclude Include="..\Classes\MainMenuScene.h" />
+    <ClInclude Include="..\Classes\Nokken.h" />
     <ClInclude Include="..\Classes\Pierce.h" />
     <ClInclude Include="..\Classes\Monster.h" />
     <ClInclude Include="..\Classes\ResourceManager.h" />

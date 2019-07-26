@@ -116,26 +116,6 @@ void Enemy::SetDirection(int dir)
 	}
 }
 
-void Enemy::SetDirectionRopeMonster(int dir)
-{
-	if (direction != dir)
-	{
-		if (dir == 3)
-		{
-			mSprite->setFlipX(true);
-		}
-		else if (direction == 3)
-		{
-			mSprite->setFlipX(false);
-		}
-		direction = dir;
-	}
-	if (preventRun != dir)
-	{
-		preventRun = 0;
-	}
-}
-
 bool Enemy::Detect(float detectRange)
 {
 	auto mcPos = MainCharacter::GetInstance()->GetSprite()->getPosition();
