@@ -6,6 +6,7 @@
 
 USING_NS_CC;
 using namespace std;
+using namespace ui;
 Inventory::Inventory(cocos2d::Sprite* sprite)
 {
 	Init(sprite);
@@ -51,6 +52,9 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	potion->setTitleText("POTION");
 	armor = cocos2d::ui::TabHeader::create();
 	armor->setTitleText("ARMOR");
+	arrow = cocos2d::ui::TabHeader::create();
+	arrow->setTitleText("ARROW");
+
 	capacity = 24;
 	container1 = ui::Layout::create();
 	container1->setOpacity(255);
@@ -58,25 +62,32 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	container2->setOpacity(50);
 	container3 = ui::Layout::create();
 	container3->setOpacity(50);
-
+	arrowContainer = ui::Layout::create();
+	arrowContainer->setOpacity(50);
 	tab->insertTab(0, weapon, container1);
 	tab->insertTab(1, potion, container2);
 	tab->insertTab(2, armor, container3);
-
+	tab->insertTab(3, arrow, arrowContainer);
 	tab->setSelectTab(1);
 	CC_SAFE_RETAIN(tab);
 	CC_SAFE_RETAIN(container1);
 	CC_SAFE_RETAIN(container2);
 	CC_SAFE_RETAIN(container3);
+	CC_SAFE_RETAIN(arrowContainer);
 
 	for (int i = 0; i < slotX*slotY; i++)
 	{
-		inventory.push_back(new Item());
-		slots.push_back(new Item());
-		weapons.push_back(new Item());
+		inventory.push_back(new Item("sprites/item/box"));
+		slots.push_back(new Item("sprites/item/box"));
+		weapons.push_back(new Item("sprites/item/box"));
+		arrows.push_back(new Item("sprites/item/box"));
 		itemAmount.push_back(0);
+		arrowAmount.push_back(0);
 		auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 14);
 		label->retain();
+		auto label1 = Label::createWithTTF("", "fonts/Marker Felt.ttf", 14);
+		label1->retain();
+		amountArrowLabels.push_back(label1);
 		amountLabels.push_back(label);
 	}
 }
@@ -86,15 +97,15 @@ void Inventory::AddItem(int id)
 	switch (database->items[id]->GetType())
 	{
 	case ItemType::potion:
-		if (InventoryContains(id))
+		if (InventoryContains(id, ItemType::potion))
 		{
-			StackItem(id);
+			StackItem(id, ItemType::potion);
 		}
 		else
 		{
 			for (int i = 0; i < inventory.size(); i++)
 			{
-				if (slots[i]->GetIcon() == NULL)
+				if (slots[i]->GetID() == 99)
 				{
 					log("add item %d", id);
 					slots[i] = new Item(database->items[id]);
@@ -105,10 +116,30 @@ void Inventory::AddItem(int id)
 			}
 		}
 		break;
+	case ItemType::arrow:
+		if (InventoryContains(id, ItemType::arrow))
+		{
+			StackItem(id, ItemType::arrow);
+		}
+		else
+		{
+			for (int i = 0; i < inventory.size(); i++)
+			{
+				if (arrows[i]->GetID() == 99)
+				{
+					log("add item %d", id);
+					arrows[i] = new Item(database->items[id]);
+					arrows[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::arrow));
+					arrowAmount[i]++;
+					break;
+				}
+			}
+		}
+		break;
 	case ItemType::weapon:
 		for (int i = 0; i < inventory.size(); i++)
 		{
-			if (weapons[i]->GetIcon() == NULL)
+			if (weapons[i]->GetID() == 99)
 			{
 				log("add item %d", id);
 				weapons[i] = new Item(database->items[id]);
@@ -133,11 +164,11 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 	case ItemType::weapon:
 		for (int  i = 0; i < inventory.size(); i++)
 		{
-			if (weapons[i]->GetID()==id && weapons[i]->GetIcon()!=NULL && i==index)
+			if (weapons[i]->GetID()==id && i==index)
 			{
 				GetTab(0)->removeChild(weapons[i]->GetIcon());
 				targetID = -1;
-				weapons[i] = new Item();
+				weapons[i] = new Item("sprites/item/box");
 
 				break;
 			}
@@ -146,7 +177,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 	case ItemType::potion:
 		for (int i = 0; i < inventory.size(); i++)
 		{
-			if (slots[i]->GetID() == id && (id == 0 || id == 1) && slots[i]->GetIcon() != NULL && i == index)
+			if (slots[i]->GetID() == id && (id == 0 || id == 1) && slots[i]->GetID() != 99 && i == index)
 			{
 				if (MainCharacter::GetInstance()->TakePotion(id))
 				{
@@ -156,7 +187,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 						amountLabels[i]->setString("");
 						GetTab(1)->removeChild(slots[i]->GetIcon());
 						targetID = -1;
-						slots[i] = new Item();
+						slots[i] = new Item("sprites/item/box");
 						AutoArrange();
 					}
 					else
@@ -169,7 +200,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 			}
 			else
 			{
-				if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL && i == index)
+				if (slots[i]->GetID() == id && i == index)
 				{
 					itemAmount[i]--;
 					if (itemAmount[i] == 0)
@@ -177,7 +208,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 						amountLabels[i]->setString("");
 						GetTab(1)->removeChild(slots[i]->GetIcon());
 						targetID = -1;
-						slots[i] = new Item();
+						slots[i] = new Item("sprites/item/box");
 						AutoArrange();
 					}
 					else
@@ -188,6 +219,52 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 					break;
 				}
 				
+			}
+		}
+		break;
+	case ItemType::arrow:
+		for (int i = 0; i < inventory.size(); i++)
+		{
+			if (arrows[i]->GetID() == id && (id == 0 || id == 1) && i == index)
+			{
+				if (MainCharacter::GetInstance()->TakePotion(id))
+				{
+					arrowAmount[i]--;
+					if (arrowAmount[i] == 0)
+					{
+						amountLabels[i]->setString("");
+						GetTab(3)->removeChild(arrows[i]->GetIcon());
+						targetID = -1;
+						arrows[i] = new Item("sprites/item/box");
+						AutoArrange();
+					}
+					else
+					{
+						amountLabels[i]->setString(to_string(arrowAmount[i]));
+					}
+					break;
+				}
+			}
+			else
+			{
+				if (arrows[i]->GetID() == id && i == index)
+				{
+					arrowAmount[i]--;
+					if (arrowAmount[i] == 0)
+					{
+						amountLabels[i]->setString("");
+						GetTab(1)->removeChild(arrows[i]->GetIcon());
+						targetID = -1;
+						arrows[i] = new Item();
+						AutoArrange();
+					}
+					else
+					{
+						amountLabels[i]->setString(to_string(arrowAmount[i]));
+					}
+					log("removed item %d", i);
+					break;
+				}
 			}
 		}
 		break;
@@ -241,6 +318,8 @@ cocos2d::ui::Layout *Inventory::GetTab(int tabIndex)
 		return container2;
 	case 2: 
 		return container3;
+	case 3:
+		return arrowContainer;
 	default:
 		return container3;
 		break;
@@ -257,14 +336,26 @@ std::vector<Item*> Inventory::GetItemsWeapon()
 	return weapons;
 }
 
-std::vector<int> Inventory::GetItemAmount()
+std::vector<int> Inventory::GetItemAmount(int type)
 {
-	return itemAmount;
+	return (type == 0 ? itemAmount : arrowAmount);
 }
 
-std::vector<Label*> Inventory::GetAmountLabel()
+std::vector<Item*> Inventory::GetArrows()
 {
-	return amountLabels;
+	return arrows;
+}
+
+std::vector<Label*> Inventory::GetAmountLabel(int type)
+{
+	if (type==0)
+	{
+		return amountLabels;
+	}
+	else
+	{
+		return amountArrowLabels;
+	}
 }
 
 cocos2d::Vec2 Inventory::GetSize()
@@ -304,15 +395,30 @@ int Inventory::GetIdByIcon(int id, ItemType type)
 	
 }
 
-void Inventory::StackItem(int id)
+void Inventory::StackItem(int id, ItemType type)
 {
-	for (int i = 0; i < slots.size(); i++)
+	switch (type)
 	{
-		if (slots[i]->GetID() == id)
+	case ItemType::potion:
+		for (int i = 0; i < slots.size(); i++)
 		{
-			itemAmount[i]++;
-			break;
+			if (slots[i]->GetID() == id)
+			{
+				itemAmount[i]++;
+				break;
+			}
 		}
+	case ItemType::arrow:
+		for (int i = 0; i < arrows.size(); i++)
+		{
+			if (arrows[i]->GetID() == id)
+			{
+				arrowAmount[i]++;
+				break;
+			}
+		}
+	default:
+		break;
 	}
 }
 
@@ -352,23 +458,43 @@ void Inventory::AutoArrange()
 	}
 }
 
-bool Inventory::InventoryContains(int id)
+bool Inventory::InventoryContains(int id, ItemType type)
 {
 	bool result = false;
-	for (int i = 0; i < slots.size(); i++)
+	switch (type)
 	{
-		result = (slots[i]->GetID() == id && slots[i]->GetIcon()!=NULL);
-		if (result)
+	case ItemType::potion:
+		
+		for (int i = 0; i < slots.size(); i++)
 		{
-			break;
+			result = (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL);
+			if (result)
+			{
+				break;
+			}
 		}
+		return result;
+		break;
+	case ItemType::arrow:
+		for (int i = 0; i < arrows.size(); i++)
+		{
+			result = (arrows[i]->GetID() == id && arrows[i]->GetIcon() != NULL);
+			if (result)
+			{
+				break;
+			}
+		}
+		return result;
+		break;
+	default:
+		return false;
+		break;
 	}
-	return result;
+	
 }
 
 void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 {
-	int index;
 	switch (type)
 	{
 	case ItemType::potion:
@@ -376,15 +502,14 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		btnUse->removeFromParent();
 		GetTab(1)->addChild(btnUse, 99);
 		GetTab(1)->addChild(btnSell, 99);
-		log("potion %d click", id);
-		index = GetIdByIcon(id, ItemType::potion);
-		if (slots[index]->GetIcon() != NULL)
+		
+		if (slots[id]->GetIcon() != NULL)
 		{
 			clickBox->removeFromParent();
 			GetTab(1)->addChild(clickBox, 22);
-			clickBox->setPosition(slots[index]->GetIcon()->getPosition());
+			clickBox->setPosition(slots[id]->GetIcon()->getPosition());
 		}
-		targetID = index;
+		targetID = id;
 		if (targetID >= 0)
 		{
 			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::btnEquipInventory, this));
@@ -396,7 +521,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		GetTab(0)->addChild(btnUse, 99);
 		GetTab(0)->addChild(btnSell, 99);
 		log("weapon %d click", id);
-		index = GetIdByIcon(id, ItemType::weapon);
+		
 		if (weapons[id]->GetIcon() != NULL)
 		{
 			clickBox->removeFromParent();
@@ -408,6 +533,25 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		if (targetID >= 0)
 		{
 			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this));
+		}
+		break;
+	case ItemType::arrow:
+		btnSell->removeFromParent();
+		btnUse->removeFromParent();
+		GetTab(3)->addChild(btnUse, 99);
+		GetTab(3)->addChild(btnSell, 99);
+		
+		if (arrows[id]->GetIcon() != NULL)
+		{
+			clickBox->removeFromParent();
+			GetTab(3)->addChild(clickBox, 22);
+
+			clickBox->setPosition(arrows[id]->GetIcon()->getPosition());
+		}
+		targetID = id;
+		if (targetID >= 0)
+		{
+			//btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this));
 		}
 		break;
 	default:

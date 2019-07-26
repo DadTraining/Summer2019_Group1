@@ -45,15 +45,20 @@ void MainCharacter::CreateMainCharacter()
 	inventory = new Inventory(grid);
 	for (int i = 0; i < 3; i++)
 	{
-		inventory->AddItem(0);
 		inventory->AddItem(1);
 		inventory->AddItem(2);
+		inventory->AddItem(0);
 	}
-	inventory->AddItem(3);
+	inventory->AddItem(7);
 	inventory->AddItem(9);
-	inventory->AddItem(11);
-	inventory->AddItem(4);
-
+	inventory->AddItem(6);
+	inventory->AddItem(7);
+	inventory->AddItem(14);
+	inventory->AddItem(13);
+	for (int i = 0; i < 10; i++)
+	{
+		inventory->AddItem(17);
+	}
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
 	mSprite->setScale(1.8);

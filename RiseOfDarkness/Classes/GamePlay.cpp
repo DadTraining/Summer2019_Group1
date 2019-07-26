@@ -462,10 +462,13 @@ void GamePlay::OpenInventory(cocos2d::Ref * sender)
 
 void GamePlay::ShowInventoryGrid()
 {
+	auto arrows = MainCharacter::GetInstance()->GetInventory()->GetArrows();
 	auto weapons = MainCharacter::GetInstance()->GetInventory()->GetItemsWeapon();
 	auto items = MainCharacter::GetInstance()->GetInventory()->GetItems();
-	std::vector<int> itemAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount();
-	std::vector<Label*> amountLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel();
+	std::vector<int> itemAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0);
+	std::vector<int> arrowAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount(1);
+	std::vector<Label*> amountLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel(0);
+	std::vector<Label*> amountArrowLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel(1);
 	int cols = 0, rows = 0;
 	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
 	// SHOW TAB POTION
@@ -514,6 +517,36 @@ void GamePlay::ShowInventoryGrid()
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
 			);
+			cols++;
+		}
+	}
+	//SHOW TAB ARROW
+	cols = rows = 0;
+	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
+	MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
+	for (int i = 0; i < arrows.size(); i++)
+	{
+		if (arrows[i]->GetIcon() != NULL)
+		{
+			if (cols == 6)
+			{
+				rows++;
+				cols = 0;
+			}
+			MainCharacter::GetInstance()->GetInventory()->arrows[i]->GetIcon()->removeFromParent();
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(arrows[i]->GetIcon(), 21);
+			MainCharacter::GetInstance()->GetInventory()->arrows[i]->GetIcon()->setPosition(
+				Vec2(64 * cols + 32,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
+			);
+			amountArrowLabel[i]->removeFromParent();
+			if (arrowAmount[i]>1)
+			{
+				amountArrowLabel[i]->setString(std::to_string(arrowAmount[i]));
+			}
+			amountArrowLabel[i]->setPosition(arrows[i]->GetIcon()->getPosition() + Vec2(16, -16));
+			MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(amountArrowLabel[i], 22);
 			cols++;
 		}
 	}

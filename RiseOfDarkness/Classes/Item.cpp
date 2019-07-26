@@ -1,6 +1,6 @@
 #include "Item.h"
 
-int Item::GetType()
+ItemType Item::GetType()
 {
 	return itemType;
 }
@@ -23,6 +23,7 @@ Item::Item()
 	itemID = NULL;
 	itemStackable = false;
 	itemIcon = nullptr;
+	weaponType = WeaponType::other;
 }
 
 Item::~Item()
@@ -37,13 +38,30 @@ Item::Item(std::string name, int id, std::string desc, int power, int speed, Ite
 	itemPower = power;
 	itemSpeed = speed;
 	itemType = type;
-	itemStackable = (type == potion ? true : false);
+	itemStackable = ((type == ItemType::potion || type== ItemType::arrow )? true : false);
+	weaponType = WeaponType::other;
+	itemIcon = cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
+	itemIcon->retain();
+}
+
+Item::Item(std::string name, int id, std::string desc, int power, int speed, ItemType type, WeaponType wType)
+{
+	itemID = id;
+	itemName = name;
+	itemDesc = desc;
+	itemPower = power;
+	itemSpeed = speed;
+	itemType = type;
+	itemStackable = ((type == ItemType::potion || type==ItemType::arrow) ? true : false);
+	weaponType = wType;
 	itemIcon = cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
 	itemIcon->retain();
 }
 
 Item::Item(std::string name)
 {
+	itemID = 99;
+	itemStackable = false;
 	itemIcon = cocos2d::ui::Button::create("res/" + name + ".png")->clone();
 	itemIcon->retain();
 }
