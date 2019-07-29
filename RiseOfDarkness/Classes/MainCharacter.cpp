@@ -21,6 +21,7 @@ void MainCharacter::AddToLayer(Layer* layer)
 {
 	layer->addChild(mSprite, 1);
 	slash->AddToLayer(layer);
+	flySlash->AddToLayer(layer);
 	for (int i = 0; i < mArrows.size(); i++)
 	{
 		mArrows[i]->AddToScene(layer);
@@ -117,6 +118,9 @@ void MainCharacter::CreateMainCharacter()
 		arrow->SetDistance(0);
 		mArrows.push_back(arrow);
 	}
+
+	flySlash = new FlySlash();
+	flySlash->GetSprite()->retain();
 }
 
 void MainCharacter::Refresh()
@@ -308,24 +312,26 @@ void MainCharacter::Defend()
 {
 	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
 	{
+		flySlash->SetDirection(direction);
+		flySlash->SetPosition();
 		switch (direction)
 		{
 		case 1:
-			SetState(BACK_SHIELD);
+			SetState(BACK_SLASH);
 			break;
 		case 2:
-			SetState(FRONT_SHIELD);
+			SetState(FRONT_SLASH);
 			break;
 		case 3:
-			SetState(LEFT_SHIELD);
+			SetState(LEFT_SLASH);
 			break;
 		case 4:
-			SetState(LEFT_SHIELD);
+			SetState(LEFT_SLASH);
 			break;
 		case 5:
 			if (currentState == BACK_IDLE || currentState == GO_UP)
 			{
-				SetState(BACK_SHIELD);
+				SetState(BACK_SLASH);
 			}
 			else
 			{
@@ -335,31 +341,31 @@ void MainCharacter::Defend()
 		case 6:
 			if (currentState == FRONT_IDLE || currentState == GO_DOWN)
 			{
-				SetState(FRONT_SHIELD);
+				SetState(FRONT_SLASH);
 			}
 			else
 			{
-				SetState(LEFT_SHIELD);
+				SetState(LEFT_SLASH);
 			}
 			break;
 		case 7:
 			if (currentState == BACK_IDLE || currentState == GO_UP)
 			{
-				SetState(BACK_SHIELD);
+				SetState(BACK_SLASH);
 			}
 			else
 			{
-				SetState(LEFT_SHIELD);
+				SetState(LEFT_SLASH);
 			}
 			break;
 		case 8:
 			if (currentState == FRONT_IDLE || currentState == GO_DOWN)
 			{
-				SetState(FRONT_SHIELD);
+				SetState(FRONT_SLASH);
 			}
 			else
 			{
-				SetState(LEFT_SHIELD);
+				SetState(LEFT_SLASH);
 			}
 			break;
 		}
@@ -937,4 +943,9 @@ void MainCharacter::TakeHeartContainer()
 	heartContainer++;
 	maxHP += 200;
 	currentHP = maxHP;
+}
+
+FlySlash* MainCharacter::GetFlySlash()
+{
+	return flySlash;
 }

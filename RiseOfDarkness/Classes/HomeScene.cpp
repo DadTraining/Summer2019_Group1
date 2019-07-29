@@ -399,6 +399,10 @@ void HomeScene::RunActionNPC()
 void HomeScene::OpenWeaponShop()
 {
 	log("weapon shop");
+	m_sprites[6]->setVisible(true);
+	m_buttons[3]->setVisible(true);
+	weaponscrollView->setVisible(true);
+	
 }
 
 void HomeScene::OpenEquipmentShop()
@@ -413,7 +417,47 @@ void HomeScene::OpenPotionShop()
 
 void HomeScene::CreateShop()
 {
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+
 	// WEAPON SHOP
+	// SPRITE ID 6
+	auto shopweapon = Sprite::create("res/sprites/shop/wea_shop.png");
+	shopweapon->setPosition(visibleSize / 2);
+	addChild(shopweapon, 4);
+	shopweapon->setVisible(false);
+	shopweapon->setCameraMask(2);
+	m_sprites.push_back(shopweapon);
+
+	// BUTTON ID 3
+	auto close = ui::Button::create("res/buttons/shopp/xx.png", "res/buttons/shopp/xx_bg.png");
+	close->setPosition(Vec2(visibleSize.width / 2 + shopweapon->getBoundingBox().size.width / 2
+		, visibleSize.height / 2 + shopweapon->getBoundingBox().size.height / 2));
+	addChild(close, 60);
+	close->setCameraMask(2);
+	close->setVisible(false);
+	m_buttons.push_back(close);
+
+	weaponscrollView = ui::ScrollView::create();
+	weaponscrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	weaponscrollView->setContentSize(Size(385, 220));
+	weaponscrollView->setInnerContainerSize(Size(400, 1560));
+	weaponscrollView->setBounceEnabled(true);
+	weaponscrollView->setTouchEnabled(true);
+	weaponscrollView->setPosition(Vec2(510, 360));
+	weaponscrollView->setVisible(false);
+	weaponscrollView->setCameraMask(2);
+	this->addChild(weaponscrollView, 70);
+
+	close->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			shopweapon->setVisible(false);
+			close->setVisible(false);
+			weaponscrollView->setVisible(false);
+		}
+	});
+	
 
 
 	//EQUIPMENT SHOP

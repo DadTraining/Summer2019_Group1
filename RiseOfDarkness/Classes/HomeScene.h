@@ -11,7 +11,7 @@ class HomeScene : public Layer, GamePlay
 private:
 	Sprite* weaponSeller, *potionSeller, *equipmentSeller;
 	Action* weapon, *potion, *equipment;
-
+	ui::ScrollView* weaponscrollView;
 public:
 	static cocos2d::Scene* CreateScene();
 	virtual bool init();

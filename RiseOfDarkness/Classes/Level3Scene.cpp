@@ -42,6 +42,8 @@ bool Level3Scene::init()
 
 	CreateMonster();
 
+	CreateTreasure();
+
 	scheduleUpdate();
 
 	return true;
@@ -363,6 +365,16 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	// COLLECT HEART CONTAINER
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::HEART_CONTAINER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::HEART_CONTAINER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (heartContainer->isVisible())
+		{
+			MainCharacter::GetInstance()->TakeHeartContainer();
+			heartContainer->setVisible(false);
+		}
+	}
 	return true;
 }
 
@@ -410,4 +422,21 @@ void Level3Scene::OpenInventory(cocos2d::Ref * sender)
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	);
+}
+
+void Level3Scene::CreateTreasure()
+{
+	auto heartContainerGroup = tileMap->getObjectGroup("heartContainer");
+	heartContainer = ResourceManager::GetInstance()->GetSpriteById(29);
+	heartContainer->setPosition(Vec2(heartContainerGroup->getObject("heartContainer")["x"].asFloat()
+		, heartContainerGroup->getObject("heartContainer")["y"].asFloat()));
+	this->addChild(heartContainer);
+
+	auto physics = PhysicsBody::createBox(heartContainer->getContentSize(), PhysicsMaterial(0, 0, 0));
+	physics->setRotationEnable(false);
+	physics->setCollisionBitmask(MainCharacter::HEART_CONTAINER_BITMASK);
+	physics->setDynamic(false);
+	physics->setContactTestBitmask(true);
+	physics->setGravityEnable(false);
+	heartContainer->setPhysicsBody(physics);
 }

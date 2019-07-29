@@ -7,6 +7,8 @@
 #include "Arrow.h"
 #include "Item.h"
 #include "Inventory.h"
+#include "FlySlash.h"
+
 using namespace cocos2d;
 
 class MainCharacter
@@ -24,6 +26,7 @@ public:
 	static const int BULLET_ROPE_BITMASK = 108;
 	static const int ROPE_MONSTER_BITMASK = 109;
 	static const int HEART_CONTAINER_BITMASK = 110;
+	static const int FLY_SLASH_BITMASK = 111;
 
 	// POTION
 	static const int HP = 50;
@@ -124,6 +127,7 @@ public:
 	bool TakePotion(int index);
 	void IncreaseStage();
 	float GetPace();
+	FlySlash* GetFlySlash();
 private:
 	static MainCharacter* m_instance;
 	Sprite* mSprite;
@@ -134,6 +138,7 @@ private:
 	int preventRun;	
 	float countingTime;
 	Slash* slash;
+	FlySlash* flySlash;
 	MainCharacter();
 	~MainCharacter();
 	void CreateMainCharacter();

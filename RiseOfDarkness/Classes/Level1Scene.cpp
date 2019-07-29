@@ -84,6 +84,8 @@ void Level1Scene::update(float deltaTime)
 	}
 
 	UpdateJoystick();
+
+	MainCharacter::GetInstance()->GetFlySlash()->Update(deltaTime);
 }
 
 void Level1Scene::CreateMonster()
@@ -412,10 +414,6 @@ void Level1Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	{
 		MainCharacter::GetInstance()->Defend();
 	}
-	if (type == ui::Widget::TouchEventType::ENDED)
-	{
-		MainCharacter::GetInstance()->StopDefend();
-	}
 }
 
 void Level1Scene::OpenInventory(cocos2d::Ref * sender)
@@ -431,6 +429,7 @@ void Level1Scene::CreateTreasure()
 {
 	auto heartContainerGroup = tileMap->getObjectGroup("heartContainer");
 	heartContainer = ResourceManager::GetInstance()->GetSpriteById(29);
+	heartContainer->removeFromParent();
 	heartContainer->setPosition(Vec2(heartContainerGroup->getObject("heartContainer")["x"].asFloat()
 		, heartContainerGroup->getObject("heartContainer")["y"].asFloat()));
 	this->addChild(heartContainer);

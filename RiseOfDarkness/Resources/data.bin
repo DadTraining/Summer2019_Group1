@@ -1,5 +1,5 @@
 #SPRITE
-30
+31
 0
 res/sprites/character/mainCharacter.png
 1
@@ -60,6 +60,8 @@ res/sprites/gameplay/shader.png
 res/sprites/gameplay/focus.png
 29
 res/sprites/gameplay/heartContainer.png
+30
+res/sprites/gameplay/flySlash.png
 #BUTTON
 26
 0

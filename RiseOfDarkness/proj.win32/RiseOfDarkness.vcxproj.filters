@@ -61,6 +61,7 @@
     <ClCompile Include="..\Classes\3rd\SneakyButtonSkinnedBase.cpp" />
     <ClCompile Include="..\Classes\3rd\SneakyJoystick.cpp" />
     <ClCompile Include="..\Classes\3rd\SneakyJoystickSkinnedBase.cpp" />
+    <ClCompile Include="..\Classes\FlySlash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -124,6 +125,7 @@
     <ClInclude Include="..\Classes\3rd\SneakyJoystick.h" />
     <ClInclude Include="..\Classes\3rd\SneakyJoystickSkinnedBase.h" />
     <ClInclude Include="..\Classes\SneakyInput.h" />
+    <ClInclude Include="..\Classes\FlySlash.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
