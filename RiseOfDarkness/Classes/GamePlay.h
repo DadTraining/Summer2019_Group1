@@ -21,6 +21,12 @@ protected:
 	Size distance;
 	Label* mName, *gameover;
 	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
+	ui::ScrollView* weaponscrollView;
+	ui::ScrollView* equipscrollView;
+	ui::ScrollView* pottionscrollView;
+	//ui::TabControl* tab;
+
+	//std::vector<ui::Button*> bt;
 
 public:
 	GamePlay();

@@ -442,6 +442,8 @@ void HomeScene::SetCamera(Vec2 pos)
 
 	//AddChild inventory
 	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
+	//m_sprites[13]->setPosition(Vec2(pos.x/2,pos.y/2));
+	//scrollView->setPosition(m_sprites[11]->getPosition());
 }
 
 void HomeScene::CreateNPC()
@@ -553,16 +555,52 @@ void HomeScene::RunActionNPC()
 
 void HomeScene::OpenWeaponShop()
 {
+	m_sprites[13]->setVisible(true);
+	m_buttons[7]->setVisible(true);
+	weaponscrollView->setVisible(true);
+	m_buttons[7]->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			m_sprites[13]->setVisible(false);
+			m_buttons[7]->setVisible(false);
+			weaponscrollView->setVisible(false);
+		}
+	});
 	log("weapon shop");
 }
 
 void HomeScene::OpenEquipmentShop()
 {
+	m_sprites[14]->setVisible(true);
+	m_buttons[8]->setVisible(true);
+	equipscrollView->setVisible(true);
+	m_buttons[8]->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			m_sprites[14]->setVisible(false);
+			m_buttons[8]->setVisible(false);
+			equipscrollView->setVisible(false);
+		}
+	});
 	log("quipment shop");
 }
 
 void HomeScene::OpenPotionShop()
 {
+	m_sprites[15]->setVisible(true);
+	m_buttons[9]->setVisible(true);
+	pottionscrollView->setVisible(true);
+	m_buttons[9]->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			m_sprites[15]->setVisible(false);
+			m_buttons[9]->setVisible(false);
+			pottionscrollView->setVisible(false);
+		}
+	});
 	log("potion shop");
 }
 
@@ -570,13 +608,127 @@ void HomeScene::CreateShop()
 {
 	// WEAPON SHOP
 
+	auto shopweapon = Sprite::create("res/sprites/shop/wea_shop.png");
+	shopweapon->setPosition(700,500);
+	addChild(shopweapon,50);
+	shopweapon->setVisible(false);
+	m_sprites.push_back(shopweapon);
+	
+
+	auto close = ui::Button::create("res/buttons/shopp/xx.png","res/buttons/shopp/xx_bg.png");
+	close->setPosition(Vec2(shopweapon->getContentSize().width+455,shopweapon->getContentSize().height+275));
+	addChild(close, 60);
+	close->setVisible(false);
+	m_buttons.push_back(close);
+
+
+	weaponscrollView = ui::ScrollView::create();
+	weaponscrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	weaponscrollView->setContentSize(Size(385, 220));
+	weaponscrollView->setInnerContainerSize(Size(400, 1560));
+	weaponscrollView->setBounceEnabled(true);
+	weaponscrollView->setTouchEnabled(true);
+	weaponscrollView->setPosition(Vec2(510,360));
+	
+
+	/*std::vector<Sprite*> items;
+	
+		auto item = Sprite::create("res/sprites/item/items_weapon_01.png");
+		item->setPosition(Vec2(weaponscrollView->getContentSize().width / 2-150, 1*40));
+		weaponscrollView->addChild(item,50);
+
+		auto label=Label::createWithTTF("Enter your name ", "fonts/Marker Felt.ttf", 20);
+		label->setPosition(Vec2(weaponscrollView->getContentSize().width / 2 - 125, 1 * 10));
+		label->setString("Normal sword");
+		label->setColor(Color3B::YELLOW);
+		weaponscrollView->addChild(label, 50);
+
+		auto cost = Label::createWithTTF("Enter your name ", "fonts/Marker Felt.ttf", 30);
+		cost->setPosition(Vec2(weaponscrollView->getContentSize().width / 2 - 30, 1 * 40));
+		cost->setString("100$");
+		cost->setColor(Color3B::YELLOW);
+		weaponscrollView->addChild(cost, 50);
+
+*/
+		for (int i = 1; i < 20; i++) {
+			auto *bt = ui::Button::create("res/buttons/shopp/btbuy.png", "res/buttons/shopp/btbuy_bg.png");
+			bt->setPosition(Vec2(weaponscrollView->getContentSize().width / 2 + 130, i * 80));
+			weaponscrollView->addChild(bt);
+			auto *frame = Sprite::create("res/sprites/shop/frameshop.png");
+			frame->setPosition(Vec2(weaponscrollView->getContentSize().width / 2 -60, i * 80));
+			weaponscrollView->addChild(frame);
+
+		}
+	addChild(weaponscrollView,70);
+	weaponscrollView->setVisible(false);
 
 	//EQUIPMENT SHOP
 
+	auto equipshop = Sprite::create("res/sprites/shop/equipshop.png");
+	equipshop->setPosition(960, 450);
+	addChild(equipshop,50);
+	equipshop->setVisible(false);
+	m_sprites.push_back(equipshop);
 
-	//POTION SHOP
+	auto close2 = ui::Button::create("res/buttons/shopp/xx.png", "res/buttons/shopp/xx_bg.png");
+	close2->setPosition(Vec2(equipshop->getContentSize().width + 720, equipshop->getContentSize().height + 220));
+	addChild(close2, 60);
+	close2->setVisible(false);
+	m_buttons.push_back(close2);
+
+	equipscrollView = ui::ScrollView::create();
+	equipscrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	equipscrollView->setContentSize(Size(385, 220));
+	equipscrollView->setInnerContainerSize(Size(400, 1560));
+	equipscrollView->setBounceEnabled(true);
+	equipscrollView->setTouchEnabled(true);
+	equipscrollView->setPosition(Vec2(equipshop->getContentSize().width*2-100, equipshop->getContentSize().height-10));
+
+	for (int i = 1; i < 20; i++) {
+		auto *bt = ui::Button::create("res/buttons/shopp/btbuy.png", "res/buttons/shopp/btbuy_bg.png");
+		bt->setPosition(Vec2(equipscrollView->getContentSize().width / 2 + 130, i * 80));
+		equipscrollView->addChild(bt);
+		auto *frame = Sprite::create("res/sprites/shop/frameshop.png");
+		frame->setPosition(Vec2(equipscrollView->getContentSize().width / 2 - 60, i * 80));
+		equipscrollView->addChild(frame);
+
+	}
+	addChild(equipscrollView, 70);
+	equipscrollView->setVisible(false);
+
+	
+	//POTION SHOP*/
+	auto pottionshop = Sprite::create("res/sprites/shop/pottshop.png");
+	pottionshop->setPosition(960, 750);
+	addChild(pottionshop, 50);
+	pottionshop->setVisible(false);
+	m_sprites.push_back(pottionshop);
+
+	auto close3 = ui::Button::create("res/buttons/shopp/xx.png", "res/buttons/shopp/xx_bg.png");
+	close3->setPosition(Vec2(pottionshop->getContentSize().width + 715, pottionshop->getContentSize().height + 522));
+	addChild(close3, 60);
+	close3->setVisible(false);
+	m_buttons.push_back(close3);
+
+	pottionscrollView = ui::ScrollView::create();
+	pottionscrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	pottionscrollView->setContentSize(Size(385, 220));
+	pottionscrollView->setInnerContainerSize(Size(400, 1560));
+	pottionscrollView->setBounceEnabled(true);
+	pottionscrollView->setTouchEnabled(true);
+	pottionscrollView->setPosition(Vec2(pottionshop->getContentSize().width * 2 - 100, pottionshop->getContentSize().height+290));
 
 
+	for (int i = 1; i < 20; i++) {
+		auto *bt = ui::Button::create("res/buttons/shopp/btbuy.png", "res/buttons/shopp/btbuy_bg.png");
+		bt->setPosition(Vec2(pottionscrollView->getContentSize().width / 2 + 130, i * 80));
+		pottionscrollView->addChild(bt);
+		auto *frame = Sprite::create("res/sprites/shop/frameshop.png");
+		frame->setPosition(Vec2(pottionscrollView->getContentSize().width / 2 - 60, i * 80));
+		pottionscrollView->addChild(frame);
 
+	}
+	addChild(pottionscrollView, 70);
+	pottionscrollView->setVisible(false);
 
 }

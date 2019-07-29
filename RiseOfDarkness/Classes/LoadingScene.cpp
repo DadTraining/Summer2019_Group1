@@ -2,6 +2,8 @@
 #include "ui/CocosGUI.h"
 #include "MainMenuScene.h"
 #include "ResourceManager.h"
+#include "SimpleAudioEngine.h"
+using namespace CocosDenshion;
 
 USING_NS_CC;
 
@@ -55,6 +57,7 @@ bool LoadingScene::init()
 	auto gotoNext = CallFunc::create([]() {
 		Director::getInstance()->replaceScene(MainMenuScene::create());
 	});
+	
         auto sequence = Sequence::create(DelayTime::create(3), gotoNext, nullptr);
 	runAction(sequence);
 
