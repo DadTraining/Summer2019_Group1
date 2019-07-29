@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="68" height="88" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="36">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="68" height="88" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="37">
  <tileset firstgid="1" source="map1.tsx"/>
  <tileset firstgid="6161" source="obstacles.tsx"/>
  <tileset firstgid="6161" source="obstacle.tsx"/>
@@ -218,7 +218,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="9" name="bowMoblin">
+ <objectgroup id="9" name="bowMoblin" locked="1">
   <object id="31" name="01" x="910" y="567">
    <properties>
     <property name="direction" type="int" value="1"/>
@@ -235,6 +235,11 @@
    <properties>
     <property name="direction" type="int" value="1"/>
    </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="10" name="heartContainer" locked="1">
+  <object id="36" name="heartContainer" x="309" y="1038">
    <point/>
   </object>
  </objectgroup>

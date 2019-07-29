@@ -23,6 +23,7 @@ public:
 	static const int BOWMOBLIN_ARROW_BITMASK = 107;
 	static const int BULLET_ROPE_BITMASK = 108;
 	static const int ROPE_MONSTER_BITMASK = 109;
+	static const int HEART_CONTAINER_BITMASK = 110;
 
 	// POTION
 	static const int HP = 50;

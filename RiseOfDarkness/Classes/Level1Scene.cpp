@@ -42,6 +42,8 @@ bool Level1Scene::init()
 
 	CreateMonster();
 
+	CreateTreasure();
+
 	scheduleUpdate();
 
 	return true;
@@ -351,7 +353,7 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
-	//// BOWMOBLIN ARROW COLLIDE OBSTACLES
+	// BOWMOBLIN ARROW COLLIDE OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
 	{
@@ -362,6 +364,17 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK)
 		{
 			m_enemies[b->getGroup()]->GetArrow()->SetVisible(false);
+		}
+	}
+
+	// COLLECT HEART CONTAINER
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::HEART_CONTAINER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::HEART_CONTAINER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (heartContainer->isVisible())
+		{
+			MainCharacter::GetInstance()->TakeHeartContainer();
+			heartContainer->setVisible(false);
 		}
 	}
 
@@ -412,4 +425,21 @@ void Level1Scene::OpenInventory(cocos2d::Ref * sender)
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	);
+}
+
+void Level1Scene::CreateTreasure()
+{
+	auto heartContainerGroup = tileMap->getObjectGroup("heartContainer");
+	heartContainer = ResourceManager::GetInstance()->GetSpriteById(29);
+	heartContainer->setPosition(Vec2(heartContainerGroup->getObject("heartContainer")["x"].asFloat()
+		, heartContainerGroup->getObject("heartContainer")["y"].asFloat()));
+	this->addChild(heartContainer);
+
+	auto physics = PhysicsBody::createBox(heartContainer->getContentSize(), PhysicsMaterial(0, 0, 0));
+	physics->setRotationEnable(false);
+	physics->setCollisionBitmask(MainCharacter::HEART_CONTAINER_BITMASK);
+	physics->setDynamic(false);
+	physics->setContactTestBitmask(true);
+	physics->setGravityEnable(false);
+	heartContainer->setPhysicsBody(physics);
 }

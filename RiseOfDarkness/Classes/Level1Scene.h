@@ -8,6 +8,8 @@ using namespace cocos2d;
 
 class Level1Scene : public Layer, GamePlay
 {
+private:
+	Sprite* heartContainer;
 public:
     static cocos2d::Scene* CreateScene();
 
@@ -28,6 +30,7 @@ public:
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
+	void CreateTreasure();
 
     CREATE_FUNC(Level1Scene);
 };
