@@ -461,7 +461,7 @@ void HomeScene::SetCamera(Vec2 pos)
 	m_sprites[13]->setPosition(Vec2(pos.x + visibleSize.width / 3.5, pos.y + visibleSize.height / 2));
 	gold->setPosition(Vec2(pos.x + visibleSize.width / 3.5, pos.y + visibleSize.height / 2 - (m_sprites[13]->getBoundingBox().size.height / 2 - gold->getBoundingBox().size.height / 2)));
 
-	//AddChild inventory
+	//set inventory position
 	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
 }
 

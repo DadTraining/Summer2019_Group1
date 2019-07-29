@@ -27,7 +27,7 @@ public:
 	std::vector<Item*> GetBoots();
 	std::vector<Item*> GetArrows();
 	std::vector<cocos2d::Label*> GetAmountLabel(int);
-	
+	void ShowCloseButton(cocos2d::ui::Layout*);
 	cocos2d::Vec2 GetSize();
 	std::vector<Item*> inventory;
 	std::vector<Item*> slots;
@@ -46,10 +46,11 @@ public:
 	void btnSellItem(cocos2d::Ref*, int id, ItemType type);
 	int slotX, slotY;
 	int targetID;
+	cocos2d::ui::TabControl *tab;
 private:
 	cocos2d::Sprite* clickBox;
 	cocos2d::Sprite* mSprite;
-	cocos2d::ui::TabControl *tab;
+	
 	cocos2d::ui::TabHeader *weapon, *potion, *armor, *boot, *arrow;
 	cocos2d::ui::Layout *container1, *container2, *container3, *arrowContainer, *bootContainer;
 	int capacity;
@@ -63,5 +64,5 @@ private:
 	std::vector<cocos2d::Label*> amountLabels;
 	std::vector<cocos2d::Label*> amountArrowLabels;
 	cocos2d::Menu* menu;
-	cocos2d::ui::Button *btnUse,*btnSell;
+	cocos2d::ui::Button *btnUse,*btnSell, *closeButton;
 };

@@ -32,6 +32,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	btnSell = ui::Button::create("res/sprites/item/buttonSell1.png", "res/sprites/item/buttonSell.png");
 	btnSell->setScale(0.5);
 	btnSell->retain();
+	
 	clickBox->setPosition(-500, -500);
 	clickBox->retain();
 	slotX = 6;
@@ -73,6 +74,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	tab->insertTab(3, arrow, arrowContainer);
 	tab->insertTab(4, boot, bootContainer);
 	tab->setSelectTab(1);
+	
 	CC_SAFE_RETAIN(tab);
 	CC_SAFE_RETAIN(container1);
 	CC_SAFE_RETAIN(container2);
@@ -488,6 +490,12 @@ std::vector<Label*> Inventory::GetAmountLabel(int type)
 	{
 		return amountArrowLabels;
 	}
+}
+
+void Inventory::ShowCloseButton(Layout* layout)
+{
+	closeButton->removeFromParent();
+	layout->addChild(closeButton, 22);
 }
 
 cocos2d::Vec2 Inventory::GetSize()
