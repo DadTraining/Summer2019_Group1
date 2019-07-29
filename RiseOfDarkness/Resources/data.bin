@@ -371,7 +371,7 @@ res/animates/NokkenMonster/idle/idle.plist
 3
 res/animates/NokkenMonster/attack/attack.plist
 #TILEMAP
-9
+11
 0
 res/tiledMaps/home/home.tmx
 1
@@ -390,6 +390,10 @@ res/tiledMaps/map2/map1t.tmx
 res/tiledMaps/map3/map3.tmx
 8
 res/tiledMaps/map3/upperMap3.tmx
+9
+res/tiledMaps/snow/snow.tmx
+10
+res/tiledMaps/snow/upperMap.tmx
 #LABEL
 15
 0
