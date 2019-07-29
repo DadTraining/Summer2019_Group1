@@ -181,14 +181,10 @@ void Level1Scene::AddListener()
 	});
 
 	// USE HP POTION
-	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
-	});
+	
 
 	// USE MP POTION
-	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
-	});
+	
 
 	// INVENTORY
 	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level1Scene::OpenInventory, this));
@@ -418,7 +414,6 @@ void Level1Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 
 void Level1Scene::OpenInventory(cocos2d::Ref * sender)
 {
-	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())

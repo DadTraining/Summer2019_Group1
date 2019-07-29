@@ -157,7 +157,7 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 
 void HomeScene::OpenInventory(cocos2d::Ref * sender)
 {
-	HomeScene::ShowInventoryGrid();
+	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	);
@@ -285,6 +285,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	buttonOpenInventory->setPosition(Vec2(visibleSize.width / 2 - map->getBoundingBox().size.width * 2, 40));
 	m_buttons.push_back(buttonOpenInventory);
 	buttonOpenInventory->setCameraMask(2);
+	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(visibleSize / 2));
 
 	SetCamera(MainCharacter::GetInstance()->GetSprite()->getPosition());
 }

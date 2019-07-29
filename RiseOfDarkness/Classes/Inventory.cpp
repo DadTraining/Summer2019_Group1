@@ -6,15 +6,17 @@
 
 USING_NS_CC;
 using namespace std;
+using namespace ui;
 Inventory::Inventory(cocos2d::Sprite* sprite)
 {
 	Init(sprite);
 	btnUse->removeFromParent();
 	btnUse->setPosition(Vec2(btnUse->getContentSize().width / 2 - btnUse->getContentSize().width / 4,
 		0 - btnUse->getContentSize().height / 4));
-	btnSell->setPosition(Vec2(btnUse->getPositionX() + btnUse->getContentSize().width / 2, btnUse->getPositionY()));
+	btnSell->removeFromParent();
+	btnSell->setPosition(Vec2(btnUse->getPositionX() + btnUse->getContentSize().width/2, btnUse->getPositionY()));
 	GetTab(1)->addChild(btnUse, 99);
-	GetTab(1)->addChild(btnSell, 99);
+	GetTab(1)->addChild(btnSell, 99);	
 }
 
 Inventory::~Inventory()
@@ -26,8 +28,13 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	clickBox = Sprite::create("res/sprites/item/click.png");
 	btnUse = ui::Button::create("res/sprites/item/buttonUse1.png", "res/sprites/item/buttonUse.png");
 	btnUse->setScale(0.5);
+	btnUse->retain();
 	btnSell = ui::Button::create("res/sprites/item/buttonSell1.png", "res/sprites/item/buttonSell.png");
 	btnSell->setScale(0.5);
+	btnSell->retain();
+	
+	// SET CAMERA MASK
+	clickBox->setCameraMask(2);
 
 	clickBox->setPosition(-500, -500);
 	clickBox->retain();
@@ -39,7 +46,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	mSprite = sprite;
 	tab = ui::TabControl::create();
 	tab->setContentSize(Size(384, 325));
-	tab->setHeaderHeight(69.f);
+	tab->setHeaderHeight(69.0f);
 	tab->setHeaderWidth(70.f);
 	tab->setHeaderSelectedZoom(.1f);
 	tab->setHeaderDockPlace(ui::TabControl::Dock::TOP);
@@ -49,6 +56,10 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	potion->setTitleText("POTION");
 	armor = cocos2d::ui::TabHeader::create();
 	armor->setTitleText("ARMOR");
+	arrow = cocos2d::ui::TabHeader::create();
+	arrow->setTitleText("ARROW");
+	boot = cocos2d::ui::TabHeader::create();
+	boot->setTitleText("BOOT");
 	capacity = 24;
 	container1 = ui::Layout::create();
 	container1->setOpacity(255);
@@ -56,78 +67,335 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	container2->setOpacity(50);
 	container3 = ui::Layout::create();
 	container3->setOpacity(50);
-
+	arrowContainer = ui::Layout::create();
+	arrowContainer->setOpacity(50);
+	bootContainer = ui::Layout::create();
+	bootContainer->setOpacity(50);
 	tab->insertTab(0, weapon, container1);
 	tab->insertTab(1, potion, container2);
 	tab->insertTab(2, armor, container3);
-
+	tab->insertTab(3, arrow, arrowContainer);
+	tab->insertTab(4, boot, bootContainer);
 	tab->setSelectTab(1);
+	
 	CC_SAFE_RETAIN(tab);
 	CC_SAFE_RETAIN(container1);
 	CC_SAFE_RETAIN(container2);
 	CC_SAFE_RETAIN(container3);
+	CC_SAFE_RETAIN(arrowContainer);
+	CC_SAFE_RETAIN(bootContainer);
 
 	for (int i = 0; i < slotX*slotY; i++)
 	{
-		inventory.push_back(new Item());
-		slots.push_back(new Item());
+		inventory.push_back(new Item("sprites/item/box"));
+		slots.push_back(new Item("sprites/item/box"));
+		weapons.push_back(new Item("sprites/item/box"));
+		arrows.push_back(new Item("sprites/item/box"));
+		armors.push_back(new Item("sprites/item/box"));
+		boots.push_back(new Item("sprites/item/box"));
 		itemAmount.push_back(0);
-		auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 14);
+		arrowAmount.push_back(0);
+		auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 12);
 		label->retain();
+		auto label1 = Label::createWithTTF("", "fonts/Marker Felt.ttf", 12);
+		label1->retain();
+		amountArrowLabels.push_back(label1);
 		amountLabels.push_back(label);
 	}
 }
 
 void Inventory::AddItem(int id)
 {
-	if (InventoryContains(id))
+	int index = GetIndexByID(id);
+	database->items[index]->GetIcon()->setCameraMask(2); // SET CAMERA MASK
+	switch (database->items[index]->GetType())
 	{
-		StackItem(id);
-	}
-	else
-	{
+	case ItemType::potion:
+		if (InventoryContains(id, ItemType::potion))
+		{
+			StackItem(id, ItemType::potion);
+		}
+		else
+		{
+			for (int i = 0; i < inventory.size(); i++)
+			{
+				if (slots[i]->GetID() == 99)
+				{
+					slots[i] = new Item(database->items[index]);
+					slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::potion));
+					itemAmount[i]++;
+					break;
+				}
+			}
+		}
+		break;
+	case ItemType::arrow:
+		if (InventoryContains(id, ItemType::arrow))
+		{
+			StackItem(id, ItemType::arrow);
+		}
+		else
+		{
+			for (int i = 0; i < inventory.size(); i++)
+			{
+				if (arrows[i]->GetID() == 99)
+				{
+					arrows[i] = new Item(database->items[index]);
+					arrows[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::arrow));
+					arrowAmount[i]++;
+					break;
+				}
+			}
+		}
+		break;
+	case ItemType::weapon:
 		for (int i = 0; i < inventory.size(); i++)
 		{
-			if (slots[i]->GetIcon() == NULL)
+			if (weapons[i]->GetID() == 99)
 			{
-				log("add item %d", id + 1);
-				slots[i] = new Item(database->items[id]);
-				slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i));
-				itemAmount[i]++;
+				weapons[i] = new Item(database->items[index]);
+				weapons[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::weapon));
 				break;
 			}
 		}
+		break;
+	case ItemType::armor:
+		for (int i = 0; i < inventory.size(); i++)
+		{
+			if (armors[i]->GetID() == 99)
+			{
+				armors[i] = new Item(database->items[index]);
+				armors[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::armor));
+				break;
+			}
+		}
+		break;
+	case ItemType::boots:
+		for (int i = 0; i < inventory.size(); i++)
+		{
+			if (boots[i]->GetID() == 99)
+			{
+				boots[i] = new Item(database->items[index]);
+				boots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::boots));
+				break;
+			}
+		}
+		break;
+	default:
+		break;
 	}
 }
 
-void Inventory::SellItem(int)
+void Inventory::SellItem(int id, int index, ItemType type)
 {
+	switch (type)
+	{
+	case ItemType::weapon:
+		if (targetID>=0)
+		{
+			MainCharacter::GetInstance()->AddGold(weapons[id]->GetSellCost());
+		}
+		GetTab(0)->removeChild(weapons[id]->GetIcon());
+		targetID = -1;
+		weapons[id] = new Item("sprites/item/box");
+		break;
+	case ItemType::armor:
+		if (targetID >= 0)
+		{
+			MainCharacter::GetInstance()->AddGold(armors[id]->GetSellCost());
+		}
+		GetTab(2)->removeChild(armors[id]->GetIcon());
+		targetID = -1;
+		armors[id] = new Item("sprites/item/box");
+		break;
+	case ItemType::boots:
+		if (targetID >= 0)
+		{
+			MainCharacter::GetInstance()->AddGold(boots[id]->GetSellCost());
+		}
+		GetTab(4)->removeChild(boots[id]->GetIcon());
+		targetID = -1;
+		boots[id] = new Item("sprites/item/box");
+		break;
+	case ItemType::potion:
+		
+		itemAmount[id]--;
+		if (itemAmount[id] <= 0)
+		{
+			amountLabels[id]->setString("");
+			GetTab(1)->removeChild(slots[id]->GetIcon());
+			targetID = -1;
+			slots[id] = new Item("sprites/item/box");
+			//AutoArrange();
+		}
+		else
+		{
+			MainCharacter::GetInstance()->AddGold(slots[id]->GetSellCost());
+			amountLabels[id]->setString(to_string(itemAmount[id]));
+		}
+		log("removed item %d", id);
+		break;
+	case ItemType::arrow:
+		arrowAmount[id]--;
+		
+		if (arrowAmount[id] <= 0)
+		{
+			amountArrowLabels[id]->setString("");
+			GetTab(3)->removeChild(arrows[id]->GetIcon());
+			targetID = -1;
+			arrows[id] = new Item();
+			//AutoArrange();
+		}
+		else
+		{
+			MainCharacter::GetInstance()->AddGold(arrows[id]->GetSellCost());
+			amountArrowLabels[id]->setString(to_string(arrowAmount[id]));
+		}
+		break;
+	default:
+		break;
+	}
 }
 
-void Inventory::RemoveItem(int id,int index)
+void Inventory::RemoveItem(int id,int index,ItemType type)
 {
-	for (int i = 0; i < inventory.size(); i++)
+	switch (type)
 	{
-		if (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL && i==index)
+	case ItemType::weapon:
+		for (int  i = 0; i < inventory.size(); i++)
 		{
-			if (MainCharacter::GetInstance()->TakePotion(i))
+			if (weapons[i]->GetID()==id && i==index)
 			{
-				itemAmount[i]--;
-				if (itemAmount[i] == 0)
-				{
-					amountLabels[i]->setString("");
-					GetTab(1)->removeChild(slots[i]->GetIcon());
-					targetID = -1;
-					slots[i] = new Item();
-				}
-				else
-				{
-					amountLabels[i]->setString(to_string(itemAmount[i]));
-				}
-				log("removed item %d", i);
+				GetTab(0)->removeChild(weapons[i]->GetIcon());
+				targetID = -1;
+				weapons[i] = new Item("sprites/item/box");
+
 				break;
 			}
 		}
+		break;
+	case ItemType::armor:
+		for (int i = 0; i < inventory.size(); i++)
+		{
+			if (armors[i]->GetID() == id && i == index)
+			{
+				GetTab(2)->removeChild(armors[i]->GetIcon());
+				targetID = -1;
+				armors[i] = new Item("sprites/item/box");
+
+				break;
+			}
+		}
+		break;
+	case ItemType::boots:
+		for (int i = 0; i < inventory.size(); i++)
+		{
+			if (boots[i]->GetID() == id && i == index)
+			{
+				GetTab(4)->removeChild(boots[i]->GetIcon());
+				targetID = -1;
+				boots[i] = new Item("sprites/item/box");
+
+				break;
+			}
+		}
+		break;
+	case ItemType::potion:
+		for (int i = 0; i < inventory.size(); i++)
+		{
+			if (slots[i]->GetID() == id && (id == 25 || id == 26) && slots[i]->GetID() != 99 && i == index)
+			{
+				if (MainCharacter::GetInstance()->TakePotion(id))
+				{
+					itemAmount[i]--;
+					if (itemAmount[i] == 0)
+					{
+						amountLabels[i]->setString("");
+						GetTab(1)->removeChild(slots[i]->GetIcon());
+						targetID = -1;
+						slots[i] = new Item("sprites/item/box");
+						AutoArrange();
+					}
+					else
+					{
+						amountLabels[i]->setString(to_string(itemAmount[i]));
+					}
+					log("removed item %d", i);
+					break;
+				}
+			}
+			else
+			{
+				if (slots[i]->GetID() == id && i == index)
+				{
+					itemAmount[i]--;
+					if (itemAmount[i] == 0)
+					{
+						amountLabels[i]->setString("");
+						GetTab(1)->removeChild(slots[i]->GetIcon());
+						targetID = -1;
+						slots[i] = new Item("sprites/item/box");
+						AutoArrange();
+					}
+					else
+					{
+						amountLabels[i]->setString(to_string(itemAmount[i]));
+					}
+					log("removed item %d", i);
+					break;
+				}
+				
+			}
+		}
+		break;
+	case ItemType::arrow:
+		for (int i = 0; i < inventory.size(); i++)
+		{
+			if (arrows[i]->GetID() == id && (id == 0 || id == 1) && i == index)
+			{
+				if (MainCharacter::GetInstance()->TakePotion(id))
+				{
+					arrowAmount[i]--;
+					if (arrowAmount[i] == 0)
+					{
+						amountArrowLabels[i]->setString("");
+						GetTab(3)->removeChild(arrows[i]->GetIcon());
+						targetID = -1;
+						arrows[i] = new Item("sprites/item/box");
+						AutoArrange();
+					}
+					else
+					{
+						amountArrowLabels[i]->setString(to_string(arrowAmount[i]));
+					}
+					break;
+				}
+			}
+			else
+			{
+				if (arrows[i]->GetID() == id && i == index)
+				{
+					arrowAmount[i]--;
+					if (arrowAmount[i] == 0)
+					{
+						amountArrowLabels[i]->setString("");
+						GetTab(1)->removeChild(arrows[i]->GetIcon());
+						targetID = -1;
+						arrows[i] = new Item();
+						AutoArrange();
+					}
+					else
+					{
+						amountArrowLabels[i]->setString(to_string(arrowAmount[i]));
+					}
+					log("removed item %d", i);
+					break;
+				}
+			}
+		}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -151,6 +419,10 @@ void Inventory::SetSpritePosition(cocos2d::Vec2 pos)
 {
 	mSprite->setPosition(pos);
 	tab->setPosition(pos);
+
+	// SET CAMERA MASK
+	mSprite->setCameraMask(2);
+	tab->setCameraMask(2);
 }
 
 cocos2d::Vec2 Inventory::GetSpritePosition()
@@ -176,6 +448,10 @@ cocos2d::ui::Layout *Inventory::GetTab(int tabIndex)
 		return container2;
 	case 2: 
 		return container3;
+	case 3:
+		return arrowContainer;
+	case 4:
+		return bootContainer;
 	default:
 		return container3;
 		break;
@@ -187,14 +463,47 @@ std::vector<Item*> Inventory::GetItems()
 	return slots;
 }
 
-std::vector<int> Inventory::GetItemAmount()
+std::vector<Item*> Inventory::GetItemsWeapon()
 {
-	return itemAmount;
+	return weapons;
 }
 
-std::vector<Label*> Inventory::GetAmountLabel()
+std::vector<int> Inventory::GetItemAmount(int type)
 {
-	return amountLabels;
+	return (type == 0 ? itemAmount : arrowAmount);
+}
+
+std::vector<Item*> Inventory::GetArmors()
+{
+	return armors;
+}
+
+std::vector<Item*> Inventory::GetBoots()
+{
+	return boots;
+}
+
+std::vector<Item*> Inventory::GetArrows()
+{
+	return arrows;
+}
+
+std::vector<Label*> Inventory::GetAmountLabel(int type)
+{
+	if (type==0)
+	{
+		return amountLabels;
+	}
+	else
+	{
+		return amountArrowLabels;
+	}
+}
+
+void Inventory::ShowCloseButton(Layout* layout)
+{
+	closeButton->removeFromParent();
+	layout->addChild(closeButton, 22);
 }
 
 cocos2d::Vec2 Inventory::GetSize()
@@ -202,21 +511,80 @@ cocos2d::Vec2 Inventory::GetSize()
 	return tab->getContentSize();
 }
 
-void Inventory::StackItem(int id)
+int Inventory::GetIdByIcon(int id, ItemType type)
 {
-	for (int i = 0; i < slots.size(); i++)
+	switch (type)
 	{
-		if (slots[i]->GetID() == id)
+	case ItemType::weapon:
+		for (int i = 0; i < weapons.size(); i++)
 		{
-			itemAmount[i]++;
-			break;
+			if (weapons[id]->GetIcon() != NULL)
+			{
+				return weapons[id]->GetID();
+			}
 		}
+		return -1;
+		break;
+	case ItemType::potion:
+		for (int i = 0; i < slots.size(); i++)
+		{
+			if (slots[i]->GetID() == id)
+			{
+				return i;
+			}
+		}
+		return -1;
+		break;
+	default:
+		return -1;
+		break;
+	}
+	
+	
+}
+
+int Inventory::GetIndexByID(int id)
+{
+	for (int i = 0; i < database->items.size(); i++)
+	{
+		if (database->items[i]->GetID()==id)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+void Inventory::StackItem(int id, ItemType type)
+{
+	switch (type)
+	{
+	case ItemType::potion:
+		for (int i = 0; i < slots.size(); i++)
+		{
+			if (slots[i]->GetID() == id)
+			{
+				itemAmount[i]++;
+				break;
+			}
+		}
+	case ItemType::arrow:
+		for (int i = 0; i < arrows.size(); i++)
+		{
+			if (arrows[i]->GetID() == id)
+			{
+				arrowAmount[i]++;
+				break;
+			}
+		}
+	default:
+		break;
 	}
 }
 
 void Inventory::AutoArrange()
 {
-	log("arrange");
+	//ARRANGE POTION
 	for (int i = 0; i < slots.size()-1; i++)
 	{
 		if (slots[i]->GetIcon()==NULL)
@@ -227,6 +595,22 @@ void Inventory::AutoArrange()
 				{
 					swap(slots[i], slots[j]);
 					swap(itemAmount[i], itemAmount[j]);
+					swap(amountLabels[i], amountLabels[j]);
+					break;
+				}
+			}
+		}
+	}
+	//ARRANGE WEAPON
+	for (int i = 0; i < weapons.size() - 1; i++)
+	{
+		if (weapons[i]->GetIcon() == NULL)
+		{
+			for (int j = i + 1; j < weapons.size(); j++)
+			{
+				if (weapons[j]->GetIcon() != NULL)
+				{
+					swap(weapons[i], weapons[j]);
 					break;
 				}
 			}
@@ -234,40 +618,185 @@ void Inventory::AutoArrange()
 	}
 }
 
-bool Inventory::InventoryContains(int id)
+bool Inventory::InventoryContains(int id, ItemType type)
 {
 	bool result = false;
-	for (int i = 0; i < slots.size(); i++)
+	switch (type)
 	{
-		result = (slots[i]->GetID() == id && slots[i]->GetIcon()!=NULL);
-		if (result)
+	case ItemType::potion:
+		
+		for (int i = 0; i < slots.size(); i++)
 		{
-			break;
+			result = (slots[i]->GetID() == id && slots[i]->GetIcon() != NULL);
+			if (result)
+			{
+				break;
+			}
 		}
-	}
-	return result;
-}
-
-void Inventory::ItemClick(cocos2d::Ref *pSender, int id)   //, Layer* layer
-{
-	clickBox->setPosition(slots[id]->GetIcon()->getPosition());
-	targetID = id;
-	if (targetID >= 0)
-	{
-		btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::btnEquipInventory, this));
+		return result;
+		break;
+	case ItemType::arrow:
+		for (int i = 0; i < arrows.size(); i++)
+		{
+			result = (arrows[i]->GetID() == id && arrows[i]->GetIcon() != NULL);
+			if (result)
+			{
+				break;
+			}
+		}
+		return result;
+		break;
+	default:
+		return false;
+		break;
 	}
 	
 }
 
-void Inventory::btnBackInventory(cocos2d::Ref *pSender)
+void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 {
+	switch (type)
+	{
+	case ItemType::potion:
+		btnSell->removeFromParent();
+		btnUse->removeFromParent();
+		GetTab(1)->addChild(btnUse, 99);
+		GetTab(1)->addChild(btnSell, 99);
+		
+		if (slots[id]->GetIcon() != NULL)
+		{
+			clickBox->removeFromParent();
+			GetTab(1)->addChild(clickBox, 22);
+			clickBox->setPosition(slots[id]->GetIcon()->getPosition());
+		}
+		targetID = id;
+		if (targetID >= 0)
+		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::btnEquipInventory, this));
+		}
+		break;
+	case ItemType::weapon:
+		btnSell->removeFromParent();
+		btnUse->removeFromParent();
+		GetTab(0)->addChild(btnUse, 99);
+		GetTab(0)->addChild(btnSell, 99);
+		log("weapon %d click", id);
+		
+		if (weapons[id]->GetIcon() != NULL)
+		{
+			clickBox->removeFromParent();
+			GetTab(0)->addChild(clickBox, 22);
+			
+			clickBox->setPosition(weapons[id]->GetIcon()->getPosition());
+		}
+		targetID = id;
+		if (targetID >= 0)
+		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this, id, type));
+		}
+		break;
+	case ItemType::arrow:
+		btnSell->removeFromParent();
+		btnUse->removeFromParent();
+		GetTab(3)->addChild(btnUse, 99);
+		GetTab(3)->addChild(btnSell, 99);
+		
+		if (arrows[id]->GetIcon() != NULL)
+		{
+			clickBox->removeFromParent();
+			GetTab(3)->addChild(clickBox, 22);
+
+			clickBox->setPosition(arrows[id]->GetIcon()->getPosition());
+		}
+		targetID = id;
+		if (targetID >= 0)
+		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
+		}
+		break;
+	case ItemType::armor:
+		btnSell->removeFromParent();
+		btnUse->removeFromParent();
+		GetTab(2)->addChild(btnUse, 99);
+		GetTab(2)->addChild(btnSell, 99);
+		if (armors[id]->GetIcon() != NULL)
+		{
+			clickBox->removeFromParent();
+			GetTab(2)->addChild(clickBox, 22);
+
+			clickBox->setPosition(armors[id]->GetIcon()->getPosition());
+		}
+		targetID = id;
+		if (targetID >= 0)
+		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this,id,type));
+		}
+		break;
+	case ItemType::boots:
+		btnSell->removeFromParent();
+		btnUse->removeFromParent();
+		GetTab(4)->addChild(btnUse, 99);
+		GetTab(4)->addChild(btnSell, 99);
+		if (boots[id]->GetIcon() != NULL)
+		{
+			clickBox->removeFromParent();
+			GetTab(4)->addChild(clickBox, 22);
+
+			clickBox->setPosition(boots[id]->GetIcon()->getPosition());
+		}
+		targetID = id;
+		if (targetID >= 0)
+		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this, id, type));
+		}
+		break;
+	default:
+		break;
+	}
+	
+}
+
+void Inventory::EquipItem(cocos2d::Ref *pSender,int id, ItemType type)
+{
+	switch (type)
+	{
+	case ItemType::weapon:
+		if (targetID >= 0)
+		{
+			RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::weapon);
+		}
+		break;
+	case ItemType::armor:
+		if (targetID >= 0)
+		{
+			RemoveItem(armors[targetID]->GetID(), targetID, ItemType::armor);
+		}
+		break;
+	case ItemType::boots:
+		if (targetID >= 0)
+		{
+			RemoveItem(boots[targetID]->GetID(), targetID, ItemType::boots);
+		}
+		break;
+	default:
+		break;
+	}
+	
 }
 
 void Inventory::btnEquipInventory(cocos2d::Ref *pSender)
 {
-	log("equip item");
 	if (targetID>=0)
 	{
-		RemoveItem(slots[targetID]->GetID(), targetID);
+		RemoveItem(slots[targetID]->GetID(), targetID,ItemType::potion);
 	}
+}
+
+void Inventory::btnSellItem(cocos2d::Ref *sender, int id, ItemType type)
+{
+	SellItem(id, GetIndexByID(id), type);
 }

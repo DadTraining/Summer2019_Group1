@@ -299,6 +299,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	buttonOpenInventory->setPosition(Vec2(mpButton->getPositionX() - mpButton->getBoundingBox().size.width - 20, 40));
 	m_buttons.push_back(buttonOpenInventory);
 	buttonOpenInventory->setCameraMask(2);
+	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(visibleSize / 2));
 
 	// SHADER
 	shader = get->GetSpriteById(27);
@@ -355,7 +356,6 @@ void GamePlay::SetCamera(Vec2 pos)
 
 void GamePlay::OpenInventory(cocos2d::Ref * sender)
 {
-	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
@@ -364,11 +364,19 @@ void GamePlay::OpenInventory(cocos2d::Ref * sender)
 
 void GamePlay::ShowInventoryGrid()
 {
+	auto boots = MainCharacter::GetInstance()->GetInventory()->GetBoots();
+	auto arrows = MainCharacter::GetInstance()->GetInventory()->GetArrows();
+	auto weapons = MainCharacter::GetInstance()->GetInventory()->GetItemsWeapon();
 	auto items = MainCharacter::GetInstance()->GetInventory()->GetItems();
-	std::vector<int> itemAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount();
-	std::vector<Label*> amountLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel();
+	auto armors = MainCharacter::GetInstance()->GetInventory()->GetArmors();
+	std::vector<int> itemAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0);
+	std::vector<int> arrowAmount = MainCharacter::GetInstance()->GetInventory()->GetItemAmount(1);
+	std::vector<Label*> amountLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel(0);
+	std::vector<Label*> amountArrowLabel = MainCharacter::GetInstance()->GetInventory()->GetAmountLabel(1);
 	int cols = 0, rows = 0;
 	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
+	// SHOW TAB POTION
+
 	MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
 	for (int i = 0; i < items.size(); i++)
 	{
@@ -386,13 +394,108 @@ void GamePlay::ShowInventoryGrid()
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
 			);
+
 			amountLabel[i]->removeFromParent();
 			if (itemAmount[i]>1)
 			{
 				amountLabel[i]->setString(std::to_string(itemAmount[i]));
 			}
 			amountLabel[i]->setPosition(items[i]->GetIcon()->getPosition() + Vec2(16, -16));
+
 			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(amountLabel[i], 22);
+			cols++;
+		}
+	}
+	//SHOW TAB WEAPON
+	cols = rows = 0;
+	for (int i = 0; i < weapons.size(); i++)
+	{
+		if (weapons[i]->GetIcon() != NULL)
+		{
+			if (cols == 6)
+			{
+				rows++;
+				cols = 0;
+			}
+			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->removeFromParent();
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(weapons[i]->GetIcon(), 21);
+			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->setPosition(
+				Vec2(64 * cols + 32,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
+			);
+			cols++;
+		}
+	}
+	//SHOW TAB ARROW
+	cols = rows = 0;
+	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->removeFromParent();
+	MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
+	for (int i = 0; i < arrows.size(); i++)
+	{
+		if (arrows[i]->GetIcon() != NULL)
+		{
+			if (cols == 6)
+			{
+				rows++;
+				cols = 0;
+			}
+			MainCharacter::GetInstance()->GetInventory()->arrows[i]->GetIcon()->removeFromParent();
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(arrows[i]->GetIcon(), 21);
+			MainCharacter::GetInstance()->GetInventory()->arrows[i]->GetIcon()->setPosition(
+				Vec2(64 * cols + 32,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
+			);
+			amountArrowLabel[i]->removeFromParent();
+			if (arrowAmount[i]>1)
+			{
+				amountArrowLabel[i]->setString(std::to_string(arrowAmount[i]));
+			}
+			amountArrowLabel[i]->setPosition(arrows[i]->GetIcon()->getPosition() + Vec2(16, -16));
+			MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(amountArrowLabel[i], 22);
+			cols++;
+		}
+	}
+	//SHOW TAB ARMOR
+	cols = rows = 0;
+	for (int i = 0; i < armors.size(); i++)
+	{
+		if (armors[i]->GetIcon() != NULL)
+		{
+			if (cols == 6)
+			{
+				rows++;
+				cols = 0;
+			}
+			MainCharacter::GetInstance()->GetInventory()->armors[i]->GetIcon()->removeFromParent();
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(2)->addChild(armors[i]->GetIcon(), 21);
+			MainCharacter::GetInstance()->GetInventory()->armors[i]->GetIcon()->setPosition(
+				Vec2(64 * cols + 32,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
+			);
+			cols++;
+		}
+	}
+	//SHOW TAB BOOT
+	cols = rows = 0;
+	for (int i = 0; i < boots.size(); i++)
+	{
+		if (boots[i]->GetIcon() != NULL)
+		{
+			if (cols == 6)
+			{
+				rows++;
+				cols = 0;
+			}
+			MainCharacter::GetInstance()->GetInventory()->boots[i]->GetIcon()->removeFromParent();
+			// get tab to add item
+			MainCharacter::GetInstance()->GetInventory()->GetTab(4)->addChild(boots[i]->GetIcon(), 21);
+			MainCharacter::GetInstance()->GetInventory()->boots[i]->GetIcon()->setPosition(
+				Vec2(64 * cols + 32,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
+			);
 			cols++;
 		}
 	}
