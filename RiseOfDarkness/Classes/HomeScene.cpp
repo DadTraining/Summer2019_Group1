@@ -52,7 +52,7 @@ void HomeScene::update(float deltaTime)
 	MainCharacter::GetInstance()->Update(deltaTime);
 
 	SetCamera(mainCharacter->getPosition());
-
+	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 	RunActionNPC();
 }
 

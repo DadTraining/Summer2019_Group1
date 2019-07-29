@@ -1,5 +1,5 @@
 #ifndef HOME_SCENE_H
-#define HOEM_SCENE_H
+#define HOME_SCENE_H
 
 #include "MainCharacter.h"
 #include "GamePlay.h"

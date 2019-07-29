@@ -18,6 +18,11 @@ void Item::RemoveFromScene()
 	
 }
 
+int Item::GetSellCost()
+{
+	return sellCost;
+}
+
 Item::Item()
 {
 	itemID = NULL;
@@ -30,13 +35,13 @@ Item::~Item()
 {
 }
 
-Item::Item(std::string name, int id, std::string desc, int power, int speed, ItemType type)
+Item::Item(std::string name, int id, std::string desc, int power, int Cost, ItemType type)
 {
 	itemID = id;
 	itemName = name;
 	itemDesc = desc;
 	itemPower = power;
-	itemSpeed = speed;
+	sellCost = Cost;
 	itemType = type;
 	itemStackable = ((type == ItemType::potion || type== ItemType::arrow )? true : false);
 	weaponType = WeaponType::other;
@@ -44,13 +49,13 @@ Item::Item(std::string name, int id, std::string desc, int power, int speed, Ite
 	itemIcon->retain();
 }
 
-Item::Item(std::string name, int id, std::string desc, int power, int speed, ItemType type, WeaponType wType)
+Item::Item(std::string name, int id, std::string desc, int power, int Cost, ItemType type, WeaponType wType)
 {
 	itemID = id;
 	itemName = name;
 	itemDesc = desc;
 	itemPower = power;
-	itemSpeed = speed;
+	sellCost = Cost;
 	itemType = type;
 	itemStackable = ((type == ItemType::potion || type==ItemType::arrow) ? true : false);
 	weaponType = wType;
@@ -87,7 +92,7 @@ Item::Item(const Item *item)
 	itemName = item->itemName;
 	itemDesc = item->itemDesc;
 	itemPower = item->itemPower;
-	itemSpeed = item->itemSpeed;
+	sellCost = item->sellCost;
 	itemType = item->itemType;
 	itemStackable = item->itemStackable;
 	itemIcon = item->itemIcon->clone();

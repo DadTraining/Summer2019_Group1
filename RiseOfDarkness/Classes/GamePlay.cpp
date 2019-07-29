@@ -489,12 +489,17 @@ void GamePlay::ShowInventoryGrid()
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
 			);
+			/*MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->setPosition(
+				Vec2(44 * cols + 22,
+					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 44 * rows - 50) - Vec2(-5, 25)
+			);*/
 			amountLabel[i]->removeFromParent();
 			if (itemAmount[i]>1)
 			{
 				amountLabel[i]->setString(std::to_string(itemAmount[i]));
 			}
 			amountLabel[i]->setPosition(items[i]->GetIcon()->getPosition() + Vec2(16, -16));
+			//amountLabel[i]->setPosition(items[i]->GetIcon()->getPosition() + Vec2(22, -22));
 			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(amountLabel[i], 22);
 			cols++;
 		}

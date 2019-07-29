@@ -11,7 +11,7 @@ public:
 	~Inventory();
 	void Init(cocos2d::Sprite* sprite);
 	void AddItem(int);
-	void SellItem(int);
+	void SellItem(int id, int index, ItemType type);
 	void RemoveItem(int,int,ItemType);
 	cocos2d::Sprite* GetClickBox();
 	void SetVisible(bool b);
@@ -33,12 +33,14 @@ public:
 	std::vector<Item*> weapons;
 	std::vector<Item*> arrows;
 	int GetIdByIcon(int, ItemType);
+	int GetIndexByID(int);
 	void StackItem(int id, ItemType type);
 	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id,ItemType);
 	void ItemClick(cocos2d::Ref * pSender, int id, ItemType);
 	void EquipItem(cocos2d::Ref *);
 	void btnEquipInventory(cocos2d::Ref *);
+	void btnSellItem(cocos2d::Ref*, int id, ItemType type);
 	int slotX, slotY;
 	int targetID;
 private:

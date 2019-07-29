@@ -42,7 +42,8 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	mSprite = sprite;
 	tab = ui::TabControl::create();
 	tab->setContentSize(Size(384, 325));
-	tab->setHeaderHeight(69.f);
+	//tab->setContentSize(Size(281, 243));
+	tab->setHeaderHeight(69.0f);
 	tab->setHeaderWidth(70.f);
 	tab->setHeaderSelectedZoom(.1f);
 	tab->setHeaderDockPlace(ui::TabControl::Dock::TOP);
@@ -83,9 +84,9 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 		arrows.push_back(new Item("sprites/item/box"));
 		itemAmount.push_back(0);
 		arrowAmount.push_back(0);
-		auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 14);
+		auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 12);
 		label->retain();
-		auto label1 = Label::createWithTTF("", "fonts/Marker Felt.ttf", 14);
+		auto label1 = Label::createWithTTF("", "fonts/Marker Felt.ttf", 12);
 		label1->retain();
 		amountArrowLabels.push_back(label1);
 		amountLabels.push_back(label);
@@ -94,7 +95,8 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 
 void Inventory::AddItem(int id)
 {
-	switch (database->items[id]->GetType())
+	int index = GetIndexByID(id);
+	switch (database->items[index]->GetType())
 	{
 	case ItemType::potion:
 		if (InventoryContains(id, ItemType::potion))
@@ -107,7 +109,7 @@ void Inventory::AddItem(int id)
 			{
 				if (slots[i]->GetID() == 99)
 				{
-					slots[i] = new Item(database->items[id]);
+					slots[i] = new Item(database->items[index]);
 					slots[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::potion));
 					itemAmount[i]++;
 					break;
@@ -126,7 +128,7 @@ void Inventory::AddItem(int id)
 			{
 				if (arrows[i]->GetID() == 99)
 				{
-					arrows[i] = new Item(database->items[id]);
+					arrows[i] = new Item(database->items[index]);
 					arrows[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::arrow));
 					arrowAmount[i]++;
 					break;
@@ -139,7 +141,7 @@ void Inventory::AddItem(int id)
 		{
 			if (weapons[i]->GetID() == 99)
 			{
-				weapons[i] = new Item(database->items[id]);
+				weapons[i] = new Item(database->items[index]);
 				weapons[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::weapon));
 				break;
 			}
@@ -150,8 +152,57 @@ void Inventory::AddItem(int id)
 	}
 }
 
-void Inventory::SellItem(int id)
+void Inventory::SellItem(int id, int index, ItemType type)
 {
+	switch (type)
+	{
+	case ItemType::weapon:
+		if (targetID>=0)
+		{
+			MainCharacter::GetInstance()->AddGold(weapons[id]->GetSellCost());
+		}
+		GetTab(0)->removeChild(weapons[id]->GetIcon());
+		targetID = -1;
+		weapons[id] = new Item("sprites/item/box");
+		break;
+	case ItemType::potion:
+		
+		itemAmount[id]--;
+		if (itemAmount[id] <= 0)
+		{
+			amountLabels[id]->setString("");
+			GetTab(1)->removeChild(slots[id]->GetIcon());
+			targetID = -1;
+			slots[id] = new Item("sprites/item/box");
+			//AutoArrange();
+		}
+		else
+		{
+			MainCharacter::GetInstance()->AddGold(slots[id]->GetSellCost());
+			amountLabels[id]->setString(to_string(itemAmount[id]));
+		}
+		log("removed item %d", id);
+		break;
+	case ItemType::arrow:
+		arrowAmount[id]--;
+		
+		if (arrowAmount[id] <= 0)
+		{
+			amountArrowLabels[id]->setString("");
+			GetTab(3)->removeChild(arrows[id]->GetIcon());
+			targetID = -1;
+			arrows[id] = new Item();
+			//AutoArrange();
+		}
+		else
+		{
+			MainCharacter::GetInstance()->AddGold(arrows[id]->GetSellCost());
+			amountArrowLabels[id]->setString(to_string(arrowAmount[id]));
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void Inventory::RemoveItem(int id,int index,ItemType type)
@@ -229,7 +280,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 					arrowAmount[i]--;
 					if (arrowAmount[i] == 0)
 					{
-						amountLabels[i]->setString("");
+						amountArrowLabels[i]->setString("");
 						GetTab(3)->removeChild(arrows[i]->GetIcon());
 						targetID = -1;
 						arrows[i] = new Item("sprites/item/box");
@@ -237,7 +288,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 					}
 					else
 					{
-						amountLabels[i]->setString(to_string(arrowAmount[i]));
+						amountArrowLabels[i]->setString(to_string(arrowAmount[i]));
 					}
 					break;
 				}
@@ -249,7 +300,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 					arrowAmount[i]--;
 					if (arrowAmount[i] == 0)
 					{
-						amountLabels[i]->setString("");
+						amountArrowLabels[i]->setString("");
 						GetTab(1)->removeChild(arrows[i]->GetIcon());
 						targetID = -1;
 						arrows[i] = new Item();
@@ -257,7 +308,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 					}
 					else
 					{
-						amountLabels[i]->setString(to_string(arrowAmount[i]));
+						amountArrowLabels[i]->setString(to_string(arrowAmount[i]));
 					}
 					log("removed item %d", i);
 					break;
@@ -392,6 +443,18 @@ int Inventory::GetIdByIcon(int id, ItemType type)
 	
 }
 
+int Inventory::GetIndexByID(int id)
+{
+	for (int i = 0; i < database->items.size(); i++)
+	{
+		if (database->items[i]->GetID()==id)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 void Inventory::StackItem(int id, ItemType type)
 {
 	switch (type)
@@ -509,6 +572,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		targetID = id;
 		if (targetID >= 0)
 		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
 			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::btnEquipInventory, this));
 		}
 		break;
@@ -529,6 +593,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		targetID = id;
 		if (targetID >= 0)
 		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
 			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this));
 		}
 		break;
@@ -548,6 +613,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		targetID = id;
 		if (targetID >= 0)
 		{
+			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
 			//btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this));
 		}
 		break;
@@ -572,4 +638,10 @@ void Inventory::btnEquipInventory(cocos2d::Ref *pSender)
 	{
 		RemoveItem(slots[targetID]->GetID(), targetID,ItemType::potion);
 	}
+}
+
+void Inventory::btnSellItem(cocos2d::Ref *sender, int id, ItemType type)
+{
+	log("sell item");
+	SellItem(id, GetIndexByID(id), type);
 }

@@ -50,14 +50,14 @@ void MainCharacter::CreateMainCharacter()
 		inventory->AddItem(0);
 	}
 	inventory->AddItem(7);
-	inventory->AddItem(9);
-	inventory->AddItem(6);
-	inventory->AddItem(7);
 	inventory->AddItem(14);
-	inventory->AddItem(13);
+	inventory->AddItem(26);
+	inventory->AddItem(7);
+	inventory->AddItem(31);
+	inventory->AddItem(37);
 	for (int i = 0; i < 10; i++)
 	{
-		inventory->AddItem(17);
+		inventory->AddItem(75);
 	}
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
