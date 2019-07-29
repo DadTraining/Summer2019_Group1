@@ -170,13 +170,13 @@ void Level3Scene::AddListener()
 	});
 
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(0, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, index, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(25, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(25, index, ItemType::potion);
 	});
 
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(1, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, index, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(25, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(25, index, ItemType::potion);
 	});
 
 	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level3Scene::OpenInventory, this));

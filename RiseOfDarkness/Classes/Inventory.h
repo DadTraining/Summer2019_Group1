@@ -23,7 +23,8 @@ public:
 	std::vector<Item*> GetItems();
 	std::vector<Item*> GetItemsWeapon();
 	std::vector<int> GetItemAmount(int);
-	
+	std::vector<Item*> GetArmors();
+	std::vector<Item*> GetBoots();
 	std::vector<Item*> GetArrows();
 	std::vector<cocos2d::Label*> GetAmountLabel(int);
 	
@@ -32,13 +33,15 @@ public:
 	std::vector<Item*> slots;
 	std::vector<Item*> weapons;
 	std::vector<Item*> arrows;
+	std::vector<Item*> armors;
+	std::vector<Item*> boots;
 	int GetIdByIcon(int, ItemType);
 	int GetIndexByID(int);
 	void StackItem(int id, ItemType type);
 	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id,ItemType);
 	void ItemClick(cocos2d::Ref * pSender, int id, ItemType);
-	void EquipItem(cocos2d::Ref *);
+	void EquipItem(cocos2d::Ref *,int ,ItemType);
 	void btnEquipInventory(cocos2d::Ref *);
 	void btnSellItem(cocos2d::Ref*, int id, ItemType type);
 	int slotX, slotY;
@@ -47,8 +50,8 @@ private:
 	cocos2d::Sprite* clickBox;
 	cocos2d::Sprite* mSprite;
 	cocos2d::ui::TabControl *tab;
-	cocos2d::ui::TabHeader *weapon, *potion, *armor, *boots, *arrow;
-	cocos2d::ui::Layout *container1, *container2, *container3, *arrowContainer;
+	cocos2d::ui::TabHeader *weapon, *potion, *armor, *boot, *arrow;
+	cocos2d::ui::Layout *container1, *container2, *container3, *arrowContainer, *bootContainer;
 	int capacity;
 	ItemDatabase *database;
 	bool showInventory;

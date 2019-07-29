@@ -43,21 +43,17 @@ void MainCharacter::CreateMainCharacter()
 	auto grid = Sprite::create("res/sprites/item/gridInventory.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		inventory->AddItem(1);
-		inventory->AddItem(2);
-		inventory->AddItem(0);
+		inventory->AddItem(25);
+		inventory->AddItem(26);
 	}
-	inventory->AddItem(7);
-	inventory->AddItem(14);
-	inventory->AddItem(26);
-	inventory->AddItem(7);
-	inventory->AddItem(31);
-	inventory->AddItem(37);
+	inventory->AddItem(41);
+	inventory->AddItem(1);
+	inventory->AddItem(13);
 	for (int i = 0; i < 10; i++)
 	{
-		inventory->AddItem(75);
+		inventory->AddItem(6);
 	}
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
@@ -570,7 +566,7 @@ bool MainCharacter::TakePotion(int index)
 {
 	switch (index)
 	{
-	case 0:
+	case 25:
 		if (currentHP < maxHP)
 		{
 			currentHP += HP;
@@ -581,7 +577,7 @@ bool MainCharacter::TakePotion(int index)
 			return true;
 		}
 		return false;
-	case 1:
+	case 26:
 		if (currentMP < maxMP)
 		{
 			currentMP += MP;
