@@ -125,28 +125,28 @@ void ResourceManager::Init(const std::string &path)
 		}
 	}
 
-	auto weaponSeller = m_sprites[29];
+	auto weaponSeller = m_sprites[20];
 	weaponSeller->setScale((Director::getInstance()->getVisibleSize().width / weaponSeller->getBoundingBox().size.width) / 22);
 
-	auto equipmentSeller = m_sprites[28];
+	auto equipmentSeller = m_sprites[19];
 	equipmentSeller->setScale((Director::getInstance()->getVisibleSize().width / equipmentSeller->getBoundingBox().size.width) / 22);
 
-	auto potionSeller = m_sprites[30];
+	auto potionSeller = m_sprites[21];
 	potionSeller->setScale((Director::getInstance()->getVisibleSize().width / potionSeller->getBoundingBox().size.width) / 22);
 
-	auto mainCharacterFace = m_sprites[19];
+	auto mainCharacterFace = m_sprites[10];
 	mainCharacterFace->setScale((Director::getInstance()->getVisibleSize().width / mainCharacterFace->getBoundingBox().size.width) / 20);
 
 	auto mainCharacterFaceButton = m_buttons[25];
 	mainCharacterFaceButton->setScale((Director::getInstance()->getVisibleSize().width / mainCharacterFaceButton->getBoundingBox().size.width) / 20);
 
-	auto infoBar = m_sprites[20];
+	auto infoBar = m_sprites[11];
 	infoBar->setScale((Director::getInstance()->getVisibleSize().width / infoBar->getBoundingBox().size.width) / 5);
 
-	auto hpBar = m_sprites[21];
+	auto hpBar = m_sprites[12];
 	hpBar->setScale((Director::getInstance()->getVisibleSize().width / hpBar->getBoundingBox().size.width) / 8);
 
-	auto mpBar = m_sprites[22];
+	auto mpBar = m_sprites[13];
 	mpBar->setScale((Director::getInstance()->getVisibleSize().width / mpBar->getBoundingBox().size.width) / 8);
 
 	auto hpLoadingBar = m_loadingbar[1];
@@ -155,11 +155,17 @@ void ResourceManager::Init(const std::string &path)
 	auto mpLoadingBar = m_loadingbar[2];
 	mpLoadingBar->setScale((Director::getInstance()->getVisibleSize().width / mpLoadingBar->getBoundingBox().size.width) / 8);
 
-	m_buttons[10]->setScale(0.8);
-	m_buttons[11]->setScale(0.8);
-	m_buttons[13]->setScale(0.8);
-	m_buttons[20]->setScale(0.8);
-	m_buttons[21]->setScale(0.8);
+	m_buttons[12]->setScale(1.5);
+
+	m_sprites[16]->setScale(1.2);
+
+	m_sprites[25]->setScale(1.5);
+	m_sprites[26]->setScale(0.5);
+
+	m_sprites[27]->setScaleX(Director::getInstance()->getVisibleSize().width / m_sprites[27]->getBoundingBox().size.width);
+	m_sprites[27]->setScaleY(Director::getInstance()->getVisibleSize().height / m_sprites[27]->getBoundingBox().size.height);
+
+	m_sprites[28]->setScale(0.3);
 }
 
 Sprite* ResourceManager::GetSpriteById(int id)

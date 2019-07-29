@@ -1,9 +1,9 @@
-#ifndef LEVEL3_SCENE_SCENE_H
-#define LEVEL3_SCENE_SCENE_H
+#ifndef LEVEL3_SCENE_H
+#define LEVEL3_SCENE_H
 
 #include "GamePlay.h"
 #include "cocos2d.h"
-#include "Enemy.h"
+
 using namespace cocos2d;
 
 class Level3Scene : public Layer, GamePlay

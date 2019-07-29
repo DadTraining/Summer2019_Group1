@@ -4,7 +4,7 @@
 
 Pierce::Pierce()
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(14));
 	mSprite->setVisible(false);
 	mPhysicsBody = PhysicsBody::createBox(mSprite->getContentSize(), PhysicsMaterial(0, 0, 0));
 	mPhysicsBody->setRotationEnable(false);

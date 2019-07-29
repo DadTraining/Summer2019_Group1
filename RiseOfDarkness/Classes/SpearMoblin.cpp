@@ -7,7 +7,7 @@ SpearMoblin::SpearMoblin(){}
 
 SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(24));
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(15));
 	mSprite->setScale(1.5);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
@@ -24,7 +24,7 @@ SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
 	pierce = new Pierce();
 	pierce->AddToLayer(layer);
 
-	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
+	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(12)));
 	layer->addChild(hpBar);
 	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
 	layer->addChild(hpLoadingBar);

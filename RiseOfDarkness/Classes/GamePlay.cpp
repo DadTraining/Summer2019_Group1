@@ -1,11 +1,17 @@
 #include "GamePlay.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
-
-USING_NS_CC;
+#include <math.h>
 
 GamePlay::GamePlay() {}
-GamePlay::~GamePlay() {}
+GamePlay::~GamePlay() 
+{
+	for (int i = 0; i < m_enemies.size(); i++)
+	{
+		delete m_enemies[i];
+	}
+	m_enemies.clear();
+}
 
 void GamePlay::UpdateInfoBar()
 {
@@ -73,108 +79,55 @@ void GamePlay::CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* l
 
 void GamePlay::CreateAllButton(Layer* layer)
 {
+	anchorCamera = Camera::create();
+	anchorCamera->setCameraFlag(CameraFlag::USER1);
+
+	layer->addChild(anchorCamera);
+
 	auto get = ResourceManager::GetInstance();
-	
-	// SPRITE ID 0
-	auto frameButton = get->GetSpriteById(18);
-	frameButton->removeFromParent();
-	frameButton->setVisible(false);
-	layer->addChild(frameButton, 5);
-	m_sprites.push_back(frameButton);
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 
-	// GO UP SPRITE ID 1
-	auto upButton = get->GetSpriteById(10);
-	upButton->removeFromParent();
-	upButton->setAnchorPoint(Vec2(0.5, 1));
-	layer->addChild(upButton, 6);
-	m_sprites.push_back(upButton);
+	// CREATE JOYSTICK
+	CreateJoystick(layer);
 
-	//SPRITE ID 2
-	auto upButtonPressed = get->GetSpriteById(11);
-	upButtonPressed->removeFromParent();
-	upButtonPressed->setAnchorPoint(Vec2(0.5, 1));
-	layer->addChild(upButtonPressed, 7);
-	upButtonPressed->setVisible(false);
-	m_sprites.push_back(upButtonPressed);
-
-	// GO DOWN SPRITE ID 3
-	auto downButton = get->GetSpriteById(12);
-	downButton->removeFromParent();
-	downButton->setAnchorPoint(Vec2(0.5, 0));
-	layer->addChild(downButton, 6);
-	m_sprites.push_back(downButton);
-
-	//SPRITE ID 4
-	auto downButtonPressed = get->GetSpriteById(13);
-	downButtonPressed->removeFromParent();
-	downButtonPressed->setAnchorPoint(Vec2(0.5, 0));
-	layer->addChild(downButtonPressed, 7);
-	downButtonPressed->setVisible(false);
-	m_sprites.push_back(downButtonPressed);
-
-	// GO LEFT SPRITE ID 5
-	auto leftButton = get->GetSpriteById(14);
-	leftButton->removeFromParent();
-	leftButton->setAnchorPoint(Vec2(0, 0.5));
-	layer->addChild(leftButton, 6);
-	m_sprites.push_back(leftButton);
-
-	// SPRITE ID 6
-	auto leftButtonPressed = get->GetSpriteById(15);
-	leftButtonPressed->removeFromParent();
-	leftButtonPressed->setAnchorPoint(Vec2(0, 0.5));
-	layer->addChild(leftButtonPressed, 7);
-	leftButtonPressed->setVisible(false);
-	m_sprites.push_back(leftButtonPressed);
-
-	// GO RIGHT SPRITE ID 7
-	auto rightButton = get->GetSpriteById(16);
-	rightButton->removeFromParent();
-	rightButton->setAnchorPoint(Vec2(1, 0.5));
-	layer->addChild(rightButton, 6);
-	m_sprites.push_back(rightButton);
-
-	// SPRITE ID 8
-	auto rightButtonPressed = get->GetSpriteById(17);
-	rightButtonPressed->removeFromParent();
-	rightButtonPressed->setAnchorPoint(Vec2(1, 0.5));
-	layer->addChild(rightButtonPressed, 7);
-	rightButtonPressed->setVisible(false);
-	m_sprites.push_back(rightButtonPressed);
-
-	// SPRITE ID 9
-	auto frameSkillButton = get->DuplicateSprite(get->GetSpriteById(18));
-	frameSkillButton->removeFromParent();
-	frameSkillButton->setVisible(false);
-	layer->addChild(frameSkillButton, 5);
-	m_sprites.push_back(frameSkillButton);
-
-	// SPECIAL ATTACK BUTTON ID 0
-	auto specialAttack = get->GetButtonById(10);
-	specialAttack->removeFromParent();
-	specialAttack->setAnchorPoint(Vec2(0, 1));
-	layer->addChild(specialAttack, 6);
-	m_buttons.push_back(specialAttack);
-
-	// EVDAE BUTTON ID 1
-	auto evade = get->GetButtonById(11);
-	evade->removeFromParent();
-	evade->setAnchorPoint(Vec2(0, 0));
-	layer->addChild(evade, 6);
-	m_buttons.push_back(evade);
-
-	// NORMAL ATTACK BUTTON ID 2
+	// NORMAL ATTACK BUTTON ID 0
 	auto normalAttack = get->GetButtonById(12);
 	normalAttack->removeFromParent();
 	normalAttack->setAnchorPoint(Vec2(1, 0));
-	layer->addChild(normalAttack, 6);
+	normalAttack->setPosition(Vec2(visibleSize.width - 20, 20));
+	layer->addChild(normalAttack, 4);
+	normalAttack->setCameraMask(2);
 	m_buttons.push_back(normalAttack);
+
+	auto normalAttackSize = normalAttack->getBoundingBox().size;
+	auto normalAttackPosition = normalAttack->getPosition();
+
+	// SPECIAL ATTACK BUTTON ID 1
+	auto specialAttack = get->GetButtonById(10);
+	specialAttack->removeFromParent();
+	specialAttack->setAnchorPoint(Vec2(1, 0));
+	specialAttack->setPosition(Vec2(normalAttackPosition.x - normalAttackSize.width - 10
+		, normalAttackPosition.y + normalAttackSize.height - 10));
+	layer->addChild(specialAttack, 4);
+	specialAttack->setCameraMask(2);
+	m_buttons.push_back(specialAttack);
+
+	// EVDAE BUTTON ID 2
+	auto evade = get->GetButtonById(11);
+	evade->removeFromParent();
+	evade->setAnchorPoint(Vec2(1, 0));
+	evade->setPosition(Vec2(normalAttackPosition.x - normalAttackSize.width - 20, normalAttackPosition.y));
+	layer->addChild(evade, 4);
+	evade->setCameraMask(2);
+	m_buttons.push_back(evade);
 
 	// DEFEND BUTTON ID 3
 	auto defend = get->GetButtonById(13);
 	defend->removeFromParent();
-	defend->setAnchorPoint(Vec2(1, 1));
-	layer->addChild(defend, 6);
+	defend->setAnchorPoint(Vec2(1, 0));
+	defend->setPosition(Vec2(normalAttackPosition.x, normalAttackPosition.y + normalAttackSize.height + 20));
+	layer->addChild(defend, 4);
+	defend->setCameraMask(2);
 	m_buttons.push_back(defend);
 
 	// PAUSE BUTTON ID 4
@@ -182,7 +135,9 @@ void GamePlay::CreateAllButton(Layer* layer)
 	pause->removeFromParent();
 	pause->setAnchorPoint(Vec2(1, 1));
 	pause->setVisible(true);
-	layer->addChild(pause, 6);
+	pause->setPosition(Vec2(visibleSize.width - 20, visibleSize.height - 20));
+	layer->addChild(pause, 4);
+	pause->setCameraMask(2);
 	m_buttons.push_back(pause);
 
 	// RESUME BUTTON ID 5
@@ -190,112 +145,185 @@ void GamePlay::CreateAllButton(Layer* layer)
 	resume->setAnchorPoint(Vec2(1, 1));
 	resume->removeFromParent();
 	resume->setVisible(false);
-	layer->addChild(resume, 7);
+	resume->setPosition(pause->getPosition());
+	layer->addChild(resume, 4);
+	resume->setCameraMask(2);
 	m_buttons.push_back(resume);
 
 	// HOME BUTTON ID 6
 	auto home = get->GetButtonById(24);
 	home->setVisible(false);
 	home->removeFromParent();
-	layer->addChild(home, 12);
+	home->setPosition(Vec2(visibleSize.width / 2 - home->getBoundingBox().size.width, visibleSize.height / 2));
+	layer->addChild(home, 8);
+	home->setCameraMask(2);
 	m_buttons.push_back(home);
 
 	// RETRY BUTTON ID 7
 	auto retry = get->GetButtonById(23);
 	retry->removeFromParent();
 	retry->setVisible(false);
-	layer->addChild(retry, 12);
+	retry->setPosition(Vec2(visibleSize.width / 2 + home->getBoundingBox().size.width, visibleSize.height / 2));
+	layer->addChild(retry, 8);
+	retry->setCameraMask(2);
 	m_buttons.push_back(retry);
 
 	// GAMEOVER TEXT
 	gameover = get->GetLabelById(1);
 	gameover->setString("GAMEOVER!");
 	gameover->setVisible(false);
+	gameover->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.5));
 	gameover->removeFromParent();
-	layer->addChild(gameover, 12);
-
-	// NAME'S MAIN CHARACTER TEXT
-	mName = get->GetLabelById(0);
-	mName->setString(MainCharacter::GetInstance()->GetName());
-	mName->removeFromParent();
-	mName->setAnchorPoint(Vec2(0, 1));
-	layer->addChild(mName, 12);
+	gameover->setCameraMask(2);
+	layer->addChild(gameover, 8);
 
 	// CLEAR STAGE TEXT
 	clear = get->GetLabelById(2);
 	clear->setString("STAGE CLEAR!");
 	clear->setVisible(false);
+	clear->setPosition(gameover->getPosition());
 	clear->removeFromParent();
-	layer->addChild(clear, 12);
+	clear->setCameraMask(2);
+	layer->addChild(clear, 8);
+
+	// PAUSE TEXT
+	paused = get->GetLabelById(3);
+	paused->setString("PAUSE");
+	paused->setVisible(false);
+	paused->setPosition(gameover->getPosition());
+	paused->removeFromParent();
+	paused->setCameraMask(2);
+	layer->addChild(paused, 8);
 
 	// STATUS MC ID 8
 	auto mainCharacterFace = get->GetButtonById(25);
 	mainCharacterFace->setAnchorPoint(Vec2(0, 1));
 	mainCharacterFace->removeFromParent();
-	layer->addChild(mainCharacterFace, 8);
+	mainCharacterFace->setPosition(Vec2(0, visibleSize.height));
+	layer->addChild(mainCharacterFace, 4);
+	mainCharacterFace->setCameraMask(2);
 	m_buttons.push_back(mainCharacterFace);
 
-	// SPRITE ID 10
-	auto infoBar = get->GetSpriteById(20);
+	// NAME'S MAIN CHARACTER TEXT
+	mName = get->GetLabelById(0);
+	mName->setString(MainCharacter::GetInstance()->GetName());
+	mName->removeFromParent();
+	mName->setPosition(Vec2(mainCharacterFace->getBoundingBox().size.width + 10
+		, visibleSize.height - mainCharacterFace->getBoundingBox().size.height / 2));
+	mName->setAnchorPoint(Vec2(0, 0.5));
+	mName->setCameraMask(2);
+	layer->addChild(mName, 4);
+
+	// SPRITE ID 0
+	auto infoBar = get->GetSpriteById(11);
 	infoBar->setAnchorPoint(Vec2(0, 1));
 	infoBar->removeFromParent();
-	layer->addChild(infoBar, 8);
+	infoBar->setPosition(Vec2(0, visibleSize.height - mainCharacterFace->getBoundingBox().size.height));
+	layer->addChild(infoBar, 4);
+	infoBar->setCameraMask(2);
 	m_sprites.push_back(infoBar);
+	auto infoBarPosition = infoBar->getPosition();
+	auto infoBarSize = infoBar->getBoundingBox().size;
 
-	//SPRITE ID 11
-	auto hpBar = get->GetSpriteById(21);
+	//SPRITE ID 1
+	auto hpBar = get->GetSpriteById(12);
 	hpBar->removeFromParent();
-	layer->addChild(hpBar, 9);
+	layer->addChild(hpBar, 5);
+	hpBar->setPosition(Vec2(infoBar->getPositionX() / 2 + infoBarSize.width / 1.6, infoBar->getPositionY() - infoBarSize.height / 2.7));
 	m_sprites.push_back(hpBar);
+	hpBar->setCameraMask(2);
 
-	//SPRITE ID 12
-	auto mpBar = get->GetSpriteById(22);
+	//SPRITE ID 2
+	auto mpBar = get->GetSpriteById(13);
 	mpBar->removeFromParent();
-	layer->addChild(mpBar, 9);
+	layer->addChild(mpBar, 5);
+	mpBar->setPosition(Vec2(infoBar->getPositionX() / 2 + infoBarSize.width / 1.6, infoBar->getPositionY() - infoBarSize.height / 1.5));
 	m_sprites.push_back(mpBar);
+	mpBar->setCameraMask(2);
 
 	hpLoadingBar = get->GetLoadingbar(1);
 	hpLoadingBar->removeFromParent();
-	layer->addChild(hpLoadingBar, 10);
+	hpLoadingBar->setPosition(hpBar->getPosition());
+	layer->addChild(hpLoadingBar, 6);
+	hpLoadingBar->setCameraMask(2);
 
 	mpLoadingBar = get->GetLoadingbar(2);
 	mpLoadingBar->removeFromParent();
-	layer->addChild(mpLoadingBar, 10);
+	mpLoadingBar->setPosition(mpBar->getPosition());
+	layer->addChild(mpLoadingBar, 6);
+	mpLoadingBar->setCameraMask(2);
 
-	//GOLD FRAME SPRITE ID 13 
-	auto goldFrame = get->GetSpriteById(25);
+	//GOLD FRAME SPRITE ID 3 
+	auto goldFrame = get->GetSpriteById(16);
 	goldFrame->setAnchorPoint(Vec2(1, 1));
 	goldFrame->removeFromParent();
-	layer->addChild(goldFrame, 10);
+	goldFrame->setPosition(Vec2(visibleSize.width / 1.5, visibleSize.height));
+	layer->addChild(goldFrame, 4);
 	m_sprites.push_back(goldFrame);
+	goldFrame->setCameraMask(2);
 
 	// AMOUNT OF GOLD'S MAINCHARACTER
-	gold = get->GetLabelById(3);
+	gold = get->GetLabelById(4);
 	gold->removeFromParent();
 	gold->setAnchorPoint(Vec2(1, 1));
 	gold->setColor(Color3B::YELLOW);
+	gold->setPosition(Vec2(visibleSize.width / 1.5, visibleSize.height 
+		- goldFrame->getBoundingBox().size.height / 2 + gold->getBoundingBox().size.height / 2));
 	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
-	layer->addChild(gold, 10);
+	layer->addChild(gold, 5);
+	gold->setCameraMask(2);
 
 	// HP BUTTON ID 9
 	auto hpButton = get->GetButtonById(20);
 	hpButton->removeFromParent();
-	layer->addChild(hpButton, 11);
+	hpButton->setAnchorPoint(Vec2(0.5, 0));
+	hpButton->setPosition(Vec2(evade->getPositionX() - 20 - evade->getBoundingBox().size.width * 1.5, 20));
+	layer->addChild(hpButton, 4);
 	m_buttons.push_back(hpButton);
+	hpButton->setCameraMask(2);
 
 	// MP BUTTON ID 10
 	auto mpButton = get->GetButtonById(21);
 	mpButton->removeFromParent();
-	layer->addChild(mpButton, 11);
+	mpButton->setAnchorPoint(Vec2(0.5, 0));
+	mpButton->setPosition(Vec2(hpButton->getPositionX() - hpButton->getBoundingBox().size.width - 20, 20));
+	layer->addChild(mpButton, 4);
 	m_buttons.push_back(mpButton);
+	mpButton->setCameraMask(2);
 
-	//BUTTON OPEN INVENTORY 11
+	//BUTTON OPEN INVENTORY 4
 	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
 	buttonOpenInventory->retain();
-	layer->addChild(buttonOpenInventory, 11);
+	layer->addChild(buttonOpenInventory, 4);
+	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
+	buttonOpenInventory->setPosition(Vec2(mpButton->getPositionX() - mpButton->getBoundingBox().size.width - 20, 40));
 	m_buttons.push_back(buttonOpenInventory);
+	buttonOpenInventory->setCameraMask(2);
 
-	SetCamera(mainCharacter->getPosition());
+	// SHADER
+	shader = get->GetSpriteById(27);
+	shader->setPosition(visibleSize / 2);
+	shader->removeFromParent();
+	shader->setCameraMask(2);
+	shader->setOpacity(0);
+	layer->addChild(shader, 7);
+
+	// FOCUS SPRITE ID 4
+	auto focus = get->GetSpriteById(28);
+	focus->removeFromParent();
+	layer->addChild(focus, 4);
+	m_sprites.push_back(focus);
+
+	// DIRECTION SPRITE ID 5
+	auto direction = get->DuplicateSprite(get->GetSpriteById(14));
+	direction->setScale(2);
+	layer->addChild(direction, 4);
+	direction->setPosition(Vec2(pause->getPositionX() - pause->getBoundingBox().size.width / 2, pause->getPositionY() - direction->getBoundingBox().size.width - 10));
+	direction->setCameraMask(2);
+	direction->setRotation(-90);
+	m_sprites.push_back(direction);
+
+	SetCamera(MainCharacter::GetInstance()->GetSprite()->getPosition());
 }
 
 void GamePlay::SetCamera(Vec2 pos)
@@ -321,134 +349,8 @@ void GamePlay::SetCamera(Vec2 pos)
 	}
 	camera->setPosition(Vec2(pos.x, pos.y));
 
-	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
-	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
-	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
-
-	// CONTROLLER
-	auto frameButtonSize = m_sprites[0]->getBoundingBox().size;
-	m_sprites[0]->setPosition(Vec2(pos.x - visibleSize.width / 2 + frameButtonSize.width / 2 + 10, pos.y - visibleSize.height / 2 + frameButtonSize.height / 2 + 10));
-	auto frameButtonPosition = m_sprites[0]->getPosition();
-	m_sprites[1]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
-	m_sprites[2]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y + frameButtonSize.height / 2));
-	m_sprites[3]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
-	m_sprites[4]->setPosition(Vec2(frameButtonPosition.x, frameButtonPosition.y - frameButtonSize.height / 2));
-	m_sprites[5]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
-	m_sprites[6]->setPosition(Vec2(frameButtonPosition.x - frameButtonSize.width / 2, frameButtonPosition.y));
-	m_sprites[7]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
-	m_sprites[8]->setPosition(Vec2(frameButtonPosition.x + frameButtonSize.width / 2, frameButtonPosition.y));
-
-	// SKILL BUTTONS
-	auto frameSkillButtonSize = m_sprites[9]->getBoundingBox().size;
-	m_sprites[9]->setPosition(Vec2(pos.x + visibleSize.width / 2 - frameSkillButtonSize.width / 2 - 10, pos.y - visibleSize.height / 2 + frameSkillButtonSize.height / 2 + 10));
-	auto frameSkillButtonPosition = m_sprites[9]->getPosition();
-	m_buttons[0]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 3, frameSkillButtonPosition.y + frameSkillButtonSize.height / 3));
-	m_buttons[1]->setPosition(Vec2(frameSkillButtonPosition.x - frameSkillButtonSize.width / 2, frameSkillButtonPosition.y - frameSkillButtonSize.height / 2));
-	m_buttons[2]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 2, frameSkillButtonPosition.y - frameSkillButtonSize.height / 2));
-	m_buttons[3]->setPosition(Vec2(frameSkillButtonPosition.x + frameSkillButtonSize.width / 2, frameSkillButtonPosition.y + frameSkillButtonSize.height / 2));
-	
-	// PAUSE FUNCTION BUTTONS
-	m_buttons[4]->setPosition(Vec2(pos + visibleSize / 2));
-	m_buttons[5]->setPosition(Vec2(pos + visibleSize / 2));
-
-	// GAMEOVER || CLEAR
-	m_buttons[6]->setPosition(Vec2(pos.x - m_buttons[7]->getBoundingBox().size.width, pos.y - m_buttons[7]->getBoundingBox().size.height / 2));
-	m_buttons[7]->setPosition(Vec2(pos.x + m_buttons[8]->getBoundingBox().size.width, pos.y - m_buttons[7]->getBoundingBox().size.height / 2));
-	gameover->setPosition(Vec2(pos.x, pos.y + m_buttons[7]->getBoundingBox().size.height / 2));
-	clear->setPosition(Vec2(pos.x, pos.y + m_buttons[7]->getBoundingBox().size.height / 2));
-
-	m_buttons[8]->setPosition(Vec2(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2));
-	mName->setPosition(pos.x - visibleSize.width / 2 + m_buttons[8]->getBoundingBox().size.width + 10, pos.y + visibleSize.height / 2 - (m_buttons[8]->getBoundingBox().size.height / 2 - mName->getBoundingBox().size.height / 2));
-	m_sprites[10]->setPosition(pos.x - visibleSize.width / 2, pos.y + visibleSize.height / 2 - m_buttons[8]->getBoundingBox().size.height);
-	auto infoBarPosition = m_sprites[10]->getPosition();
-	auto infoBarSize = m_sprites[10]->getBoundingBox().size;
-	m_sprites[11]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 2.8);
-	m_sprites[12]->setPosition(infoBarPosition.x + infoBarSize.width / 1.6, infoBarPosition.y - infoBarSize.height / 1.5);
-	hpLoadingBar->setPosition(m_sprites[11]->getPosition());
-	mpLoadingBar->setPosition(m_sprites[12]->getPosition());
-
-	m_sprites[13]->setPosition(Vec2(pos.x + visibleSize.width / 3.5, pos.y + visibleSize.height / 2));
-	gold->setPosition(Vec2(pos.x + visibleSize.width / 3.5, pos.y + visibleSize.height / 2 - (m_sprites[13]->getBoundingBox().size.height / 2 - gold->getBoundingBox().size.height / 2)));
-
-	m_buttons[9]->setPosition(Vec2(pos.x + visibleSize.width / 7, pos.y - visibleSize.height / 2 + m_buttons[9]->getBoundingBox().size.height / 2));
-	m_buttons[10]->setPosition(Vec2(m_buttons[9]->getPositionX() + m_buttons[10]->getBoundingBox().size.width + 5, m_buttons[9]->getPositionY()));
-
-	m_buttons[11]->setPosition(Vec2(m_buttons[9]->getPositionX() - m_buttons[9]->getBoundingBox().size.width, m_buttons[9]->getPositionY()));
-	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(pos.x, pos.y));
-}
-
-void GamePlay::DisablePressed()
-{
-	m_sprites[2]->setVisible(false);
-	m_sprites[4]->setVisible(false);
-	m_sprites[6]->setVisible(false);
-	m_sprites[8]->setVisible(false);
-
-}
-
-void GamePlay::EnablePressed()
-{
-	switch (MainCharacter::GetInstance()->GetDirection())
-	{
-	case 1:
-		m_sprites[2]->setVisible(true);
-		break;
-	case 2:
-		m_sprites[4]->setVisible(true);
-		break;
-	case 3:
-		m_sprites[6]->setVisible(true);
-		break;
-	case 4:
-		m_sprites[8]->setVisible(true);
-	}
-	MainCharacter::GetInstance()->Run();
-}
-
-void GamePlay::UpdateController()
-{
-	switch (mCurrentTouchState)
-	{
-	case ui::Widget::TouchEventType::BEGAN:
-	case ui::Widget::TouchEventType::MOVED:
-	{
-		if (Rect(m_sprites[1]->getPosition().x - m_sprites[1]->getBoundingBox().size.width / 2, m_sprites[1]->getPosition().y - m_sprites[1]->getBoundingBox().size.height, m_sprites[1]->getContentSize().width, m_sprites[1]->getContentSize().height).containsPoint(mNextTouchPoint))
-		{
-			mainCharacter->setFlippedX(false);
-			MainCharacter::GetInstance()->SetDirection(1);
-			EnablePressed();
-		}
-		else if (Rect(m_sprites[3]->getPosition().x - m_sprites[3]->getBoundingBox().size.width / 2, m_sprites[3]->getPosition().y, m_sprites[3]->getContentSize().width, m_sprites[3]->getContentSize().height).containsPoint(mNextTouchPoint))
-		{
-			mainCharacter->setFlippedX(false);
-			MainCharacter::GetInstance()->SetDirection(2);
-			EnablePressed();
-		}
-		else if (Rect(m_sprites[5]->getPosition().x, m_sprites[5]->getPosition().y - m_sprites[5]->getBoundingBox().size.height / 2, m_sprites[5]->getContentSize().width, m_sprites[5]->getContentSize().height).containsPoint(mNextTouchPoint))
-		{
-			mainCharacter->setFlippedX(false);
-			MainCharacter::GetInstance()->SetDirection(3);
-			EnablePressed();
-		}
-		else if (Rect(m_sprites[7]->getPosition().x - m_sprites[7]->getBoundingBox().size.width, m_sprites[7]->getPosition().y - m_sprites[7]->getBoundingBox().size.height / 2, m_sprites[7]->getContentSize().width, m_sprites[7]->getContentSize().height).containsPoint(mNextTouchPoint))
-		{
-			mainCharacter->setFlippedX(true);
-			MainCharacter::GetInstance()->SetDirection(4);
-			EnablePressed();
-		}
-		else
-		{
-			DisablePressed();
-			MainCharacter::GetInstance()->StopRun();
-		}
-		break;
-	}
-	case ui::Widget::TouchEventType::ENDED:
-	{
-		DisablePressed();
-		MainCharacter::GetInstance()->StopRun();
-	}
-	}
+	m_sprites[4]->setPosition(Vec2(mainCharacter->getPositionX()
+		, mainCharacter->getPositionY() + mainCharacter->getBoundingBox().size.height / 2 + 10));
 }
 
 void GamePlay::OpenInventory(cocos2d::Ref * sender)
@@ -512,10 +414,105 @@ void GamePlay::EnemyUpdate(float deltaTime)
 {
 	for (int i = 0; i < m_enemies.size(); i++)
 	{
-		if (m_enemies[i]->GetSprite()->isVisible())
-		{
-			m_enemies[i]->Update(deltaTime);
-		}
+		m_enemies[i]->Update(deltaTime);
 	}
 	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
+}
+
+void GamePlay::CreateJoystick(Layer* layer)
+{
+	// JOYSTICK
+	auto thumb = ResourceManager::GetInstance()->GetSpriteById(25);
+	thumb->removeFromParent();
+	auto joystick = ResourceManager::GetInstance()->GetSpriteById(26);
+	joystick->removeFromParent();
+
+	Rect joystickBaseDimensions;
+	joystickBaseDimensions = Rect(0, 0, 80.f, 80.0f);
+
+	Point joystickBasePosition;
+	joystickBasePosition = Vec2(thumb->getBoundingBox().size.width / 2 + joystick->getBoundingBox().size.width / 2
+		, thumb->getBoundingBox().size.height / 2 + joystick->getBoundingBox().size.height / 2);
+
+	joystickBase = new SneakyJoystickSkinnedBase();
+	joystickBase->init();
+	joystickBase->setPosition(joystickBasePosition);
+	joystickBase->setBackgroundSprite(thumb);
+	joystickBase->setThumbSprite(joystick);
+
+	SneakyJoystick *aJoystick = new SneakyJoystick();
+	aJoystick->initWithRect(joystickBaseDimensions);
+	aJoystick->autorelease();
+	joystickBase->setJoystick(aJoystick);
+	joystickBase->setPosition(joystickBasePosition);
+
+	leftJoystick = joystickBase->getJoystick();
+	layer->addChild(joystickBase, 4);
+	joystickBase->setCameraMask(2);
+
+	activeRunRange = thumb->getBoundingBox().size.height / 2;
+}
+
+void GamePlay::UpdateJoystick()
+{
+	Point pos = leftJoystick->getStickPosition();
+	float radius = std::sqrt(pos.x*pos.x + pos.y*pos.y);
+	if (radius > 0)
+	{
+		float degree = std::atan2f(pos.y, pos.x) * 180 / std::_Pi;
+
+		// GO UP
+		if (degree < 120 && degree > 60)
+		{
+			m_sprites[5]->setRotation(90);
+			MainCharacter::GetInstance()->SetDirection(1);
+		}
+		// GO DOWN
+		else if (degree < -60 && degree > -120)
+		{
+			m_sprites[5]->setRotation(-90);
+			MainCharacter::GetInstance()->SetDirection(2);
+		}
+		// GO LEFT
+		else if (degree > 150 || degree < -150)
+		{
+			m_sprites[5]->setRotation(0);
+			MainCharacter::GetInstance()->SetDirection(3);
+		}
+		// GO RIGHT
+		else if (degree < 30 && degree > -30)
+		{
+			m_sprites[5]->setRotation(180);
+			MainCharacter::GetInstance()->SetDirection(4);
+		}
+		// GO LEFT UP
+		else if (degree <= 150 && degree >= 120)
+		{
+			m_sprites[5]->setRotation(45);
+			MainCharacter::GetInstance()->SetDirection(5);
+		}
+		// GO LEFT DOWN
+		else if(degree <= -120 && degree >= -150)
+		{
+			m_sprites[5]->setRotation(-45);
+			MainCharacter::GetInstance()->SetDirection(6);
+		}
+		// GO RIGHT UP
+		else if (degree <= 60 && degree >= 30)
+		{
+			m_sprites[5]->setRotation(135);
+			MainCharacter::GetInstance()->SetDirection(7);
+		}
+		// GO RIGHT DOWN
+		else
+		{
+			m_sprites[5]->setRotation(-135);
+			MainCharacter::GetInstance()->SetDirection(8);
+		}
+		MainCharacter::GetInstance()->Run(radius / activeRunRange);
+	}
+	else
+	{
+		MainCharacter::GetInstance()->StopRun();
+	}
 }

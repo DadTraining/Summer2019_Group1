@@ -1,5 +1,6 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
+#include <math.h>
 
 MainCharacter* MainCharacter::m_instance = nullptr;
 
@@ -103,11 +104,12 @@ void MainCharacter::CreateMainCharacter()
 	currentMP = maxMP;
 	gold = 2000;
 	preventRun = 0;
+	pace = std::sqrt(2 * speed*speed) / 2;
 
 	slash = new Slash();
 	for (int i = 0; i < 10; i++)
 	{
-		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+		auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(14));
 		sprite->retain();
 		sprite->setScaleX(0.6f);
 		Arrow *arrow = new Arrow(sprite, MainCharacter::NORMAL_ARROW_BITMASK);
@@ -236,8 +238,68 @@ void MainCharacter::Idle()
 		case 2:
 			SetState(FRONT_IDLE);
 			break;
-		default:
+		case 3:
 			SetState(LEFT_IDLE);
+			break;
+		case 4:
+			SetState(LEFT_IDLE);
+			break;
+		case 5:
+			if (currentState == GO_UP || currentState == BACK_ARCHERY || currentState == BACK_SLASH || currentState == ROLL_BACK)
+			{
+				SetState(BACK_IDLE);
+			}
+			else if(currentState != BACK_IDLE)
+			{
+				SetState(LEFT_IDLE);
+			}
+			else
+			{
+				SetState(BACK_IDLE);
+			}
+			break;
+		case 6:
+			if (currentState == GO_DOWN || currentState == FRONT_ARCHERY || currentState == FRONT_SLASH || currentState == ROLL_FRONT)
+			{
+				SetState(FRONT_IDLE);
+			}
+			else if (currentState != FRONT_IDLE)
+			{
+				SetState(LEFT_IDLE);
+			}
+			else
+			{
+				SetState(FRONT_IDLE);
+			}
+			break;
+		case 7:
+			if (currentState == GO_UP || currentState == BACK_ARCHERY || currentState == BACK_SLASH || currentState == ROLL_BACK)
+			{
+				SetState(BACK_IDLE);
+			}
+			else if (currentState != BACK_IDLE)
+			{
+				SetState(LEFT_IDLE);
+			}
+			else
+			{
+				SetState(BACK_IDLE);
+			}
+			break;
+		case 8:
+			if (currentState == GO_DOWN || currentState == FRONT_ARCHERY || currentState == FRONT_SLASH || currentState == ROLL_FRONT)
+			{
+				SetState(FRONT_IDLE);
+			}
+			else if (currentState != FRONT_IDLE)
+			{
+				SetState(LEFT_IDLE);
+			}
+			else
+			{
+				SetState(FRONT_IDLE);
+			}
+			break;
 		}
 	}
 }
@@ -254,8 +316,52 @@ void MainCharacter::Defend()
 		case 2:
 			SetState(FRONT_SHIELD);
 			break;
-		default:
+		case 3:
 			SetState(LEFT_SHIELD);
+			break;
+		case 4:
+			SetState(LEFT_SHIELD);
+			break;
+		case 5:
+			if (currentState == BACK_IDLE || currentState == GO_UP)
+			{
+				SetState(BACK_SHIELD);
+			}
+			else
+			{
+				SetState(LEFT_SHIELD);
+			}
+			break;
+		case 6:
+			if (currentState == FRONT_IDLE || currentState == GO_DOWN)
+			{
+				SetState(FRONT_SHIELD);
+			}
+			else
+			{
+				SetState(LEFT_SHIELD);
+			}
+			break;
+		case 7:
+			if (currentState == BACK_IDLE || currentState == GO_UP)
+			{
+				SetState(BACK_SHIELD);
+			}
+			else
+			{
+				SetState(LEFT_SHIELD);
+			}
+			break;
+		case 8:
+			if (currentState == FRONT_IDLE || currentState == GO_DOWN)
+			{
+				SetState(FRONT_SHIELD);
+			}
+			else
+			{
+				SetState(LEFT_SHIELD);
+			}
+			break;
 		}
 	}
 }
@@ -270,8 +376,52 @@ void MainCharacter::StopDefend()
 	case 2:
 		SetState(FRONT_IDLE);
 		break;
-	default:
+	case 3:
 		SetState(LEFT_IDLE);
+		break;
+	case 4:
+		SetState(LEFT_IDLE);
+		break;
+	case 5:
+		if (currentState == FRONT_SHIELD)
+		{
+			SetState(BACK_IDLE);
+		}
+		else
+		{
+			SetState(LEFT_IDLE);
+		}
+		break;
+	case 6:
+		if (currentState == BACK_SHIELD)
+		{
+			SetState(FRONT_IDLE);
+		}
+		else
+		{
+			SetState(LEFT_IDLE);
+		}
+		break;
+	case 7:
+		if (currentState == FRONT_SHIELD)
+		{
+			SetState(BACK_IDLE);
+		}
+		else
+		{
+			SetState(LEFT_IDLE);
+		}
+		break;
+	case 8:
+		if (currentState == BACK_SHIELD)
+		{
+			SetState(FRONT_IDLE);
+		}
+		else
+		{
+			SetState(LEFT_IDLE);
+		}
+		break;
 	}
 }
 
@@ -354,6 +504,54 @@ void MainCharacter::NormalAttack()
 			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX() + 25, mSprite->getPositionY()));
 			slash->GetSprite()->setRotation(90);
 			break;
+		case 5:
+			if (currentState == BACK_SHIELD || currentState == BACK_IDLE || currentState == GO_UP)
+			{
+				SetState(BACK_SLASH);
+			}
+			else
+			{
+				SetState(LEFT_SLASH);
+			}
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX() - 15, mSprite->getPositionY() + 15));
+			slash->GetSprite()->setRotation(135);
+			break;
+		case 6:
+			if (currentState == FRONT_SHIELD || currentState == FRONT_IDLE || currentState == GO_DOWN)
+			{
+				SetState(FRONT_SLASH);
+			}
+			else
+			{
+				SetState(LEFT_SLASH);
+			}
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX() - 15, mSprite->getPositionY() - 15));
+			slash->GetSprite()->setRotation(-135);
+			break;
+		case 7:
+			if (currentState == BACK_SHIELD || currentState == BACK_IDLE || currentState == GO_UP)
+			{
+				SetState(BACK_SLASH);
+			}
+			else
+			{
+				SetState(LEFT_SLASH);
+			}
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX() + 15, mSprite->getPositionY() + 15));
+			slash->GetSprite()->setRotation(45);
+			break;
+		case 8:
+			if (currentState == FRONT_SHIELD || currentState == FRONT_IDLE || currentState == GO_DOWN)
+			{
+				SetState(FRONT_SLASH);
+			}
+			else
+			{
+				SetState(LEFT_SLASH);
+			}
+			slash->GetSprite()->setPosition(Vec2(mSprite->getPositionX() + 15, mSprite->getPositionY() - 15));
+			slash->GetSprite()->setRotation(-45);
+			break;
 		}
 	}
 }
@@ -362,25 +560,69 @@ void MainCharacter::Evade()
 {
 	if ((currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE 
 		|| currentState == BACK_IDLE || currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD)
-		&& currentMP >= 30)
+		&& currentMP >= 10)
 	{
 		switch (direction)
 		{
 		case 1:
 			SetState(ROLL_BACK);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, Director::getInstance()->getVisibleSize().width / 12)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, 50)));
 			break;
 		case 2:
 			SetState(ROLL_FRONT);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -Director::getInstance()->getVisibleSize().width / 12)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -50)));
 			break;
 		case 3:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(-Director::getInstance()->getVisibleSize().width / 12, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(-50, 0)));
 			break;
 		case 4:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(Director::getInstance()->getVisibleSize().width / 12, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(50, 0)));
+			break;
+		case 5:
+			if (currentState == BACK_IDLE || currentState == GO_UP || BACK_SHIELD)
+			{
+				SetState(ROLL_BACK);
+			}
+			else
+			{
+				SetState(ROLL_LEFT);
+			}
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(-70.710678, 70.710678)));
+			break;
+		case 6:
+			if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SHIELD)
+			{
+				SetState(ROLL_FRONT);
+			}
+			else
+			{
+				SetState(ROLL_LEFT);
+			}
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(-70.710678, -70.710678)));
+			break;
+		case 7:
+			if (currentState == BACK_IDLE || currentState == GO_UP || currentState == BACK_SHIELD)
+			{
+				SetState(ROLL_BACK);
+			}
+			else
+			{
+				SetState(ROLL_LEFT);
+			}
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(70.710678, 70.710678)));
+			break;
+		case 8:
+			if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SHIELD)
+			{
+				SetState(ROLL_FRONT);
+			}
+			else
+			{
+				SetState(ROLL_LEFT);
+			}
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(70.710678, -70.710678)));
 		}
 		currentMP -= 10;
 	}
@@ -391,7 +633,7 @@ void MainCharacter::SetPreventRun(int prevent)
 	preventRun = prevent;
 }
 
-void MainCharacter::Run()
+void MainCharacter::Run(float percentSpeed)
 {
 	if ((currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD || currentState == FRONT_IDLE
 		|| currentState == LEFT_IDLE || currentState == BACK_IDLE || currentState == GO_UP || currentState == GO_LEFT || currentState == GO_DOWN) && currentHP > 0)
@@ -402,44 +644,92 @@ void MainCharacter::Run()
 			SetState(GO_UP);
 			if (preventRun != 1)
 			{
-				mSprite->setPositionY(mSprite->getPositionY() + speed);
-				if (preventRun != 0)
-				{
-					preventRun = 0;
-				}
+				mSprite->setPositionY(mSprite->getPositionY() + speed * percentSpeed);
+				preventRun = 0;
 			}
 			break;
 		case 2:
 			SetState(GO_DOWN);
 			if (preventRun != 2)
 			{
-				mSprite->setPositionY(mSprite->getPositionY() - speed);
-				if (preventRun != 0)
-				{
-					preventRun = 0;
-				}
+				mSprite->setPositionY(mSprite->getPositionY() - speed * percentSpeed);
+				preventRun = 0;
 			}
 			break;
 		case 3:
 			SetState(GO_LEFT);
 			if (preventRun != 3)
 			{
-				mSprite->setPositionX(mSprite->getPositionX() - speed);
-				if (preventRun != 0)
-				{
-					preventRun = 0;
-				}
+				mSprite->setPositionX(mSprite->getPositionX() - speed * percentSpeed);
+				preventRun = 0;
 			}
 			break;
 		case 4:
 			SetState(GO_LEFT);
 			if (preventRun != 4)
 			{
-				mSprite->setPositionX(mSprite->getPositionX() + speed);
-				if (preventRun != 0)
-				{
-					preventRun = 0;
-				}
+				mSprite->setPositionX(mSprite->getPositionX() + speed * percentSpeed);
+				preventRun = 0;
+			}
+			break;
+		case 5:
+			if (currentState == BACK_IDLE || currentState == GO_UP || currentState == BACK_SHIELD)
+			{
+				SetState(GO_UP);
+			}
+			else
+			{
+				SetState(GO_LEFT);
+			}
+			if (preventRun != 5)
+			{
+				mSprite->setPosition(mSprite->getPositionX() - pace * percentSpeed, mSprite->getPositionY() + pace * percentSpeed);
+				preventRun = 0;
+			}
+			break;
+		case 6:
+			if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SHIELD)
+			{
+				SetState(GO_DOWN);
+			}
+			else
+			{
+				SetState(GO_LEFT);
+			}
+			if (preventRun != 6)
+			{
+				mSprite->setPosition(mSprite->getPositionX() - pace * percentSpeed, mSprite->getPositionY() - pace * percentSpeed);
+				preventRun = 0;
+			}
+			break;
+		case 7:
+			if (currentState == BACK_IDLE || currentState == GO_UP || currentState == BACK_SHIELD)
+			{
+				SetState(GO_UP);
+			}
+			else
+			{
+				SetState(GO_LEFT);
+			}
+			if (preventRun != 7)
+			{
+				mSprite->setPosition(mSprite->getPositionX() + pace * percentSpeed, mSprite->getPositionY() + pace * percentSpeed);
+				preventRun = 0;
+			}
+			break;
+		case 8:
+			if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SHIELD)
+			{
+				SetState(GO_DOWN);
+			}
+			else
+			{
+				SetState(GO_LEFT);
+			}
+			if (preventRun != 8)
+			{
+				mSprite->setPosition(mSprite->getPositionX() + pace * percentSpeed, mSprite->getPositionY() - pace * percentSpeed);
+				preventRun = 0;
 			}
 		}
 	}
@@ -553,6 +843,33 @@ int MainCharacter::GetAttack()
 
 void MainCharacter::SetDirection(int direction)
 {
+	switch (direction)
+	{
+	case 1:
+		mSprite->setFlippedX(false);
+		break;
+	case 2:
+		mSprite->setFlippedX(false);
+		break;
+	case 3:
+		mSprite->setFlippedX(false);
+		break;
+	case 4:
+		mSprite->setFlippedX(true);
+		break;
+	case 5:
+		mSprite->setFlippedX(false);
+		break;
+	case 6:
+		mSprite->setFlippedX(false);
+		break;
+	case 7:
+		mSprite->setFlippedX(true);
+		break;
+	case 8:
+		mSprite->setFlippedX(true);
+		break;
+	}
 	this->direction = direction;
 }
 
@@ -603,4 +920,21 @@ void MainCharacter::AddGold(int numb)
 void MainCharacter::SubGold(int numb)
 {
 	gold -= numb;
+}
+
+float MainCharacter::GetPace()
+{
+	return pace;
+}
+
+int MainCharacter::GetHeartContainer()
+{
+	return heartContainer;
+}
+
+void MainCharacter::TakeHeartContainer()
+{
+	heartContainer++;
+	maxHP += 200;
+	currentHP = maxHP;
 }

@@ -50,7 +50,7 @@ bool InputNameScene::init()
 	label->enableOutline(Color4B::RED, 1);
 	this->addChild(label, 1);
 
-	note = ResourceManager::GetInstance()->GetSpriteById(27);
+	note = ResourceManager::GetInstance()->GetSpriteById(18);
 	note->removeFromParent();
 	addChild(note, 5);
 	note->setPosition(visibleSize / 2);
@@ -107,7 +107,7 @@ bool InputNameScene::init()
 			if (MainCharacter::GetInstance()->GetName() != "")
 			{
 				auto gotoNext = CallFunc::create([]() {
-					Director::getInstance()->replaceScene(HomeScene::CreateScene());
+					Director::getInstance()->replaceScene(Level1Scene::CreateScene());
 				});
 				runAction(gotoNext);
 			}

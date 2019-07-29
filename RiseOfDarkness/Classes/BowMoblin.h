@@ -45,6 +45,8 @@ public:
 	Arrow* GetArrow();
 
 	bool Detect(float detectRange);
+
+	bool IsAlive();
 };
 
 #endif

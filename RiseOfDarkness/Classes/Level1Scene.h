@@ -1,5 +1,5 @@
-#ifndef LEVEL1_SCENE_SCENE_H
-#define LEVEL1_SCENE_SCENE_H
+#ifndef LEVEL1_SCENE_H
+#define LEVEL1_SCENE_H
 
 #include "GamePlay.h"
 #include "cocos2d.h"

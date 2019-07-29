@@ -6,18 +6,16 @@
 #include "MapScene.h"
 #include "HomeScene.h"
 
-using namespace std;
-
 USING_NS_CC;
 
 Scene* Level3Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level3Scene::create();
 
-	scene->addChild(layer);
+	scene->addChild(layer, -1);
 
 	return scene;
 }
@@ -44,8 +42,6 @@ bool Level3Scene::init()
 
 	CreateMonster();
 
-
-
 	scheduleUpdate();
 
 	return true;
@@ -53,8 +49,6 @@ bool Level3Scene::init()
 
 void Level3Scene::update(float deltaTime)
 {
-	UpdateController();
-
 	UpdateInfoBar();
 
 	MainCharacter::GetInstance()->Update(deltaTime);
@@ -84,6 +78,8 @@ void Level3Scene::update(float deltaTime)
 		m_buttons[7]->setVisible(true);
 		gameover->setVisible(true);
 	}
+
+	UpdateJoystick();
 }
 
 void Level3Scene::CreateMonster()
@@ -129,11 +125,13 @@ void Level3Scene::AddListener()
 	touchListener->onTouchMoved = CC_CALLBACK_2(Level3Scene::OnTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::SpecialAttack, this));
-	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::Evade, this));
-	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::NormalAttack, this));
+	// SKILLS
+	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::SpecialAttack, this));
+	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::Evade, this));
+	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::NormalAttack, this));
 	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level3Scene::Defend, this));
 
+	// PAUSE GAME
 	m_buttons[4]->addClickEventListener([&](Ref* event) {
 		if (!m_buttons[5]->isVisible())
 		{
@@ -141,18 +139,24 @@ void Level3Scene::AddListener()
 			m_buttons[5]->setVisible(true);
 			m_buttons[6]->setVisible(true);
 			m_buttons[7]->setVisible(true);
+			paused->setVisible(true);
+			shader->setOpacity(200);
 			Director::getInstance()->pause();
 		}
 	});
 
+	// RESUME GAME
 	m_buttons[5]->addClickEventListener([&](Ref* event) {
 		m_buttons[4]->setVisible(true);
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(false);
 		m_buttons[7]->setVisible(false);
+		shader->setOpacity(0);
+		paused->setVisible(false);
 		Director::getInstance()->resume();
 	});
 
+	// GO TO HOMESCENE
 	m_buttons[6]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
@@ -161,6 +165,7 @@ void Level3Scene::AddListener()
 		runAction(gotoMap);
 	});
 
+	// RESTART GAME STAGE
 	m_buttons[7]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
@@ -169,14 +174,17 @@ void Level3Scene::AddListener()
 		runAction(gotoMap);
 	});
 
+	// USE HP POTION
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
 		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
 	});
 
+	// USE MP POTION
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
 		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
 	});
 
+	// INVENTORY
 	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level3Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
@@ -186,28 +194,17 @@ void Level3Scene::AddListener()
 
 bool Level3Scene::OnTouchBegan(Touch* touch, Event* event)
 {
-	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
-	mCurrentTouchPoint = touch->getLocation();
-	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
-	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
-	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 	return true;
 }
 
 bool Level3Scene::OnTouchEnded(Touch* touch, Event* event)
 {
-	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
-	mCurrentTouchPoint = Point(-1, -1);
 	return true;
 }
 
 void Level3Scene::OnTouchMoved(Touch* touch, Event* event)
 {
-	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
-	mCurrentTouchPoint = touch->getLocation();
-	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
-	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
-	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
+
 }
 
 bool Level3Scene::onContactBegin(PhysicsContact& contact)
@@ -243,6 +240,30 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 		{
 			mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
 			MainCharacter::GetInstance()->SetPreventRun(4);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 5)
+		{
+			mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+				mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+			MainCharacter::GetInstance()->SetPreventRun(5);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 6)
+		{
+			mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+				mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+			MainCharacter::GetInstance()->SetPreventRun(6);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 7)
+		{
+			mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+				mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+			MainCharacter::GetInstance()->SetPreventRun(7);
+		}
+		else if (MainCharacter::GetInstance()->GetDirection() == 8)
+		{
+			mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+				mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+			MainCharacter::GetInstance()->SetPreventRun(8);
 		}
 	}
 

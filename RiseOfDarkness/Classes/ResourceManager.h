@@ -5,7 +5,6 @@
 #include "ui/CocosGUI.h"
 
 using namespace cocos2d;
-USING_NS_CC;
 
 class ResourceManager
 {

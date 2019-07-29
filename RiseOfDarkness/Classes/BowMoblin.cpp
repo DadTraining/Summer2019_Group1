@@ -7,7 +7,7 @@ BowMoblin::BowMoblin() {}
 
 BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos, int group)
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(31));
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(22));
 	mSprite->setScale(1.5);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
@@ -22,7 +22,7 @@ BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos, int group)
 	layer->addChild(mSprite);
 
 
-	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
+	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(12)));
 	layer->addChild(hpBar);
 	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
 	layer->addChild(hpLoadingBar);
@@ -66,7 +66,7 @@ BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos, int group)
 	coolDownAttack = 0;
 	preventRun = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(14));
 	sprite->setScaleX(0.6f);
 	arrow = new Arrow(sprite, MainCharacter::BOWMOBLIN_ARROW_BITMASK);
 	arrow->SetVisible(false);
@@ -297,6 +297,19 @@ bool BowMoblin::Detect(float detectRange)
 		return true;
 	}
 	return false;
+}
+
+bool BowMoblin::IsAlive()
+{
+	if (currentHP <= 0)
+	{
+		mPhysicsBody->setContactTestBitmask(false);
+		mSprite->setVisible(false);
+		hpBar->setVisible(false);
+		hpLoadingBar->setVisible(false);
+		return false;
+	}
+	return true;
 }
 
 

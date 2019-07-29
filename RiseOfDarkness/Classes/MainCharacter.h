@@ -29,7 +29,7 @@ public:
 	static const int MP = 20;
 
 	// STATUS
-	static const int SPEED = 3;
+	static const int SPEED = 2;
 	static const int ATTACK = 20;
 	static const int DEFEND = 10;
 
@@ -70,6 +70,7 @@ private:
 	int speed;
 	int attack;
 	int defend;
+	int heartContainer;
 	std::string mName;
 	float maxHP, currentHP, maxMP, currentMP;
 	int gold;
@@ -77,6 +78,7 @@ private:
 	std::vector<int> mAllItems;
 	std::vector<Item*> mItems;
 	Inventory *inventory;
+
 public:
 	int GetSpeed();
 	int GetAttack();
@@ -86,6 +88,8 @@ public:
 	int GetGold();
 	void AddGold(int numb);
 	void SubGold(int numb);
+	int GetHeartContainer();
+	void TakeHeartContainer();
 
 public:
 	static MainCharacter* GetInstance();
@@ -103,7 +107,7 @@ public:
 	void SpecialAttack();
 	void Defend();
 	void Evade();
-	void Run();
+	void Run(float percentSpeed);
 	void StopRun();
 	void Fire(int);
 	void SetListArrow(std::vector<Arrow*>);
@@ -118,6 +122,7 @@ public:
 	void SetPreventRun(int prevent);
 	bool TakePotion(int index);
 	void IncreaseStage();
+	float GetPace();
 private:
 	static MainCharacter* m_instance;
 	Sprite* mSprite;
@@ -131,6 +136,7 @@ private:
 	MainCharacter();
 	~MainCharacter();
 	void CreateMainCharacter();
+	float pace;
 };
 
 #endif

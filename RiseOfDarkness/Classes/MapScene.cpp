@@ -90,9 +90,9 @@ void MapScene::LoadLevel(Ref *pSender,int level)
 	case 1:
 		Director::getInstance()->replaceScene(Level1Scene::CreateScene());
 		break;
-	case 2:
+	/*case 2:
 		Director::getInstance()->replaceScene(Level2Scene::CreateScene());
-		break;
+		break;*/
 	case 3:
 		Director::getInstance()->replaceScene(Level3Scene::CreateScene());
 		break;
