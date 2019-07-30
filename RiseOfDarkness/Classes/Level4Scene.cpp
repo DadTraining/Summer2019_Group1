@@ -13,7 +13,7 @@ USING_NS_CC;
 Scene* Level4Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level4Scene::create();
 
@@ -305,7 +305,7 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 	Collision(contact, MainCharacter::FIRE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 8);
 
 	// BULLET DAMAGE MAIN CHARACTER
-	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 8);
+	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
 
 	// BULLET COLLIDE OBSTACLES
 	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);

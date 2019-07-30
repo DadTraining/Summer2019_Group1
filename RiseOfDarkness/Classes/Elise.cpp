@@ -14,7 +14,7 @@ Elise::Elise(Layer* layer, int direction, Vec2 pos, int group)
 	box.height = mSprite->getContentSize().height / 2.2;
 	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, box.height / 6));
 	mPhysicsBody->setRotationEnable(false);
-	mPhysicsBody->setCollisionBitmask(MainCharacter::ROPE_MONSTER_BITMASK);
+	mPhysicsBody->setCollisionBitmask(MainCharacter::ELISE_MONSTER_BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);
 	mPhysicsBody->setDynamic(false);
 	mPhysicsBody->setGravityEnable(false);

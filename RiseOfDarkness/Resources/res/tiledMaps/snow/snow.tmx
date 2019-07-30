@@ -195,7 +195,7 @@
   <object id="5" name="01" x="784" y="208"/>
  </objectgroup>
  <objectgroup id="10" name="elise">
-  <object id="14" x="145.333" y="177.333">
+  <object id="14" name="05" x="145.333" y="177.333">
    <ellipse/>
   </object>
   <object id="15" name="04" x="653.333" y="113.333">
