@@ -148,10 +148,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Classes\3rd\SneakyButton.cpp" />
-    <ClCompile Include="..\Classes\3rd\SneakyButtonSkinnedBase.cpp" />
-    <ClCompile Include="..\Classes\3rd\SneakyJoystick.cpp" />
-    <ClCompile Include="..\Classes\3rd\SneakyJoystickSkinnedBase.cpp" />
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Arrow.cpp" />
     <ClCompile Include="..\Classes\BowMoblin.cpp" />
@@ -179,14 +175,12 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\ResourceManager.cpp" />
     <ClCompile Include="..\Classes\SelectScene.cpp" />
     <ClCompile Include="..\Classes\Slash.cpp" />
+    <ClCompile Include="..\Classes\SneakyJoystick.cpp" />
+    <ClCompile Include="..\Classes\SneakyJoystickSkinnedBase.cpp" />
     <ClCompile Include="..\Classes\SpearMoblin.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Classes\3rd\SneakyButton.h" />
-    <ClInclude Include="..\Classes\3rd\SneakyButtonSkinnedBase.h" />
-    <ClInclude Include="..\Classes\3rd\SneakyJoystick.h" />
-    <ClInclude Include="..\Classes\3rd\SneakyJoystickSkinnedBase.h" />
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Arrow.h" />
     <ClInclude Include="..\Classes\BowMoblin.h" />
@@ -214,7 +208,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\ResourceManager.h" />
     <ClInclude Include="..\Classes\SelectScene.h" />
     <ClInclude Include="..\Classes\Slash.h" />
-    <ClInclude Include="..\Classes\SneakyInput.h" />
+    <ClInclude Include="..\Classes\SneakyJoystick.h" />
+    <ClInclude Include="..\Classes\SneakyJoystickSkinnedBase.h" />
     <ClInclude Include="..\Classes\SpearMoblin.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

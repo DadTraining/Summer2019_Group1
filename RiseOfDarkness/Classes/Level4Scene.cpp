@@ -11,7 +11,7 @@ USING_NS_CC;
 Scene* Level4Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level4Scene::create();
 
@@ -181,9 +181,16 @@ void Level4Scene::AddListener()
 	});
 
 	// USE HP POTION
-
+	m_buttons[9]->addClickEventListener([&](Ref* event) {
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(25, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(25, index, ItemType::potion);
+	});
 
 	// USE MP POTION
+	m_buttons[10]->addClickEventListener([&](Ref* event) {
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(26, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(26, index, ItemType::potion);
+	});
 
 
 	// INVENTORY

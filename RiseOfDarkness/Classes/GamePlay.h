@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "Enemy.h"
-#include "SneakyInput.h"
+#include "SneakyJoystickSkinnedBase.h"
 
 using namespace cocos2d;
 

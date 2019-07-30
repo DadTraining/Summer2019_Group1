@@ -8,7 +8,7 @@ USING_NS_CC;
 Scene* HomeScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	auto layer = HomeScene::create();
 
@@ -264,7 +264,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	auto direction = get->DuplicateSprite(get->GetSpriteById(14));
 	direction->setScale(2);
 	layer->addChild(direction, 4);
-	direction->setPosition(Vec2(visibleSize.width - 20, visibleSize.height - 20));
+	direction->setPosition(Vec2(visibleSize.width - 70, visibleSize.height - 70));
 	direction->setCameraMask(2);
 	direction->setRotation(-90);
 	m_sprites.push_back(direction);
@@ -282,7 +282,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	buttonOpenInventory->retain();
 	layer->addChild(buttonOpenInventory, 4);
 	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
-	buttonOpenInventory->setPosition(Vec2(visibleSize.width / 2 - map->getBoundingBox().size.width * 2, 40));
+	buttonOpenInventory->setPosition(Vec2(visibleSize.width / 2 - map->getBoundingBox().size.width * 2, map->getPositionY() - 15));
 	m_buttons.push_back(buttonOpenInventory);
 	buttonOpenInventory->setCameraMask(2);
 	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(visibleSize / 2));
