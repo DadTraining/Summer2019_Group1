@@ -378,6 +378,7 @@ void GamePlay::ShowInventoryGrid()
 	// SHOW TAB POTION
 
 	MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(MainCharacter::GetInstance()->GetInventory()->GetClickBox(), 22);
+	MainCharacter::GetInstance()->GetInventory()->GetClickBox()->setCameraMask(2);
 	for (int i = 0; i < items.size(); i++)
 	{
 		if (items[i]->GetIcon() != NULL)
@@ -390,6 +391,7 @@ void GamePlay::ShowInventoryGrid()
 			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->removeFromParent();
 			// get tab to add item
 			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(items[i]->GetIcon(), 21);
+			items[i]->GetIcon()->setCameraMask(2);
 			MainCharacter::GetInstance()->GetInventory()->slots[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
@@ -400,6 +402,7 @@ void GamePlay::ShowInventoryGrid()
 			{
 				amountLabel[i]->setString(std::to_string(itemAmount[i]));
 			}
+			amountLabel[i]->setCameraMask(2);
 			amountLabel[i]->setPosition(items[i]->GetIcon()->getPosition() + Vec2(16, -16));
 
 			MainCharacter::GetInstance()->GetInventory()->GetTab(1)->addChild(amountLabel[i], 22);
@@ -420,6 +423,7 @@ void GamePlay::ShowInventoryGrid()
 			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->removeFromParent();
 			// get tab to add item
 			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(weapons[i]->GetIcon(), 21);
+			weapons[i]->GetIcon()->setCameraMask(2);
 			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
@@ -443,6 +447,7 @@ void GamePlay::ShowInventoryGrid()
 			MainCharacter::GetInstance()->GetInventory()->arrows[i]->GetIcon()->removeFromParent();
 			// get tab to add item
 			MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(arrows[i]->GetIcon(), 21);
+			arrows[i]->GetIcon()->setCameraMask(2);
 			MainCharacter::GetInstance()->GetInventory()->arrows[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
@@ -452,6 +457,7 @@ void GamePlay::ShowInventoryGrid()
 			{
 				amountArrowLabel[i]->setString(std::to_string(arrowAmount[i]));
 			}
+			amountArrowLabel[i]->setCameraMask(2);
 			amountArrowLabel[i]->setPosition(arrows[i]->GetIcon()->getPosition() + Vec2(16, -16));
 			MainCharacter::GetInstance()->GetInventory()->GetTab(3)->addChild(amountArrowLabel[i], 22);
 			cols++;
@@ -471,6 +477,7 @@ void GamePlay::ShowInventoryGrid()
 			MainCharacter::GetInstance()->GetInventory()->armors[i]->GetIcon()->removeFromParent();
 			// get tab to add item
 			MainCharacter::GetInstance()->GetInventory()->GetTab(2)->addChild(armors[i]->GetIcon(), 21);
+			armors[i]->GetIcon()->setCameraMask(2);
 			MainCharacter::GetInstance()->GetInventory()->armors[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)
@@ -492,6 +499,7 @@ void GamePlay::ShowInventoryGrid()
 			MainCharacter::GetInstance()->GetInventory()->boots[i]->GetIcon()->removeFromParent();
 			// get tab to add item
 			MainCharacter::GetInstance()->GetInventory()->GetTab(4)->addChild(boots[i]->GetIcon(), 21);
+			boots[i]->GetIcon()->setCameraMask(2);
 			MainCharacter::GetInstance()->GetInventory()->boots[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,
 					MainCharacter::GetInstance()->GetInventory()->GetSize().y - 64 * rows - 32) - Vec2(0, 69)

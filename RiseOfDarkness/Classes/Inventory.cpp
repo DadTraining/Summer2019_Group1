@@ -32,9 +32,6 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	btnSell = ui::Button::create("res/sprites/item/buttonSell1.png", "res/sprites/item/buttonSell.png");
 	btnSell->setScale(0.5);
 	btnSell->retain();
-	
-	// SET CAMERA MASK
-	clickBox->setCameraMask(2);
 
 	clickBox->setPosition(-500, -500);
 	clickBox->retain();
@@ -107,7 +104,6 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 void Inventory::AddItem(int id)
 {
 	int index = GetIndexByID(id);
-	database->items[index]->GetIcon()->setCameraMask(2); // SET CAMERA MASK
 	switch (database->items[index]->GetType())
 	{
 	case ItemType::potion:
