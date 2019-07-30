@@ -45,7 +45,7 @@ void MainCharacter::CreateMainCharacter()
 	auto grid = Sprite::create("res/sprites/item/gridInventory.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		inventory->AddItem(25);
 		inventory->AddItem(26);

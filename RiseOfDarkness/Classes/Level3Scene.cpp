@@ -82,6 +82,9 @@ void Level3Scene::update(float deltaTime)
 	}
 
 	UpdateJoystick();
+
+	MainCharacter::GetInstance()->GetFlySlash()->Update(deltaTime);
+
 }
 
 void Level3Scene::CreateMonster()
@@ -376,6 +379,47 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 		{
 			MainCharacter::GetInstance()->TakeHeartContainer();
 			heartContainer->setVisible(false);
+		}
+	}
+
+	// FLY SLASH COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetFlySlash()->Disappear();
+	}
+
+	// FLY SLASH DAMAGE SPEARMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetFlySlash()->GetSprite()->isVisible())
+		{
+			if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			{
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+			}
+			else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			{
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+			}
+		}
+	}
+
+	// FLY SLASH DAMAGE BOWMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetFlySlash()->GetSprite()->isVisible())
+		{
+			if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			{
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+			}
+			else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			{
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+			}
 		}
 	}
 	return true;

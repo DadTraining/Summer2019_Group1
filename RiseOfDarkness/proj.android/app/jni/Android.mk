@@ -36,7 +36,12 @@ LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/BowMoblin.cpp \
                    $(LOCAL_PATH)/../../../Classes/Bullet.cpp \
                    $(LOCAL_PATH)/../../../Classes/ItemDatabase.cpp \
-                   $(LOCAL_PATH)/../../../Classes/Level3Scene.cpp
+                   $(LOCAL_PATH)/../../../Classes/Level3Scene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/SneakyJoystick.cpp \
+                   $(LOCAL_PATH)/../../../Classes/SneakyJoystickSkinnedBase.cpp \
+                   $(LOCAL_PATH)/../../../Classes/FlySlash.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Level4Scene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Nokken.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

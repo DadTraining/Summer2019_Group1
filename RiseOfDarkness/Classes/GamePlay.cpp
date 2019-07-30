@@ -573,7 +573,7 @@ void GamePlay::UpdateJoystick()
 	float radius = std::sqrt(pos.x*pos.x + pos.y*pos.y);
 	if (radius > 0)
 	{
-		float degree = std::atan2f(pos.y, pos.x) * 180 / std::_Pi;
+		float degree = std::atan2f(pos.y, pos.x) * 180 / 3.141593;
 
 		// GO UP
 		if (degree < 120 && degree > 60)
