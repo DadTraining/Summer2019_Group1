@@ -49,14 +49,12 @@ Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 	countingTime = 0;
 	coolDownAttack = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(35));
-	sprite->setScale(1.0f);
-	bullet = new Bullet(sprite, MainCharacter::BULLET_ROPE_BITMASK);
-	bullet->SetVisible(false);
-	bullet->GetSprite()->getPhysicsBody()->setGroup(group);
-	bullet->SetDirection(3);
-	bullet->SetRotate(0);
-	bullet->SetDistance(0);
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(39));
+	sprite->setScale(0.5f);
+	fire = new Fire(sprite, MainCharacter::FIRE_BITMASK);
+	fire->SetVisible(false);
+	fire->GetSprite()->getPhysicsBody()->setGroup(group);
+	fire->SetDistance(0);
 	layer->addChild(sprite, 7);
 }
 
@@ -92,15 +90,20 @@ void Maokai::Update(float deltaTime)
 		{
 			AutoRevive(HP_REVIVE);
 		}
-		if (bullet->IsVisible())
+		if (fire->IsVisible())
 		{
-			bullet->update(deltaTime);
+			fire->RunAction();
+			fire->update(deltaTime);
+		}
+		else
+		{
+			fire->StopAction();
 		}
 	}
 	else
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
-		bullet->SetVisible(false);
+		fire->SetVisible(false);
 	}
 }
 
@@ -143,17 +146,17 @@ void Maokai::Idle()
 
 void Maokai::Attack()
 {
-	if (!bullet->IsVisible())
+	if (!fire->IsVisible())
 	{
-		bullet->SetPosition(mSprite->getPosition());
-		bullet->SetVisible(true);
+		fire->SetPosition(mSprite->getPosition());
+		fire->SetVisible(true);
 		SetState(ATTACK);
 	}
 }
 
-Bullet * Maokai::GetBullet()
+Fire * Maokai::GetFire()
 {
-	return bullet;
+	return fire;
 }
 
 bool Maokai::Detect(float detectRange)

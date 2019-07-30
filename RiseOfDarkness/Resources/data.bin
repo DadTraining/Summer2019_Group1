@@ -387,7 +387,7 @@ res/animates/maokai/idle/idle.plist
 3
 res/animates/maokai/attack/attack.plist
 56
-0.5f
+0.1f
 8
 res/animates/fire/fire.plist
 #TILEMAP

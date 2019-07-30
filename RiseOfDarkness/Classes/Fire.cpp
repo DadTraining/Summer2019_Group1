@@ -2,8 +2,6 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 
-USING_NS_CC;
-
 Fire::Fire(Sprite* sprite, int BITMASK)
 {
 	mSprite = sprite;
@@ -15,36 +13,51 @@ Fire::Fire(Sprite* sprite, int BITMASK)
 	mPhysicsBody->setCollisionBitmask(BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);
 	mSprite->setPhysicsBody(mPhysicsBody);
-	mAction = ResourceManager::GetInstance()->GetActionById(56)->clone();
+	setAlive(false);
 
+	mAction = ResourceManager::GetInstance()->GetActionById(56)->clone();
 	CC_SAFE_RETAIN(mAction);
-	check = true;
 }
 
 Fire::~Fire()
 {
 	mAction->autorelease();
 }
-int count = 0;
+
+void Fire::setAlive(bool alive)
+{
+	mIsAlive = alive;
+}
+
+void Fire::fly(bool isRight)
+{
+
+}
+
+bool Fire::isAlive()
+{
+	return mIsAlive;
+}
+
+
 void Fire::update(float deltaTime)
 {
-	if (count == 4)
+	SetDistance(GetDistance() + RUN_STEP);
+	SetPosition(GetPosition() + Vec2(0, -RUN_STEP));
+	//out of range
+	if (GetDistance() >= RANGE)
 	{
-		//StopAction();
+		//setAlive(false);
 		mSprite->setVisible(false);
-		count = 0;
-	}
-	else
-	{
-		mSprite->setVisible(true);
-		RunAction();
-		count++;
+		mSprite->setPosition(Vec2(-10, -10));
+		SetDistance(0);
 	}
 }
 
 void Fire::SetVisible(bool b)
 {
 	mSprite->setVisible(b);
+	SetDistance(0);
 	if (!b)
 	{
 		mSprite->setPosition(Vec2(-1, -1));
@@ -55,6 +68,18 @@ bool Fire::IsVisible()
 {
 	return mSprite->isVisible();
 }
+
+void Fire::SetDistance(int s)
+{
+	distance = s;
+}
+
+int Fire::GetDistance()
+{
+	return distance;
+}
+
+
 
 Sprite * Fire::GetSprite()
 {
@@ -84,16 +109,16 @@ void Fire::SetPosition(Vec2 pos)
 
 void Fire::RunAction()
 {
-	if (check)
+	if (mSprite->getNumberOfRunningActions() == 0)
 	{
 		mSprite->runAction(mAction);
-		check = false;
 	}
 }
 
-bool Fire::StopAction()
+void Fire::StopAction()
 {
-	/*mSprite->stopAllActions();
-	check = true;*/
-	return check;
+	if (mSprite->getNumberOfRunningActions() != 0)
+	{
+		mSprite->stopAction(mAction);
+	}
 }

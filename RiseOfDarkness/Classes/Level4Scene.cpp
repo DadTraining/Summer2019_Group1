@@ -12,7 +12,7 @@ USING_NS_CC;
 Scene* Level4Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level4Scene::create();
 
@@ -291,8 +291,8 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 	// MAIN CHARACTER'S ARROW COLLIDE MAOKAI MONSTER
 	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::MAOKAI_MONSTER_BITMASK, 4);
 
-	// BULLET DAMAGE MAIN CHARACTER
-	Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
+	// FIRE DAMAGE MAIN CHARACTER
+	Collision(contact, MainCharacter::FIRE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 8);
 
 	// BULLET COLLIDE OBSTACLES
 	//Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
@@ -445,7 +445,7 @@ void Level4Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
 			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
 		{
-			MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
+			MainCharacter::GetInstance()->GetDamage(MainCharacter::BULLET_DAMAGE);
 			if (a->getCollisionBitmask() == bitmask1)
 			{
 				m_enemies[a->getGroup()]->GetBullet()->SetVisible(false);
@@ -468,6 +468,22 @@ void Level4Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 			else if (b->getCollisionBitmask() == bitmask1)
 			{
 				m_enemies[b->getGroup()]->GetBullet()->SetVisible(false);
+			}
+		}
+		break;
+	case 8:
+		// FIRE DAMAGE MAIN CHARACTER
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			MainCharacter::GetInstance()->GetDamage(MainCharacter::FIRE_DAMAGE);
+			if (a->getCollisionBitmask() == bitmask1)
+			{
+				m_enemies[a->getGroup()]->GetFire()->SetVisible(false);
+			}
+			else if (b->getCollisionBitmask() == bitmask1)
+			{
+				m_enemies[b->getGroup()]->GetFire()->SetVisible(false);
 			}
 		}
 		break;

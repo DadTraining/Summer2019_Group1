@@ -205,3 +205,8 @@ Bullet* Enemy::GetBullet()
 {
 	return nullptr;
 }
+
+Fire * Enemy::GetFire()
+{
+	return nullptr;
+}

@@ -3,27 +3,36 @@
 
 #include "cocos2d.h"
 
-using namespace cocos2d;
+USING_NS_CC;
 
 class Fire
 {
 private:
-	bool check;
+	const int RUN_STEP = 2;
+
 	Sprite *mSprite;
 	PhysicsBody* mPhysicsBody;
-	Action* mAction;
+	Action *mAction;
+	bool mIsAlive;
+	int distance;
 public:
+	static const int RANGE = 80;
 	Fire(Sprite *sprite, int BITMASK);
 	~Fire();
+	void setAlive(bool alive);
+	void fly(bool isRight);
+	bool isAlive();
 	void update(float);
 	void SetVisible(bool);
 	bool IsVisible();
+	void SetDistance(int);
+	int GetDistance();
 	Sprite* GetSprite();
 	void SetScale(float, float);
 	void AddToScene(cocos2d::Layer*);
-	Vec2 GetPosition();
+	cocos2d::Vec2 GetPosition();
 	void SetPosition(cocos2d::Vec2 pos);
 	void RunAction();
-	bool StopAction();
+	void StopAction();
 };
-#endif // !_FIRE_H_
+#endif

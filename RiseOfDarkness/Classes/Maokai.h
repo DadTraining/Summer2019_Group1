@@ -3,13 +3,14 @@
 
 #include "Enemy.h"
 #include "cocos2d.h"
-#include "Bullet.h"
+#include "Fire.h"
 
 class Maokai : public Enemy
 {
 private:
 	static const int IDLE = 0;
 	static const int ATTACK = 1;
+	static const int FIRE = 2;
 
 	static const int HP = 300;
 	static const int DETECT_RANGE = 200;
@@ -19,7 +20,7 @@ private:
 	static const int HP_REVIVE = 10;
 
 	Action* mAction[2];
-	Bullet* bullet;
+	Fire* fire;
 public:
 	Maokai();
 	Maokai(Layer* layer, Vec2 pos, int group);
@@ -33,7 +34,7 @@ public:
 
 	void Attack();
 
-	Bullet* GetBullet();
+	Fire* GetFire();
 
 	bool Detect(float detectRange);
 };
