@@ -84,6 +84,8 @@ void Level2Scene::update(float deltaTime)
 	}
 
 	UpdateJoystick();
+
+	MainCharacter::GetInstance()->GetFlySlash()->Update(deltaTime);
 }
 
 void Level2Scene::CreateMonster()
@@ -397,6 +399,30 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 			{
 				mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
 				MainCharacter::GetInstance()->SetPreventRun(4);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 5)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(5);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 6)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(6);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 7)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(7);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 8)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(8);
 			}
 		}
 		break;

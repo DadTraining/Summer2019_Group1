@@ -21,6 +21,7 @@ public:
 	void SetDirection(int direction);
 	Sprite* GetSprite();
 	PhysicsBody* GetPhysicsBody();
+	void Disappear();
 };
 
 #endif

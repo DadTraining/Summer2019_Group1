@@ -517,7 +517,10 @@ void GamePlay::EnemyUpdate(float deltaTime)
 {
 	for (int i = 0; i < m_enemies.size(); i++)
 	{
-		m_enemies[i]->Update(deltaTime);
+		if (m_enemies[i]->GetSprite()->isVisible())
+		{
+			m_enemies[i]->Update(deltaTime);
+		}
 	}
 	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }

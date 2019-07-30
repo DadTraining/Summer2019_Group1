@@ -71,38 +71,46 @@ void FlySlash::Update(float deltaTime)
 
 void FlySlash::SetPosition()
 {
-	mSprite->setPosition(MainCharacter::GetInstance()->GetSprite()->getPosition());
-	mSprite->setVisible(true);
-	switch (direction)
+	if (!mSprite->isVisible())
 	{
-	case 1:
-		mSprite->setRotation(-90);
-		break;
-	case 2:
-		mSprite->setRotation(90);
-		break;
-	case 3:
-		mSprite->setRotation(180);
-		break;
-	case 4:
-		mSprite->setRotation(0);
-		break;
-	case 5:
-		mSprite->setRotation(-135);
-		break;
-	case 6:
-		mSprite->setRotation(135);
-		break;
-	case 7:
-		mSprite->setRotation(-45);
-		break;
-	case 8:
-		mSprite->setRotation(45);
-		break;
+		mSprite->setPosition(MainCharacter::GetInstance()->GetSprite()->getPosition());
+		mSprite->setVisible(true);
+		switch (direction)
+		{
+		case 1:
+			mSprite->setRotation(-90);
+			break;
+		case 2:
+			mSprite->setRotation(90);
+			break;
+		case 3:
+			mSprite->setRotation(180);
+			break;
+		case 4:
+			mSprite->setRotation(0);
+			break;
+		case 5:
+			mSprite->setRotation(-135);
+			break;
+		case 6:
+			mSprite->setRotation(135);
+			break;
+		case 7:
+			mSprite->setRotation(-45);
+			break;
+		case 8:
+			mSprite->setRotation(45);
+			break;
+		}
 	}
 }
 
 void FlySlash::SetDirection(int direction)
 {
 	this->direction = direction;
+}
+
+void FlySlash::Disappear()
+{
+	mSprite->setVisible(false);
 }

@@ -99,7 +99,7 @@ void MainCharacter::CreateMainCharacter()
 	mSprite->setPhysicsBody(mPhysicsBody);
 
 	// CREATE ALL STATUS
-	stageLevel = 3;
+	stageLevel = 4;
 	direction = 2;
 	currentState = FRONT_IDLE;
 	speed = SPEED;
@@ -317,64 +317,68 @@ void MainCharacter::Idle()
 
 void MainCharacter::Defend()
 {
-	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
+	if (currentMP >= 80)
 	{
-		flySlash->SetDirection(direction);
-		flySlash->SetPosition();
-		switch (direction)
+		if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE)
 		{
-		case 1:
-			SetState(BACK_SLASH);
-			break;
-		case 2:
-			SetState(FRONT_SLASH);
-			break;
-		case 3:
-			SetState(LEFT_SLASH);
-			break;
-		case 4:
-			SetState(LEFT_SLASH);
-			break;
-		case 5:
-			if (currentState == BACK_IDLE || currentState == GO_UP)
+			flySlash->SetDirection(direction);
+			flySlash->SetPosition();
+			switch (direction)
 			{
+			case 1:
 				SetState(BACK_SLASH);
-			}
-			else
-			{
-				SetState(LEFT_SHIELD);
-			}
-			break;
-		case 6:
-			if (currentState == FRONT_IDLE || currentState == GO_DOWN)
-			{
+				break;
+			case 2:
 				SetState(FRONT_SLASH);
-			}
-			else
-			{
+				break;
+			case 3:
 				SetState(LEFT_SLASH);
-			}
-			break;
-		case 7:
-			if (currentState == BACK_IDLE || currentState == GO_UP)
-			{
-				SetState(BACK_SLASH);
-			}
-			else
-			{
+				break;
+			case 4:
 				SetState(LEFT_SLASH);
+				break;
+			case 5:
+				if (currentState == BACK_IDLE || currentState == GO_UP)
+				{
+					SetState(BACK_SLASH);
+				}
+				else
+				{
+					SetState(LEFT_SHIELD);
+				}
+				break;
+			case 6:
+				if (currentState == FRONT_IDLE || currentState == GO_DOWN)
+				{
+					SetState(FRONT_SLASH);
+				}
+				else
+				{
+					SetState(LEFT_SLASH);
+				}
+				break;
+			case 7:
+				if (currentState == BACK_IDLE || currentState == GO_UP)
+				{
+					SetState(BACK_SLASH);
+				}
+				else
+				{
+					SetState(LEFT_SLASH);
+				}
+				break;
+			case 8:
+				if (currentState == FRONT_IDLE || currentState == GO_DOWN)
+				{
+					SetState(FRONT_SLASH);
+				}
+				else
+				{
+					SetState(LEFT_SLASH);
+				}
+				break;
 			}
-			break;
-		case 8:
-			if (currentState == FRONT_IDLE || currentState == GO_DOWN)
-			{
-				SetState(FRONT_SLASH);
-			}
-			else
-			{
-				SetState(LEFT_SLASH);
-			}
-			break;
+			currentMP -= 80;
 		}
 	}
 }

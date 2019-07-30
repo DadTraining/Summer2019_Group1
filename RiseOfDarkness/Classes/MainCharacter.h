@@ -44,6 +44,7 @@ public:
 	static const int NORMAL_ARROW = 10;
 	static const int BOWMOBLIN_DAMAGE = 30;
 	static const int ROPE_MONSTER_DAMAGE = 35;
+	static const int FLY_SLASH_DAMAGE = 100;
 
 	// GOLD RECEIVE FROM KILL ENEMY
 	static const int BOWMOBLIN_GOLD = 50;
