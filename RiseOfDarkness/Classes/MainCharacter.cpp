@@ -1,6 +1,6 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
-
+#include "ItemDatabase.h"
 MainCharacter* MainCharacter::m_instance = nullptr;
 
 MainCharacter::MainCharacter() {}
@@ -48,9 +48,18 @@ void MainCharacter::CreateMainCharacter()
 		inventory->AddItem(25);
 		inventory->AddItem(26);
 	}
-	inventory->AddItem(41);
+	inventory->AddItem(38);
 	inventory->AddItem(1);
 	inventory->AddItem(13);
+	inventory->AddItem(18);
+
+	//Initial Items
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(37)]); //sword
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(17)]); //bow
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]); //null
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]);
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]);
+
 	for (int i = 0; i < 10; i++)
 	{
 		inventory->AddItem(6);
@@ -517,6 +526,11 @@ PhysicsBody* MainCharacter::GetPhysicsBody()
 	return mPhysicsBody;
 }
 
+void MainCharacter::EquipedItem(int index, Item item)
+{
+	mItems[index] = new Item(item);
+}
+
 int MainCharacter::GetSpeed()
 {
 	return speed;
@@ -612,4 +626,9 @@ void MainCharacter::AddGold(int numb)
 void MainCharacter::SubGold(int numb)
 {
 	gold -= numb;
+}
+
+std::vector<Item*> MainCharacter::GetEquipedItem()
+{
+	return mItems;
 }

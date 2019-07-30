@@ -41,12 +41,13 @@ public:
 	void AutoArrange();  //arrange list item after remove an item
 	bool InventoryContains(int id,ItemType);
 	void ItemClick(cocos2d::Ref * pSender, int id, ItemType);
-	void EquipItem(cocos2d::Ref *,int ,ItemType);
+	void EquipItem(cocos2d::Ref *,int ,ItemType, WeaponType);
 	void btnEquipInventory(cocos2d::Ref *);
 	void btnSellItem(cocos2d::Ref*, int id, ItemType type);
 	int slotX, slotY;
 	int targetID;
 	cocos2d::ui::TabControl *tab;
+	ItemDatabase *database;
 private:
 	cocos2d::Sprite* clickBox;
 	cocos2d::Sprite* mSprite;
@@ -54,7 +55,7 @@ private:
 	cocos2d::ui::TabHeader *weapon, *potion, *armor, *boot, *arrow;
 	cocos2d::ui::Layout *container1, *container2, *container3, *arrowContainer, *bootContainer;
 	int capacity;
-	ItemDatabase *database;
+	
 	bool showInventory;
 	bool showTooltip;
 	std::string toolTip;

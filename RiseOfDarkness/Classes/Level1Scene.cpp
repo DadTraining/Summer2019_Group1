@@ -175,8 +175,8 @@ void Level1Scene::AddListener()
 	});
 
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(25, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(25, index, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(26, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(26, index, ItemType::potion);
 	});
 
 	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level1Scene::OpenInventory, this));

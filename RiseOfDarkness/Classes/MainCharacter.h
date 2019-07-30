@@ -7,6 +7,7 @@
 #include "Arrow.h"
 #include "Item.h"
 #include "Inventory.h"
+
 using namespace cocos2d;
 
 class MainCharacter
@@ -78,6 +79,7 @@ private:
 	std::vector<Item*> mItems;
 	Inventory *inventory;
 public:
+	void EquipedItem(int index, Item item);
 	int GetSpeed();
 	int GetAttack();
 	std::string GetName();
@@ -86,7 +88,7 @@ public:
 	int GetGold();
 	void AddGold(int numb);
 	void SubGold(int numb);
-
+	std::vector<Item*> GetEquipedItem();
 public:
 	static MainCharacter* GetInstance();
 	void Init(std::string name);

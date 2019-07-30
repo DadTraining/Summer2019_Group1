@@ -80,3 +80,15 @@ void ItemDatabase::Init()
 	
 	items.push_back(new Item("sprites/item/box"));
 }
+
+int ItemDatabase::GetIndexByID(int id)
+{
+	for (int i = 0; i < items.size(); i++)
+	{
+		if (id==items[i]->GetID())
+		{
+			return i;
+		}
+	}
+	return -1;
+}

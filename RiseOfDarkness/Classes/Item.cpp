@@ -5,6 +5,11 @@ ItemType Item::GetType()
 	return itemType;
 }
 
+WeaponType Item::GetWeaponType()
+{
+	return weaponType;
+}
+
 void Item::CreateSprite(int id)
 {
 }
@@ -97,6 +102,7 @@ Item::Item(const Item *item)
 	itemStackable = item->itemStackable;
 	itemIcon = item->itemIcon->clone();
 	itemIcon->retain();
+	weaponType = item->weaponType;
 }
 
 std::string Item::GetDesc()
