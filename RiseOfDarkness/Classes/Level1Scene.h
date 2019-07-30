@@ -31,6 +31,7 @@ public:
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
 	void CreateTreasure();
+	void ClickShowInfor(Ref* pSender);
 
     CREATE_FUNC(Level1Scene);
 };

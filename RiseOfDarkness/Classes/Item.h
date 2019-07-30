@@ -40,6 +40,7 @@ public:
 	Item(const Item*);
 	std::string GetDesc();
 	ItemType GetType();
+	WeaponType GetWeaponType();
 	void CreateSprite(int);
 	void AddToScene(cocos2d::ui::Layout *layout, cocos2d::Vec2 pos);
 	void RemoveFromScene();

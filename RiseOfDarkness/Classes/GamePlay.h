@@ -25,6 +25,7 @@ protected:
 	SneakyJoystick* leftJoystick;
 	Sprite* shader;
 	float activeRunRange;
+	ui::Layout* tab;
 public:
 	GamePlay();
 	virtual ~GamePlay();
@@ -44,6 +45,9 @@ public:
 
 	virtual void CreateJoystick(Layer* layer);
 	virtual void UpdateJoystick();
+
+	virtual void InitChest(Layer* layer);
+	virtual void ShowInfor();
 };
 
 #endif

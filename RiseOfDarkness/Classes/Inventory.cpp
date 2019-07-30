@@ -16,7 +16,7 @@ Inventory::Inventory(cocos2d::Sprite* sprite)
 	btnSell->removeFromParent();
 	btnSell->setPosition(Vec2(btnUse->getPositionX() + btnUse->getContentSize().width/2, btnUse->getPositionY()));
 	GetTab(1)->addChild(btnUse, 99);
-	GetTab(1)->addChild(btnSell, 99);	
+	GetTab(1)->addChild(btnSell, 99);
 }
 
 Inventory::~Inventory()
@@ -32,7 +32,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	btnSell = ui::Button::create("res/sprites/item/buttonSell1.png", "res/sprites/item/buttonSell.png");
 	btnSell->setScale(0.5);
 	btnSell->retain();
-
+	
 	clickBox->setPosition(-500, -500);
 	clickBox->retain();
 	slotX = 6;
@@ -415,8 +415,6 @@ void Inventory::SetSpritePosition(cocos2d::Vec2 pos)
 {
 	mSprite->setPosition(pos);
 	tab->setPosition(pos);
-
-	// SET CAMERA MASK
 	mSprite->setCameraMask(2);
 	tab->setCameraMask(2);
 }
@@ -690,7 +688,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		if (targetID >= 0)
 		{
 			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
-			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this, id, type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this, id, type, weapons[id]->GetWeaponType()));
 		}
 		break;
 	case ItemType::arrow:
@@ -728,7 +726,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		if (targetID >= 0)
 		{
 			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
-			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this,id,type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this,id,type, WeaponType::other));
 		}
 		break;
 	case ItemType::boots:
@@ -747,7 +745,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		if (targetID >= 0)
 		{
 			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
-			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this, id, type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this, id, type, WeaponType::other));
 		}
 		break;
 	default:
@@ -756,26 +754,83 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 	
 }
 
-void Inventory::EquipItem(cocos2d::Ref *pSender,int id, ItemType type)
+void Inventory::EquipItem(cocos2d::Ref *pSender,int id, ItemType type,WeaponType wType)
 {
+	auto mItems = MainCharacter::GetInstance()->GetEquipedItem();
+	Item *item;
 	switch (type)
 	{
 	case ItemType::weapon:
 		if (targetID >= 0)
 		{
-			RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::weapon);
+			if (wType==WeaponType::sword)
+			{
+				if (mItems[0]->GetID()==99)
+				{
+					MainCharacter::GetInstance()->MainCharacter::EquipedItem(0, weapons[targetID]);
+					RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::weapon);
+				}
+				else
+				{
+					int index = targetID;
+					MainCharacter::GetInstance()->MainCharacter::EquipedItem(0, weapons[targetID]);
+					RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::weapon);
+					item = new Item(mItems[0]);
+					AddItem(item->GetID());
+				}
+			}
+			else
+			{
+				if (mItems[1]->GetID() == 99)
+				{
+					MainCharacter::GetInstance()->MainCharacter::EquipedItem(1, weapons[targetID]);
+					RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::weapon);
+				}
+				else
+				{
+					int index = targetID;
+					MainCharacter::GetInstance()->MainCharacter::EquipedItem(1, weapons[targetID]);
+					RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::weapon);
+					item = new Item(mItems[1]);
+					AddItem(item->GetID());
+				}
+			}
 		}
 		break;
 	case ItemType::armor:
 		if (targetID >= 0)
 		{
-			RemoveItem(armors[targetID]->GetID(), targetID, ItemType::armor);
+			if (mItems[2]->GetID() == 99)
+			{
+				MainCharacter::GetInstance()->MainCharacter::EquipedItem(2, armors[targetID]);
+				RemoveItem(armors[targetID]->GetID(), targetID, ItemType::armor);
+			}
+			else
+			{
+				int index = targetID;
+				MainCharacter::GetInstance()->MainCharacter::EquipedItem(2, armors[targetID]);
+				RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::armor);
+				item = new Item(mItems[2]);
+				AddItem(item->GetID());
+			}
 		}
 		break;
 	case ItemType::boots:
 		if (targetID >= 0)
 		{
-			RemoveItem(boots[targetID]->GetID(), targetID, ItemType::boots);
+			if (mItems[3]->GetID() == 99)
+			{
+				MainCharacter::GetInstance()->MainCharacter::EquipedItem(3, boots[targetID]);
+				RemoveItem(boots[targetID]->GetID(), targetID, ItemType::boots);
+			}
+			else
+			{
+				int index = targetID;
+				MainCharacter::GetInstance()->MainCharacter::EquipedItem(3, boots[targetID]);
+				RemoveItem(boots[targetID]->GetID(), targetID, ItemType::boots);
+				item = new Item(mItems[3]);
+				AddItem(item->GetID());
+			}
 		}
 		break;
 	default:

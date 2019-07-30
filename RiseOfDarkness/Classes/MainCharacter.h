@@ -99,6 +99,8 @@ public:
 	void SubGold(int numb);
 	int GetHeartContainer();
 	void TakeHeartContainer();
+	void EquipedItem(int index, Item item);
+	std::vector<Item*> GetEquipedItem();
 
 public:
 	static MainCharacter* GetInstance();

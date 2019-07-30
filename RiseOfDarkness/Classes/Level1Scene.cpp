@@ -44,6 +44,8 @@ bool Level1Scene::init()
 
 	CreateTreasure();
 
+	InitChest(this);
+
 	scheduleUpdate();
 
 	return true;
@@ -198,6 +200,9 @@ void Level1Scene::AddListener()
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level1Scene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+	// STATUS
+	m_buttons[8]->addClickEventListener(CC_CALLBACK_1(Level1Scene::ClickShowInfor, this));
 }
 
 bool Level1Scene::OnTouchBegan(Touch* touch, Event* event)
@@ -483,4 +488,10 @@ void Level1Scene::CreateTreasure()
 	physics->setContactTestBitmask(true);
 	physics->setGravityEnable(false);
 	heartContainer->setPhysicsBody(physics);
+}
+
+void Level1Scene::ClickShowInfor(Ref * pSender)
+{
+	tab->setVisible(!tab->isVisible());
+	ShowInfor();
 }

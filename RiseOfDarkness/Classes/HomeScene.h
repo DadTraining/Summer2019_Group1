@@ -31,6 +31,7 @@ public:
 	void OpenEquipmentShop();
 	void CreateShop();
 	void CreateAllButton(Layer* layer);
+	void ClickShowInfor(Ref* pSender);
 
 	CREATE_FUNC(HomeScene);
 };

@@ -630,3 +630,41 @@ void GamePlay::UpdateJoystick()
 		MainCharacter::GetInstance()->StopRun();
 	}
 }
+
+void GamePlay::InitChest(Layer* layer)
+{
+	//ShowInfor
+	tab = ui::Layout::create();
+	tab->setSize(Size(228, 318));
+	tab->removeFromParent();
+	layer->addChild(tab, 22);
+	tab->setVisible(false);
+	tab->removeAllChildren();
+	tab->retain();
+	tab->setAnchorPoint(Point(0, 0));
+	tab->setCameraMask(2);
+	tab->setPosition(Vec2(Director::getInstance()->getVisibleSize().width / 2 - tab->getBoundingBox().size.width / 2
+		, Director::getInstance()->getVisibleSize().height / 2 - tab->getBoundingBox().size.height / 2));
+	auto bg = Sprite::create("res/sprites/item/chest.png");
+	bg->setPosition(0, 0);
+	bg->retain();
+	bg->setAnchorPoint(Point(0, 0));
+	bg->removeFromParent();
+	tab->addChild(bg, 23);
+
+	bg->setCameraMask(2);
+}
+
+void GamePlay::ShowInfor()
+{
+	int rows = 0;
+	auto items = MainCharacter::GetInstance()->GetEquipedItem();
+	for (int i = 0; i < items.size(); i++)
+	{
+		items[i]->GetIcon()->removeFromParent();
+		tab->addChild(items[i]->GetIcon(), 24);
+		items[i]->GetIcon()->setPosition(Vec2(32, tab->getSize().height - 64 * rows - 32));
+		rows++;
+		items[i]->GetIcon()->setCameraMask(2);
+	}
+}

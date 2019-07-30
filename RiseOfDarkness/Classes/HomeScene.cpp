@@ -39,6 +39,8 @@ bool HomeScene::init()
 
 	CreateNPC();
 
+	InitChest(this);
+
 	scheduleUpdate();
 
 
@@ -78,6 +80,8 @@ void HomeScene::AddListener()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	m_buttons[2]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));
+
+	m_buttons[0]->addClickEventListener(CC_CALLBACK_1(HomeScene::ClickShowInfor, this));
 }
 
 bool HomeScene::OnTouchBegan(Touch* touch, Event* event)
@@ -469,4 +473,10 @@ void HomeScene::CreateShop()
 
 
 
+}
+
+void HomeScene::ClickShowInfor(Ref * pSender)
+{
+	tab->setVisible(!tab->isVisible());
+	ShowInfor();
 }
