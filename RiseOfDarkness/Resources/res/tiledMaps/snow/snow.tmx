@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="2">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="6">
  <tileset firstgid="1" source="set1.tsx"/>
  <tileset firstgid="375" source="set5.tsx"/>
  <tileset firstgid="631" source="set4.tsx"/>
@@ -188,5 +188,10 @@
   <object id="1" name="mc" x="334" y="529">
    <point/>
   </object>
+ </objectgroup>
+ <objectgroup id="8" name="maokai">
+  <object id="3" name="03" x="80" y="112"/>
+  <object id="4" name="02" x="465.333" y="241.333"/>
+  <object id="5" name="01" x="784" y="208"/>
  </objectgroup>
 </map>

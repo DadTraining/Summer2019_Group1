@@ -96,14 +96,14 @@ void Level2Scene::CreateMonster()
 {
 	float x1, y1;
 	int direction1;
-	auto spearGoblinGroup = tileMap->getObjectGroup("nokken");
+	auto nokenGroup = tileMap->getObjectGroup("nokken");
 	int amount1 = 3;
 	char str1[10];
 	for (int i = 1; i <= amount1; i++)
 	{
 		sprintf(str1, "%02d", i);
-		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
-		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
+		x1 = nokenGroup->getObject(str1)["x"].asFloat();
+		y1 = nokenGroup->getObject(str1)["y"].asFloat();
 		Nokken *nokken = new Nokken(this, Vec2(x1, y1), i - 1);
 		nokken->GetPhysicsBody()->setGroup(i - 1);
 		m_enemies.push_back(nokken);
@@ -111,15 +111,15 @@ void Level2Scene::CreateMonster()
 
 	float x2, y2;
 	int direction2;
-	auto rope = tileMap->getObjectGroup("rope");
+	auto ropeGroup = tileMap->getObjectGroup("rope");
 	int amount2 = 4;
 	char str2[10];
 	for (int i = 1; i <= amount2; i++)
 	{
 		sprintf(str2, "%02d", i);
-		direction2 = rope->getObject(str2)["direction"].asInt();
-		x2 = rope->getObject(str2)["x"].asFloat();
-		y2 = rope->getObject(str2)["y"].asFloat();
+		direction2 = ropeGroup->getObject(str2)["direction"].asInt();
+		x2 = ropeGroup->getObject(str2)["x"].asFloat();
+		y2 = ropeGroup->getObject(str2)["y"].asFloat();
 		Monster *monster = new Monster(this, direction2, Vec2(x2, y2), i - 1 + amount1);
 		monster->GetPhysicsBody()->setGroup(i - 1 + amount1);
 		m_enemies.push_back(monster);
