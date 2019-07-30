@@ -4,6 +4,7 @@
 #include "MapScene.h"
 #include "HomeScene.h"
 #include "Maokai.h"
+#include "Elise.h"
 
 using namespace std;
 
@@ -110,21 +111,21 @@ void Level4Scene::CreateMonster()
 		m_enemies.push_back(maokai);
 	}
 
-	/*float x2, y2;
+	float x2, y2;
 	int direction2;
-	auto rope = tileMap->getObjectGroup("rope");
-	int amount2 = 4;
+	auto eliseGroup = tileMap->getObjectGroup("elise");
+	int amount2 = 5;
 	char str2[10];
 	for (int i = 1; i <= amount2; i++)
 	{
 		sprintf(str2, "%02d", i);
-		direction2 = rope->getObject(str2)["direction"].asInt();
-		x2 = rope->getObject(str2)["x"].asFloat();
-		y2 = rope->getObject(str2)["y"].asFloat();
-		Monster *monster = new Monster(this, direction2, Vec2(x2, y2), i - 1 + amount1);
-		monster->GetPhysicsBody()->setGroup(i - 1 + amount1);
-		m_enemies.push_back(monster);
-	}*/
+		direction2 = eliseGroup->getObject(str2)["direction"].asInt();
+		x2 = eliseGroup->getObject(str2)["x"].asFloat();
+		y2 = eliseGroup->getObject(str2)["y"].asFloat();
+		Elise *elise = new Elise(this, direction2, Vec2(x2, y2), i - 1 + amount1);
+		elise->GetPhysicsBody()->setGroup(i - 1 + amount1);
+		m_enemies.push_back(elise);
+	}
 }
 
 void Level4Scene::CreatePhysicsWorld(const char * obstacle, const char * mc, Layer * layer)
@@ -279,8 +280,11 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 	// MAIN CHARACTER WITH OBSTACLES
 	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::OBSTACLE_BITMASK, 1);
 
-	// MAIN CHARACTER WITH MONSTER
+	// MAIN CHARACTER WITH MAOKAI
 	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::MAOKAI_MONSTER_BITMASK, 1);
+
+	// MAIN CHARACTER WITH ELISE
+	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::ELISE_MONSTER_BITMASK, 1);
 
 	// ARROW COLLIDE WITH OBSTACLE
 	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::OBSTACLE_BITMASK, 2);
@@ -288,14 +292,23 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 	// MAIN CHARACTER SLASH MAOKAI MONSTER
 	Collision(contact, MainCharacter::SLASH_BITMASK, MainCharacter::MAOKAI_MONSTER_BITMASK, 3);
 
+	// MAIN CHARACTER SLASH ELISE
+	Collision(contact, MainCharacter::SLASH_BITMASK, MainCharacter::ELISE_MONSTER_BITMASK, 3);
+
 	// MAIN CHARACTER'S ARROW COLLIDE MAOKAI MONSTER
 	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::MAOKAI_MONSTER_BITMASK, 4);
+
+	// MAIN CHARACTER'S ARROW COLLIDE ELISE
+	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::ELISE_MONSTER_BITMASK, 4);
 
 	// FIRE DAMAGE MAIN CHARACTER
 	Collision(contact, MainCharacter::FIRE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 8);
 
+	// BULLET DAMAGE MAIN CHARACTER
+	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 8);
+
 	// BULLET COLLIDE OBSTACLES
-	//Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
+	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
 
 	return true;
 }

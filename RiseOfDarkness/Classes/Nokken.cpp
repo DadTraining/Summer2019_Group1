@@ -51,7 +51,7 @@ Nokken::Nokken(Layer * layer, Vec2 pos, int group)
 
 	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(35));
 	sprite->setScale(0.5f);
-	bullet = new Bullet(sprite, MainCharacter::BULLET_ROPE_BITMASK);
+	bullet = new Bullet(sprite, MainCharacter::BULLET_BITMASK);
 	bullet->SetStep(6);
 	bullet->SetVisible(false);
 	bullet->GetSprite()->getPhysicsBody()->setGroup(group);

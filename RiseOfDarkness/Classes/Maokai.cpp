@@ -12,9 +12,9 @@ Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(36));
 	mSprite->setScale(0.5f);
 	Size box;
-	box.width = mSprite->getContentSize().width / 1.2;
-	box.height = mSprite->getContentSize().height / 2.2;
-	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, box.height / 6));
+	box.width = mSprite->getContentSize().width / 2.5f;
+	box.height = mSprite->getContentSize().height / 2.0f;
+	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, - box.height / 6));
 	mPhysicsBody->setRotationEnable(false);
 	mPhysicsBody->setCollisionBitmask(MainCharacter::MAOKAI_MONSTER_BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);
@@ -31,6 +31,9 @@ Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 	hpLoadingBar->setScale(0.2);
 	hpBar->retain();
 	hpLoadingBar->retain();
+
+	hpBar->setVisible(false);
+	hpLoadingBar->setVisible(false);
 
 	mAction[IDLE] = ResourceManager::GetInstance()->GetActionById(54)->clone();
 	mAction[ATTACK] = ResourceManager::GetInstance()->GetActionById(55)->clone();
@@ -50,7 +53,7 @@ Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 	coolDownAttack = 0;
 
 	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(39));
-	sprite->setScale(0.5f);
+	sprite->setScale(0.4f);
 	fire = new Fire(sprite, MainCharacter::FIRE_BITMASK);
 	fire->SetVisible(false);
 	fire->GetSprite()->getPhysicsBody()->setGroup(group);
@@ -168,6 +171,8 @@ bool Maokai::Detect(float detectRange)
 
 	if (dis <= detectRange)
 	{
+		hpBar->setVisible(true);
+		hpLoadingBar->setVisible(true);
 		return true;
 	}
 

@@ -1,14 +1,14 @@
-#include "Monster.h"
+#include "Elise.h"
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include <math.h>
 
-Monster::Monster() {}
+Elise::Elise() {}
 
-Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
+Elise::Elise(Layer* layer, int direction, Vec2 pos, int group)
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(32));
-	mSprite->setScale(1.7f);
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(37));
+	mSprite->setScale(1.0f);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
 	box.height = mSprite->getContentSize().height / 2.2;
@@ -31,30 +31,30 @@ Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 	hpBar->retain();
 	hpLoadingBar->retain();
 
-	mAction[BACK_IDLE] = ResourceManager::GetInstance()->GetActionById(43)->clone();
-	mAction[FRONT_IDLE] = ResourceManager::GetInstance()->GetActionById(44)->clone();
-	mAction[RIGHT_IDLE] = ResourceManager::GetInstance()->GetActionById(45)->clone();
-	mAction[GO_UP] = ResourceManager::GetInstance()->GetActionById(46)->clone();
-	mAction[GO_DOWN] = ResourceManager::GetInstance()->GetActionById(47)->clone();
-	mAction[GO_RIGHT] = ResourceManager::GetInstance()->GetActionById(48)->clone();
-	mAction[FRONT_ATTACK] = ResourceManager::GetInstance()->GetActionById(49)->clone();
-	mAction[BACK_ATTACK] = ResourceManager::GetInstance()->GetActionById(50)->clone();
-	mAction[RIGHT_ATTACK] = ResourceManager::GetInstance()->GetActionById(51)->clone();
+	mAction[UP_ATTACK] = ResourceManager::GetInstance()->GetActionById(61)->clone();
+	mAction[DOWN_ATTACK] = ResourceManager::GetInstance()->GetActionById(62)->clone();
+	mAction[LEFT_ATTACK] = ResourceManager::GetInstance()->GetActionById(63)->clone();
+	mAction[RIGHT_ATTACK] = ResourceManager::GetInstance()->GetActionById(64)->clone();
 
-	CC_SAFE_RETAIN(mAction[FRONT_IDLE]);
-	CC_SAFE_RETAIN(mAction[BACK_IDLE]);
-	CC_SAFE_RETAIN(mAction[RIGHT_IDLE]);
-	CC_SAFE_RETAIN(mAction[GO_DOWN]);
-	CC_SAFE_RETAIN(mAction[GO_UP]);
-	CC_SAFE_RETAIN(mAction[GO_RIGHT]);
-	CC_SAFE_RETAIN(mAction[FRONT_ATTACK]);
-	CC_SAFE_RETAIN(mAction[BACK_ATTACK]);
+	mAction[GO_UP] = ResourceManager::GetInstance()->GetActionById(57)->clone();
+	mAction[GO_DOWN] = ResourceManager::GetInstance()->GetActionById(58)->clone();
+	mAction[GO_LEFT] = ResourceManager::GetInstance()->GetActionById(59)->clone();
+	mAction[GO_RIGHT] = ResourceManager::GetInstance()->GetActionById(60)->clone();
+
+	CC_SAFE_RETAIN(mAction[UP_ATTACK]);
+	CC_SAFE_RETAIN(mAction[DOWN_ATTACK]);
+	CC_SAFE_RETAIN(mAction[LEFT_ATTACK]);
 	CC_SAFE_RETAIN(mAction[RIGHT_ATTACK]);
+
+	CC_SAFE_RETAIN(mAction[GO_UP]);
+	CC_SAFE_RETAIN(mAction[GO_DOWN]);
+	CC_SAFE_RETAIN(mAction[GO_LEFT]);
+	CC_SAFE_RETAIN(mAction[GO_RIGHT]);
 
 	firstDirection = direction;
 	this->direction = direction;
 	this->pos = pos;
-	currentState = FRONT_IDLE;
+	currentState = DOWN_ATTACK;
 
 	mSprite->setPosition(pos);
 
@@ -76,23 +76,23 @@ Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 	layer->addChild(sprite, 7);
 }
 
-Monster::~Monster()
+Elise::~Elise()
 {
-	mAction[FRONT_IDLE]->autorelease();
-	mAction[BACK_IDLE]->autorelease();
-	mAction[RIGHT_IDLE]->autorelease();
+	mAction[UP_ATTACK]->autorelease();
+	mAction[DOWN_ATTACK]->autorelease();
+	mAction[LEFT_ATTACK]->autorelease();
+	mAction[RIGHT_ATTACK]->autorelease();
+
 	mAction[GO_DOWN]->autorelease();
 	mAction[GO_UP]->autorelease();
+	mAction[GO_LEFT]->autorelease();
 	mAction[GO_RIGHT]->autorelease();
-	mAction[FRONT_ATTACK]->autorelease();
-	mAction[BACK_ATTACK]->autorelease();
-	mAction[RIGHT_ATTACK]->autorelease();
 
 	hpBar->autorelease();
 	hpLoadingBar->autorelease();
 }
 
-void Monster::Update(float deltaTime)
+void Elise::Update(float deltaTime)
 {
 	if (IsAlive())
 	{
@@ -132,7 +132,7 @@ void Monster::Update(float deltaTime)
 	}
 }
 
-void Monster::SetState(int nextState)
+void Elise::SetState(int nextState)
 {
 	if (currentState == nextState && mSprite->getNumberOfRunningActions() == 0)
 	{
@@ -146,30 +146,37 @@ void Monster::SetState(int nextState)
 	{
 		switch (nextState)
 		{
-		case FRONT_IDLE:
-		case BACK_IDLE:
-		case RIGHT_IDLE:
-			currentState = nextState;
-			mSprite->runAction(mAction[nextState]);
-			break;
 		case GO_UP:
 		case GO_DOWN:
+		case GO_LEFT:
+			currentState = nextState;
+			mSprite->stopAllActions();
+			mSprite->runAction(mAction[nextState]);
+			break;
 		case GO_RIGHT:
 			currentState = nextState;
 			mSprite->stopAllActions();
 			mSprite->runAction(mAction[nextState]);
 			break;
-		case FRONT_ATTACK:
-		case BACK_ATTACK:
+		case DOWN_ATTACK:
+		case UP_ATTACK:
+		case LEFT_ATTACK:
+			currentState = nextState;
+			mSprite->stopAllActions();
+			mSprite->runAction(mAction[nextState]);
+			break;
 		case RIGHT_ATTACK:
 			currentState = nextState;
 			mSprite->stopAllActions();
 			mSprite->runAction(mAction[nextState]);
+			break;
+		default:
+			break;
 		}
 	}
 }
 
-void Monster::Idle()
+void Elise::Idle()
 {
 	if (mSprite->getNumberOfRunningActions() == 0)
 	{
@@ -177,26 +184,24 @@ void Monster::Idle()
 		switch (direction)
 		{
 		case 1:
-			SetState(BACK_IDLE);
+			SetState(UP_ATTACK);
 			break;
 		case 2:
-			SetState(FRONT_IDLE);
+			SetState(DOWN_ATTACK);
 			break;
 		case 3:
-			mSprite->setFlippedX(true);
-			SetState(RIGHT_IDLE);
+			SetState(LEFT_ATTACK);
 			break;
 		case 4:
-			mSprite->setFlippedX(false);
-			SetState(RIGHT_IDLE);
+			SetState(RIGHT_ATTACK);
 			break;
 		}
 	}
 }
 
-void Monster::Run()
+void Elise::Run()
 {
-	if (currentState != RIGHT_ATTACK || currentState != FRONT_ATTACK || currentState != BACK_ATTACK)
+	if (currentState != RIGHT_ATTACK || currentState != LEFT_ATTACK || currentState != DOWN_ATTACK || currentState != UP_ATTACK)
 	{
 		hpBar->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() + 20));
 		hpLoadingBar->setPosition(Vec2(mSprite->getPositionX(), mSprite->getPositionY() + 20));
@@ -220,7 +225,7 @@ void Monster::Run()
 			if (preventRun != 3)
 			{
 				mSprite->setPositionX(mSprite->getPositionX() - speed);
-				SetState(GO_RIGHT);
+				SetState(GO_LEFT);
 			}
 			break;
 		case 4:
@@ -233,7 +238,7 @@ void Monster::Run()
 	}
 }
 
-void Monster::Attack()
+void Elise::Attack()
 {
 
 	if (!bullet->IsVisible())
@@ -245,15 +250,15 @@ void Monster::Attack()
 		{
 		case 1:
 			bullet->SetDirection(2);
-			SetState(BACK_ATTACK);
+			SetState(UP_ATTACK);
 			break;
 		case 2:
 			bullet->SetDirection(3);
-			SetState(FRONT_ATTACK);
+			SetState(DOWN_ATTACK);
 			break;
 		case 3:
 			bullet->SetDirection(0);
-			SetState(RIGHT_ATTACK);
+			SetState(LEFT_ATTACK);
 			break;
 		case 4:
 			bullet->SetDirection(1);
@@ -262,12 +267,12 @@ void Monster::Attack()
 	}
 }
 
-Bullet* Monster::GetBullet()
+Bullet* Elise::GetBullet()
 {
 	return bullet;
 }
 
-bool Monster::Detect(float detectRange)
+bool Elise::Detect(float detectRange)
 {
 	auto mcPos = MainCharacter::GetInstance()->GetSprite()->getPosition();
 	auto ePos = mSprite->getPosition();
@@ -307,18 +312,10 @@ bool Monster::Detect(float detectRange)
 	return false;
 }
 
-void Monster::SetDirection(int dir)
+void Elise::SetDirection(int dir)
 {
 	if (direction != dir)
 	{
-		if (dir == 3)
-		{
-			mSprite->setFlipX(true);
-		}
-		else if (direction == 3)
-		{
-			mSprite->setFlipX(false);
-		}
 		direction = dir;
 	}
 	if (preventRun != dir)

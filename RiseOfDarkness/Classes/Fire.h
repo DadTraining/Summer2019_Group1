@@ -16,7 +16,7 @@ private:
 	bool mIsAlive;
 	int distance;
 public:
-	static const int RANGE = 80;
+	static const int RANGE = 100;
 	Fire(Sprite *sprite, int BITMASK);
 	~Fire();
 	void setAlive(bool alive);

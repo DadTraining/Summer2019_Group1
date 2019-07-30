@@ -320,7 +320,7 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::NOKKEN_MONSTER_BITMASK, 4);
 	
 	// BULLET DAMAGE MAIN CHARACTER
-	Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
+	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
 	
 	// ROPE MONSTER COLLIDE OBSTACLES
 	Collision(contact, MainCharacter::OBSTACLE_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 5);
@@ -329,7 +329,7 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	Collision(contact, MainCharacter::RIVER_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 5);
 
 	// BULLET COLLIDE OBSTACLES
-	Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
+	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
 
 	return true;
 }
