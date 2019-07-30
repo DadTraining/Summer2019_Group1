@@ -8,7 +8,6 @@ USING_NS_CC;
 Scene* HomeScene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	auto layer = HomeScene::create();
 
@@ -34,6 +33,8 @@ bool HomeScene::init()
 
 	CreateAllButton(this);
 	
+	InitChest();
+
 	AddListener();
 
 	CreateNPC();
@@ -43,10 +44,30 @@ bool HomeScene::init()
 	return true;
 }
 
+void HomeScene::InitChest()
+{
+	//ShowInfor
+	tab = ui::Layout::create();
+	tab->setSize(Size(228, 318));
+	tab->removeFromParent();
+	addChild(tab, 22);
+	tab->setVisible(false);
+	tab->removeAllChildren();
+	tab->retain();
+	tab->setAnchorPoint(Point(0, 0));
+	tab->setPosition(Director::getInstance()->getVisibleSize() / 2);
+	auto bg = Sprite::create("res/sprites/item/chest.png");
+	bg->setPosition(0, 0);
+	bg->retain();
+	bg->setAnchorPoint(Point(0, 0));
+	bg->removeFromParent();
+	tab->addChild(bg, 23);
+}
+
 void HomeScene::update(float deltaTime)
 {
 	UpdateController();
-
+	
 	UpdateInfoBar();
 
 	MainCharacter::GetInstance()->Update(deltaTime);
@@ -79,8 +100,14 @@ void HomeScene::AddListener()
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(HomeScene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
-
+	m_buttons[5]->addClickEventListener(CC_CALLBACK_1(HomeScene::ClickShowInfor, this));
 	m_buttons[6]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));
+}
+
+void HomeScene::ClickShowInfor(Ref * pSender)
+{
+	tab->setVisible(!tab->isVisible());
+	ShowInfor();
 }
 
 bool HomeScene::OnTouchBegan(Touch* touch, Event* event)
@@ -600,4 +627,17 @@ void HomeScene::CreateShop()
 
 
 
+}
+
+void HomeScene::ShowInfor()
+{
+	int rows = 0;
+	auto items = MainCharacter::GetInstance()->GetEquipedItem();
+	for (int i = 0; i < items.size(); i++)
+	{
+		items[i]->GetIcon()->removeFromParent();
+		tab->addChild(items[i]->GetIcon(), 24);
+		items[i]->GetIcon()->setPosition(Vec2(32, tab->getSize().height - 64 * rows - 32));
+		rows++;
+	}
 }

@@ -9,12 +9,14 @@ class HomeScene : public Layer, GamePlay
 private:
 	Sprite* weaponSeller, *potionSeller, *equipmentSeller;
 	Action* weapon, *potion, *equipment;
+	ui::Layout* tab;
 public:
 	static Scene* CreateScene();
 	virtual bool init();
+	void InitChest();
 	void update(float deltaTime);
 	void AddListener();
-	
+	void ClickShowInfor(Ref* pSender);
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);
 	void OnTouchMoved(Touch* touch, Event* event);
@@ -32,7 +34,7 @@ public:
 	void OpenPotionShop();
 	void OpenEquipmentShop();
 	void CreateShop();
-
+	void ShowInfor();
 	CREATE_FUNC(HomeScene);
 };
 

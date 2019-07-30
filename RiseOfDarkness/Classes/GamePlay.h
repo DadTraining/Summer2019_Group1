@@ -24,6 +24,7 @@ protected:
 	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
 	std::vector<Enemy*> m_enemies;
 	int currentStage;
+	
 public:
 	GamePlay();
 	virtual ~GamePlay();
@@ -40,7 +41,6 @@ public:
 
 	virtual void OpenInventory(cocos2d::Ref * sender);
 	virtual void ShowInventoryGrid();
-
 	virtual bool CheckClear();
 	virtual void EnemyUpdate(float deltaTime);
 };
