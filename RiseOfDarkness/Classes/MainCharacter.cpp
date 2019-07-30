@@ -894,7 +894,7 @@ bool MainCharacter::TakePotion(int index)
 {
 	switch (index)
 	{
-	case 0:
+	case 25:
 		if (currentHP < maxHP)
 		{
 			currentHP += HP;
@@ -905,7 +905,7 @@ bool MainCharacter::TakePotion(int index)
 			return true;
 		}
 		return false;
-	case 1:
+	case 26:
 		if (currentMP < maxMP)
 		{
 			currentMP += MP;
@@ -913,8 +913,11 @@ bool MainCharacter::TakePotion(int index)
 			{
 				currentMP = maxMP;
 			}
+			return true;
 		}
+		return false;
 	default:
+		return false;
 		break;
 	}
 }
