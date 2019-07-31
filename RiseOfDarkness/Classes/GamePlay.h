@@ -48,6 +48,7 @@ public:
 
 	virtual void InitChest(Layer* layer);
 	virtual void ShowInfor();
+	
 };
 
 #endif

@@ -11,7 +11,7 @@ class HomeScene : public Layer, GamePlay
 private:
 	Sprite* weaponSeller, *potionSeller, *equipmentSeller;
 	Action* weapon, *potion, *equipment;
-	ui::ScrollView* weaponscrollView;
+	ui::ScrollView *weaponscrollView, *potionScrollView, *equipmentScrollView;
 public:
 	static cocos2d::Scene* CreateScene();
 	virtual bool init();
@@ -32,7 +32,10 @@ public:
 	void CreateShop();
 	void CreateAllButton(Layer* layer);
 	void ClickShowInfor(Ref* pSender);
-
+	void ClickBuyItem(Ref* sender, int id);
+	void OpenCloseWeaponShop(cocos2d::Ref* pSender);
+	void OpenClosePotionShop(cocos2d::Ref* pSender);
+	void OpenCloseEquipmentShop(cocos2d::Ref* pSender);
 	CREATE_FUNC(HomeScene);
 };
 

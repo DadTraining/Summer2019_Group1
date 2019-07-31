@@ -104,6 +104,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 void Inventory::AddItem(int id)
 {
 	int index = GetIndexByID(id);
+	targetID = index;
 	switch (database->items[index]->GetType())
 	{
 	case ItemType::potion:

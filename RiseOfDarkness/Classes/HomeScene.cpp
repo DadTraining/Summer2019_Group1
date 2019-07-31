@@ -82,7 +82,7 @@ void HomeScene::AddListener()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	m_buttons[2]->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenInventory, this));
-
+	
 	m_buttons[0]->addClickEventListener(CC_CALLBACK_1(HomeScene::ClickShowInfor, this));
 }
 
@@ -405,21 +405,26 @@ void HomeScene::RunActionNPC()
 
 void HomeScene::OpenWeaponShop()
 {
-	log("weapon shop");
+	m_sprites[7]->setVisible(true);
 	m_sprites[6]->setVisible(true);
 	m_buttons[3]->setVisible(true);
 	weaponscrollView->setVisible(true);
-	
 }
 
 void HomeScene::OpenEquipmentShop()
 {
-	log("quipment shop");
+	m_sprites[10]->setVisible(true);
+	m_sprites[11]->setVisible(true);
+	m_buttons[5]->setVisible(true);
+	equipmentScrollView->setVisible(true);
 }
 
 void HomeScene::OpenPotionShop()
 {
-	log("potion shop");
+	m_sprites[8]->setVisible(true);
+	m_sprites[9]->setVisible(true);
+	m_buttons[4]->setVisible(true);
+	potionScrollView->setVisible(true);
 }
 
 void HomeScene::CreateShop()
@@ -427,58 +432,443 @@ void HomeScene::CreateShop()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	// WEAPON SHOP
-	// SPRITE ID 6
-	auto shopweapon = Sprite::create("res/sprites/shop/wea_shop.png");
-	shopweapon->setPosition(visibleSize / 2);
-	addChild(shopweapon, 4);
-	shopweapon->setVisible(false);
-	shopweapon->setCameraMask(2);
-	m_sprites.push_back(shopweapon);
 
 	// BUTTON ID 3
+	
+	weaponscrollView = ui::ScrollView::create();
+	weaponscrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	weaponscrollView->setContentSize(Size(517, 387-88)); //517,387
+	weaponscrollView->setInnerContainerSize(Size(517, 880));
+	weaponscrollView->setAnchorPoint(Vec2(0.5, 0.5));
+	weaponscrollView->setPosition(Vec2(visibleSize/2)-Vec2(0,33));
+	weaponscrollView->setVisible(false);
+	weaponscrollView->setBounceEnabled(true);
+	weaponscrollView->setCameraMask(2);
+	weaponscrollView->setScrollBarColor(Color3B::WHITE);
+	weaponscrollView->setScrollBarOpacity(0);
+	addChild(weaponscrollView, 25);
+	// SPRITE ID 6
+	auto shopweapon = Sprite::create("res/sprites/shop/weaponShop.png");
+	shopweapon->setPosition(visibleSize/2);
+	shopweapon->setCameraMask(2);
+	shopweapon->setVisible(false);
+	addChild(shopweapon, 4);
+	auto shopWeaponUP = Sprite::create("res/sprites/shop/weaponShopUp.png");
+	shopWeaponUP->setPosition(visibleSize / 2);
+	shopWeaponUP->setCameraMask(2);
+	addChild(shopWeaponUP, 99);
+	shopWeaponUP->setVisible(false);
+	weaponscrollView->setCameraMask(2);
+	m_sprites.push_back(shopweapon);
+	m_sprites.push_back(shopWeaponUP);
 	auto close = ui::Button::create("res/buttons/shopp/xx.png", "res/buttons/shopp/xx_bg.png");
 	close->setPosition(Vec2(visibleSize.width / 2 + shopweapon->getBoundingBox().size.width / 2
 		, visibleSize.height / 2 + shopweapon->getBoundingBox().size.height / 2));
-	addChild(close, 60);
+	addChild(close, 25);
 	close->setCameraMask(2);
 	close->setVisible(false);
 	m_buttons.push_back(close);
-
-	weaponscrollView = ui::ScrollView::create();
-	weaponscrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
-	weaponscrollView->setContentSize(Size(385, 220));
-	weaponscrollView->setInnerContainerSize(Size(400, 1560));
-	weaponscrollView->setBounceEnabled(true);
-	weaponscrollView->setTouchEnabled(true);
-	weaponscrollView->setPosition(Vec2(510, 360));
-	weaponscrollView->setVisible(false);
-	weaponscrollView->setCameraMask(2);
-	this->addChild(weaponscrollView, 70);
-
-	close->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	close->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenCloseWeaponShop, this));
+	int rows = 0;
+	for (int i = 17; i <= 20; i++)
 	{
-		if (type == ui::Widget::TouchEventType::ENDED)
-		{
-			shopweapon->setVisible(false);
-			close->setVisible(false);
-			weaponscrollView->setVisible(false);
-		}
-	});
-	
-
-
-	//EQUIPMENT SHOP
-
+		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		itemSprite->setAnchorPoint(Point(0, 1));
+		itemSprite->setPosition(Vec2(25,
+			weaponscrollView->getInnerContainerSize().height-rows*itemSprite->getContentSize().height));
+		itemSprite->setCameraMask(2);
+		weaponscrollView->addChild(itemSprite, 55);
+		auto buttonBuy = ui::Button::create("res/buttons/shopp/btbuy.png", "res/buttons/shopp/btbuy_bg.png");
+		buttonBuy->setAnchorPoint(Point(0, 1));
+		buttonBuy->setPosition(Vec2(13+itemSprite->getPosition().x + itemSprite->getContentSize().width,
+			itemSprite->getPosition().y-buttonBuy->getContentSize().height));
+		buttonBuy->setCameraMask(2);
+		buttonBuy->addClickEventListener(CC_CALLBACK_1(HomeScene::ClickBuyItem, this, i));
+		weaponscrollView->addChild(buttonBuy, 56);
+		rows++;
+	}
+	for (int i = 26; i <= 31; i++)
+	{
+		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		itemSprite->setAnchorPoint(Point(0, 1));
+		itemSprite->setPosition(Vec2(25,
+			weaponscrollView->getInnerContainerSize().height - rows*itemSprite->getContentSize().height));
+		itemSprite->setCameraMask(2);
+		weaponscrollView->addChild(itemSprite, 55);
+		auto buttonBuy = ui::Button::create("res/buttons/shopp/btbuy.png", "res/buttons/shopp/btbuy_bg.png");
+		buttonBuy->setAnchorPoint(Point(0, 1));
+		buttonBuy->setPosition(Vec2(13 + itemSprite->getPosition().x + itemSprite->getContentSize().width,
+			itemSprite->getPosition().y - buttonBuy->getContentSize().height));
+		buttonBuy->setCameraMask(2);
+		buttonBuy->addClickEventListener(CC_CALLBACK_1(HomeScene::ClickBuyItem, this, i));
+		weaponscrollView->addChild(buttonBuy, 56);
+		rows++;
+	}
 
 	//POTION SHOP
 
+	potionScrollView = ui::ScrollView::create();
+	potionScrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	potionScrollView->setContentSize(Size(517, 387 - 88)); //517,387
+	potionScrollView->setInnerContainerSize(Size(517, 440));
+	potionScrollView->setAnchorPoint(Vec2(0.5, 0.5));
+	potionScrollView->setPosition(Vec2(visibleSize / 2) - Vec2(0, 33));
+	potionScrollView->setVisible(false);
+	potionScrollView->setBounceEnabled(true);
+	potionScrollView->setCameraMask(2);
+	potionScrollView->setScrollBarColor(Color3B::WHITE);
+	potionScrollView->setScrollBarOpacity(0);
+	addChild(potionScrollView, 25);
+	// SPRITE ID 8
+	auto shopPotion = Sprite::create("res/sprites/shop/weaponShop.png");
+	shopPotion->setPosition(visibleSize / 2);
+	shopPotion->setCameraMask(2);
+	shopPotion->setVisible(false);
+	addChild(shopPotion, 4);
+	auto shopPotionUP = Sprite::create("res/sprites/shop/weaponShopUp.png");
+	shopPotionUP->setPosition(visibleSize / 2);
+	shopPotionUP->setCameraMask(2);
+	addChild(shopPotionUP, 99);
+	shopPotionUP->setVisible(false);
+	weaponscrollView->setCameraMask(2);
+	m_sprites.push_back(shopPotion);
+	m_sprites.push_back(shopPotionUP);
+	auto closePotionShop = ui::Button::create("res/buttons/shopp/xx.png", "res/buttons/shopp/xx_bg.png");
+	closePotionShop->setPosition(Vec2(visibleSize.width / 2 + shopPotion->getBoundingBox().size.width / 2
+		, visibleSize.height / 2 + shopPotion->getBoundingBox().size.height / 2));
+	addChild(closePotionShop, 25);
+	closePotionShop->setCameraMask(2);
+	closePotionShop->setVisible(false);
+	m_buttons.push_back(closePotionShop);
+	closePotionShop->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenClosePotionShop, this));
+	rows = 0;
+	for (int i = 21; i <= 25; i++)
+	{
+		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		itemSprite->setAnchorPoint(Point(0, 1));
+		itemSprite->setPosition(Vec2(25,
+			potionScrollView->getInnerContainerSize().height - rows*itemSprite->getContentSize().height));
+		itemSprite->setCameraMask(2);
+		potionScrollView->addChild(itemSprite, 55);
+		auto buttonBuy = ui::Button::create("res/buttons/shopp/btbuy.png", "res/buttons/shopp/btbuy_bg.png");
+		buttonBuy->setAnchorPoint(Point(0, 1));
+		buttonBuy->setPosition(Vec2(13 + itemSprite->getPosition().x + itemSprite->getContentSize().width,
+			itemSprite->getPosition().y - buttonBuy->getContentSize().height));
+		buttonBuy->setCameraMask(2);
+		buttonBuy->addClickEventListener(CC_CALLBACK_1(HomeScene::ClickBuyItem, this, i));
+		potionScrollView->addChild(buttonBuy, 56);
+		rows++;
+	}
+	
+	//EQUIPMENT SHOP
 
-
-
+	equipmentScrollView = ui::ScrollView::create();
+	equipmentScrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	equipmentScrollView->setContentSize(Size(517, 387 - 88)); //517,387
+	equipmentScrollView->setInnerContainerSize(Size(517, 880));
+	equipmentScrollView->setAnchorPoint(Vec2(0.5, 0.5));
+	equipmentScrollView->setPosition(Vec2(visibleSize / 2) - Vec2(0, 33));
+	equipmentScrollView->setVisible(false);
+	equipmentScrollView->setBounceEnabled(true);
+	equipmentScrollView->setCameraMask(2);
+	equipmentScrollView->setScrollBarColor(Color3B::WHITE);
+	equipmentScrollView->setScrollBarOpacity(0);
+	addChild(equipmentScrollView, 25);
+	// SPRITE ID 8
+	auto shopEquipment = Sprite::create("res/sprites/shop/weaponShop.png");
+	shopEquipment->setPosition(visibleSize / 2);
+	shopEquipment->setCameraMask(2);
+	shopEquipment->setVisible(false);
+	addChild(shopEquipment, 4);
+	auto shopEquipmentUp = Sprite::create("res/sprites/shop/weaponShopUp.png");
+	shopEquipmentUp->setPosition(visibleSize / 2);
+	shopEquipmentUp->setCameraMask(2);
+	addChild(shopEquipmentUp, 99);
+	shopEquipmentUp->setVisible(false);
+	weaponscrollView->setCameraMask(2);
+	m_sprites.push_back(shopEquipment);
+	m_sprites.push_back(shopEquipmentUp);
+	auto closeEquipmentShop = ui::Button::create("res/buttons/shopp/xx.png", "res/buttons/shopp/xx_bg.png");
+	closeEquipmentShop->setPosition(Vec2(visibleSize.width / 2 + shopEquipment->getBoundingBox().size.width / 2
+		, visibleSize.height / 2 + shopEquipment->getBoundingBox().size.height / 2));
+	addChild(closeEquipmentShop, 25);
+	closeEquipmentShop->setCameraMask(2);
+	closeEquipmentShop->setVisible(false);
+	m_buttons.push_back(closeEquipmentShop);
+	closeEquipmentShop->addClickEventListener(CC_CALLBACK_1(HomeScene::OpenCloseEquipmentShop, this));
+	rows = 0;
+	for (int i = 1; i <= 16; i++)
+	{
+		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		itemSprite->setAnchorPoint(Point(0, 1));
+		itemSprite->setPosition(Vec2(25,
+			equipmentScrollView->getInnerContainerSize().height - rows*itemSprite->getContentSize().height));
+		itemSprite->setCameraMask(2);
+		equipmentScrollView->addChild(itemSprite, 55);
+		auto buttonBuy = ui::Button::create("res/buttons/shopp/btbuy.png", "res/buttons/shopp/btbuy_bg.png");
+		buttonBuy->setAnchorPoint(Point(0, 1));
+		buttonBuy->setPosition(Vec2(13 + itemSprite->getPosition().x + itemSprite->getContentSize().width,
+			itemSprite->getPosition().y - buttonBuy->getContentSize().height));
+		buttonBuy->setCameraMask(2);
+		buttonBuy->addClickEventListener(CC_CALLBACK_1(HomeScene::ClickBuyItem, this, i));
+		equipmentScrollView->addChild(buttonBuy, 56);
+		rows++;
+	}
 }
 
 void HomeScene::ClickShowInfor(Ref * pSender)
 {
 	tab->setVisible(!tab->isVisible());
 	ShowInfor();
+}
+
+void HomeScene::ClickBuyItem(Ref * sender, int id)
+{
+	switch (id)
+	{
+	case 1:
+		if (MainCharacter::GetInstance()->GetGold()>=300)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(300);
+		}
+		break;
+	case 2:
+		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(500);
+		}
+		break;
+	case 3:
+		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(1000);
+		}
+		break;
+	case 4:
+		if (MainCharacter::GetInstance()->GetGold() >= 2000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(2000);
+		}
+		break;
+	case 5:
+		if (MainCharacter::GetInstance()->GetGold() >= 5000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(5000);
+		}
+		break;
+	case 6:
+		if (MainCharacter::GetInstance()->GetGold() >= 3)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(3);
+		}
+		break;
+	case 7:
+		if (MainCharacter::GetInstance()->GetGold() >= 5)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(5);
+		}
+		break;
+	case 8:
+		if (MainCharacter::GetInstance()->GetGold() >= 8)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(8);
+		}
+		break;
+	case 9:
+		if (MainCharacter::GetInstance()->GetGold() >= 12)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(12);
+		}
+		break;
+	case 10:
+		if (MainCharacter::GetInstance()->GetGold() >= 15)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(15);
+		}
+		break;
+	case 11:
+		if (MainCharacter::GetInstance()->GetGold() >= 20)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(20);
+		}
+		break;
+	case 12:
+		if (MainCharacter::GetInstance()->GetGold() >= 25)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(25);
+		}
+		break;
+	case 13:
+		if (MainCharacter::GetInstance()->GetGold() >= 200)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(200);
+		}
+		break;
+	case 14:
+		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(500);
+		}
+		break;
+	case 15:
+		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(1000);
+		}
+		break;
+	case 16:
+		if (MainCharacter::GetInstance()->GetGold() >= 2000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(2000);
+		}
+		break;
+	case 17:
+		if (MainCharacter::GetInstance()->GetGold() >= 200)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(200);
+		}
+		break;
+	case 18:
+		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(500);
+		}
+		break;
+	case 19:
+		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(1000);
+		}
+		break;
+	case 20:
+		if (MainCharacter::GetInstance()->GetGold() >= 2000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(2000);
+		}
+		break;
+	case 21:
+		if (MainCharacter::GetInstance()->GetGold() >= 25)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(25);
+		}
+		break;
+	case 22:
+		if (MainCharacter::GetInstance()->GetGold() >= 20)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(20);
+		}
+		break;
+	case 23:
+		if (MainCharacter::GetInstance()->GetGold() >= 22)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(22);
+		}
+		break;
+	case 24:
+		if (MainCharacter::GetInstance()->GetGold() >= 15)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(15);
+		}
+		break;
+	case 25:
+		if (MainCharacter::GetInstance()->GetGold() >= 45)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(45);
+		}
+		break;
+	case 26:
+		if (MainCharacter::GetInstance()->GetGold() >= 200)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(200);
+		}
+		break;
+	case 27:
+		if (MainCharacter::GetInstance()->GetGold() >= 300)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(300);
+		}
+		break;
+	case 28:
+		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(500);
+		}
+		break;
+	case 29:
+		if (MainCharacter::GetInstance()->GetGold() >= 700)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(700);
+		}
+		break;
+	case 30:
+		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(1000);
+		}
+	case 31:
+		if (MainCharacter::GetInstance()->GetGold() >= 3000)
+		{
+			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
+			MainCharacter::GetInstance()->SubGold(3000);
+		}
+		break;
+	default:
+		break;
+	}
+	
+	
+}
+
+void HomeScene::OpenCloseWeaponShop(Ref * pSender)
+{
+	m_buttons[3]->setVisible(!m_buttons[3]->isVisible());
+	weaponscrollView->setVisible(!weaponscrollView->isVisible());
+	m_sprites[6]->setVisible(!m_sprites[6]->isVisible());
+	m_sprites[7]->setVisible(!m_sprites[7]->isVisible());
+}
+
+void HomeScene::OpenClosePotionShop(cocos2d::Ref * pSender)
+{
+	m_buttons[4]->setVisible(!m_buttons[4]->isVisible());
+	potionScrollView->setVisible(!potionScrollView->isVisible());
+	m_sprites[8]->setVisible(!m_sprites[8]->isVisible());
+	m_sprites[9]->setVisible(!m_sprites[9]->isVisible());
+}
+
+void HomeScene::OpenCloseEquipmentShop(cocos2d::Ref * pSender)
+{
+	m_buttons[5]->setVisible(!m_buttons[4]->isVisible());
+	equipmentScrollView->setVisible(!equipmentScrollView->isVisible());
+	m_sprites[10]->setVisible(!m_sprites[10]->isVisible());
+	m_sprites[11]->setVisible(!m_sprites[11]->isVisible());
 }
