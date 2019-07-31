@@ -33,7 +33,7 @@ void Inventory::Init(cocos2d::Sprite* sprite)
 	btnSell->setScale(0.5);
 	btnSell->retain();
 	
-	clickBox->setPosition(-500, -500);
+	clickBox->setPosition(-1000, -1000);
 	clickBox->retain();
 	slotX = 6;
 	slotY = 4;
