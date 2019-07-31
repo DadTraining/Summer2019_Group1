@@ -1,5 +1,5 @@
 #SPRITE
-40
+41
 0
 res/sprites/character/mainCharacter.png
 1
@@ -80,6 +80,8 @@ res/sprites/character/elise.png
 res/sprites/character/warwick.png
 39
 res/sprites/gameplay/fire.png
+40
+res/sprites/gameplay/bullet3.png
 #BUTTON
 26
 0

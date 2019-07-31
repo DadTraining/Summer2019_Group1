@@ -66,7 +66,7 @@ Elise::Elise(Layer* layer, int direction, Vec2 pos, int group)
 	coolDownAttack = 0;
 	preventRun = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(33));
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(40));
 	sprite->setScale(0.7f);
 	bullet = new Bullet(sprite, MainCharacter::BULLET_BITMASK);
 	bullet->SetStep(7);
