@@ -23,7 +23,7 @@ Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 	mSprite->setPhysicsBody(mPhysicsBody);
 	layer->addChild(mSprite);
 
-	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
+	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(12)));
 	layer->addChild(hpBar);
 	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
 	layer->addChild(hpLoadingBar);

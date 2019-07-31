@@ -22,7 +22,7 @@ Elise::Elise(Layer* layer, int direction, Vec2 pos, int group)
 	layer->addChild(mSprite);
 
 
-	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
+	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(12)));
 	layer->addChild(hpBar);
 	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
 	layer->addChild(hpLoadingBar);

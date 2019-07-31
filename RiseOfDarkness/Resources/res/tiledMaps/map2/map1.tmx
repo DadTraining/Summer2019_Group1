@@ -42,7 +42,7 @@
 </data>
  </layer>
  <objectgroup id="21" name="heartContainer">
-  <object id="42" x="933" y="950">
+  <object id="42" name="heartContainer" x="933" y="950">
    <point/>
   </object>
  </objectgroup>
