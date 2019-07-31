@@ -5,6 +5,7 @@
 #include "HomeScene.h"
 #include "Maokai.h"
 #include "Elise.h"
+#include "Warwick.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ USING_NS_CC;
 Scene* Level4Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level4Scene::create();
 
@@ -99,7 +100,7 @@ void Level4Scene::CreateMonster()
 	float x1, y1;
 	int direction1;
 	auto maokaiGroup = tileMap->getObjectGroup("maokai");
-	int amount1 = 3;
+	int amount1 = 5;
 	char str1[10];
 	for (int i = 1; i <= amount1; i++)
 	{
@@ -125,6 +126,22 @@ void Level4Scene::CreateMonster()
 		Elise *elise = new Elise(this, direction2, Vec2(x2, y2), i - 1 + amount1);
 		elise->GetPhysicsBody()->setGroup(i - 1 + amount1);
 		m_enemies.push_back(elise);
+	}
+
+	float x3, y3;
+	int direction3;
+	auto warwickGroup = tileMap->getObjectGroup("warwick");
+	int amount3 = 3;
+	char str3[10];
+	for (int i = 1; i <= amount3; i++)
+	{
+		sprintf(str3, "%02d", i);
+		direction3 = warwickGroup->getObject(str3)["direction"].asInt();
+		x3 = warwickGroup->getObject(str3)["x"].asFloat();
+		y3 = warwickGroup->getObject(str3)["y"].asFloat();
+		Warwick *warwick = new Warwick(this, direction3, Vec2(x3, y3));
+		warwick->GetPhysicsBody()->setGroup(i - 1 + amount1 + amount2);
+		m_enemies.push_back(warwick);
 	}
 }
 
@@ -280,6 +297,12 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 	// MAIN CHARACTER WITH OBSTACLES
 	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::OBSTACLE_BITMASK, 1);
 
+	// ELISE WITH OBSTACLES
+	Collision(contact, MainCharacter::OBSTACLE_BITMASK, MainCharacter::ELISE_MONSTER_BITMASK, 5);
+
+	// WARWICK WITH OBSTACLES
+	Collision(contact, MainCharacter::OBSTACLE_BITMASK, MainCharacter::WARWICK_MONSTER_BITMASK, 5);
+
 	// MAIN CHARACTER WITH MAOKAI
 	Collision(contact, MainCharacter::MAIN_CHARACTER_BITMASK, MainCharacter::MAOKAI_MONSTER_BITMASK, 1);
 
@@ -295,17 +318,26 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 	// MAIN CHARACTER SLASH ELISE
 	Collision(contact, MainCharacter::SLASH_BITMASK, MainCharacter::ELISE_MONSTER_BITMASK, 3);
 
+	// MAIN CHARACTER SLASH WARWICK MONSTER
+	Collision(contact, MainCharacter::SLASH_BITMASK, MainCharacter::WARWICK_MONSTER_BITMASK, 3);
+
 	// MAIN CHARACTER'S ARROW COLLIDE MAOKAI MONSTER
 	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::MAOKAI_MONSTER_BITMASK, 4);
 
 	// MAIN CHARACTER'S ARROW COLLIDE ELISE
 	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::ELISE_MONSTER_BITMASK, 4);
 
+	// MAIN CHARACTER'S ARROW COLLIDE WARWICK
+	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::WARWICK_MONSTER_BITMASK, 4);
+
 	// FIRE DAMAGE MAIN CHARACTER
 	Collision(contact, MainCharacter::FIRE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 8);
 
 	// BULLET DAMAGE MAIN CHARACTER
 	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
+
+	// WARWICK DAMAGE MAIN CHARACTER
+	Collision(contact, MainCharacter::WARWICK_MONSTER_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 9);
 
 	// BULLET COLLIDE OBSTACLES
 	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
@@ -498,6 +530,15 @@ void Level4Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 			{
 				m_enemies[b->getGroup()]->GetFire()->SetVisible(false);
 			}
+		}
+		break;
+	case 9:
+		// WARWICK DAMAGE MAIN CHARACTER
+		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
+			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
+		{
+			log("GET...GET");
+			MainCharacter::GetInstance()->GetDamage(MainCharacter::WARWICK_DAMAGE);
 		}
 		break;
 	default:

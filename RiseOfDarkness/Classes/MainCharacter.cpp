@@ -80,8 +80,8 @@ void MainCharacter::CreateMainCharacter()
 	// CREATE PHYSICS BODY 
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.5;
-	box.height = mSprite->getContentSize().height / 3;
-	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height));
+	box.height = mSprite->getContentSize().height / 2;
+	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height / 3));
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setRotationEnable(false);
 	mPhysicsBody->setDynamic(false);
@@ -447,6 +447,7 @@ void MainCharacter::Run()
 
 void MainCharacter::GetDamage(int damage)
 {
+	log("GET DAMAGE");
 	currentHP += defend - damage;
 	slash->GetSprite()->setPosition(Vec2(-1, -1));
 	switch (direction)

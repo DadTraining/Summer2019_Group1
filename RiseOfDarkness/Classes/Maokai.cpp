@@ -105,7 +105,7 @@ void Maokai::Update(float deltaTime)
 	}
 	else
 	{
-		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
+		MainCharacter::GetInstance()->AddGold(MainCharacter::MAOKAI_MONSTER_GOLD);
 		fire->SetVisible(false);
 	}
 }

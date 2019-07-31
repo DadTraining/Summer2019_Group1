@@ -100,7 +100,7 @@ void Nokken::Update(float deltaTime)
 	}
 	else
 	{
-		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
+		MainCharacter::GetInstance()->AddGold(MainCharacter::NOKKEN_MONSTER_GOLD);
 		bullet->SetVisible(false);
 	}
 }

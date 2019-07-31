@@ -127,7 +127,7 @@ void Elise::Update(float deltaTime)
 	}
 	else
 	{
-		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
+		MainCharacter::GetInstance()->AddGold(MainCharacter::ELISE_MONSTER_GOLD);
 		bullet->SetVisible(false);
 	}
 }
