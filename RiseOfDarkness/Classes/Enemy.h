@@ -6,6 +6,7 @@
 #include "Arrow.h"
 #include "Bullet.h"
 #include "Item.h"
+#include "Fire.h"
 
 using namespace cocos2d;
 
@@ -44,6 +45,7 @@ public:
 	virtual Arrow* GetArrow();
 	virtual Bullet* GetBullet();
 	virtual Item* GetItem();
+	virtual Fire* GetFire();
 };
 
 #endif

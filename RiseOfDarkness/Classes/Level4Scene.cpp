@@ -32,6 +32,8 @@ bool Level4Scene::init()
 
 	MainCharacter::GetInstance()->Refresh();
 
+	currentStage = 4;
+
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(9);
 	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(10);
 
@@ -47,6 +49,13 @@ bool Level4Scene::init()
 	snow->setPositionY(Director::getInstance()->getVisibleSize().height * 2.2);
 	addChild(snow, 12);
 
+	if (!MainCharacter::GetInstance()->GetCheckHeartCollect(currentStage))
+	{
+		CreateTreasure();
+	}
+
+	InitChest(this);
+
 	scheduleUpdate();
 
 	return true;
@@ -54,7 +63,7 @@ bool Level4Scene::init()
 
 void Level4Scene::update(float deltaTime)
 {
-	UpdateController();
+	amountEnemy->setString("X " + std::to_string(GetAliveEnemies()));
 
 	UpdateInfoBar();
 
@@ -62,26 +71,37 @@ void Level4Scene::update(float deltaTime)
 
 	SetCamera(mainCharacter->getPosition());
 
-	for (int i = 0; i < m_enemies.size(); i++)
-	{
-		if (m_enemies[i]->GetSprite()->isVisible())
-		{
-			m_enemies[i]->Update(deltaTime);
-		}
-	}
+	EnemyUpdate(deltaTime);
 
 	if (CheckClear())
 	{
 		if (MainCharacter::GetInstance()->GetStageLevel() == currentStage)
 		{
-			Director::getInstance()->pause();
 			MainCharacter::GetInstance()->IncreaseStage();
-			clear->setVisible(true);
-			m_buttons[4]->setVisible(false);
-			m_buttons[5]->setVisible(false);
-			m_buttons[6]->setVisible(true);
-			m_buttons[7]->setVisible(true);
 		}
+		Director::getInstance()->pause();
+		clear->setVisible(true);
+		m_buttons[4]->setVisible(false);
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(true);
+		m_buttons[7]->setVisible(true);
+		shader->setOpacity(200);
+		if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+		{
+			MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+		}
+		if (tab->isVisible())
+		{
+			tab->setVisible(false);
+			health->setVisible(false);
+			attack->setVisible(false);
+			armor->setVisible(false);
+			speedBoot->setVisible(false);
+		}
+		m_buttons[8]->setEnabled(false);
+		m_buttons[9]->setEnabled(false);
+		m_buttons[10]->setEnabled(false);
+		m_buttons[11]->setEnabled(false);
 	}
 
 	if (!MainCharacter::GetInstance()->IsAlive())
@@ -91,7 +111,29 @@ void Level4Scene::update(float deltaTime)
 		m_buttons[6]->setVisible(true);
 		m_buttons[7]->setVisible(true);
 		gameover->setVisible(true);
+		shader->setOpacity(200);
+		if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+		{
+			MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+		}
+		if (tab->isVisible())
+		{
+			tab->setVisible(false);
+			health->setVisible(false);
+			attack->setVisible(false);
+			armor->setVisible(false);
+			speedBoot->setVisible(false);
+		}
+		m_buttons[8]->setEnabled(false);
+		m_buttons[9]->setEnabled(false);
+		m_buttons[10]->setEnabled(false);
+		m_buttons[11]->setEnabled(false);
 	}
+
+	UpdateJoystick();
+
+	MainCharacter::GetInstance()->GetFlySlash()->Update(deltaTime);
+
 	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }
 
@@ -145,64 +187,6 @@ void Level4Scene::CreateMonster()
 	}
 }
 
-void Level4Scene::CreatePhysicsWorld(const char * obstacle, const char * mc, Layer * layer)
-{
-	// Create camera
-	camera = Camera::create();
-	layer->addChild(camera, 10);
-
-	// Add tile map
-	tileMap->removeFromParent();
-	tileMap->setPosition(Vec2(0, 0));
-	layer->addChild(tileMap, 0);
-
-	// Create physics body world
-	auto edgeBody = PhysicsBody::createEdgeBox(tileMap->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
-	edgeBody->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
-	edgeBody->setContactTestBitmask(true);
-	auto edgeNode = Node::create();
-	edgeNode->setPosition(tileMap->getContentSize() / 2);
-	edgeNode->setPhysicsBody(edgeBody);
-	layer->addChild(edgeNode);
-
-	// Create box 2d for obstacles
-	auto ob = tileMap->getLayer(obstacle);
-	ob->setVisible(false);
-	Size layerSize = ob->getLayerSize();
-	for (int i = 0; i < layerSize.width; i++)
-	{
-		for (int j = 0; j < layerSize.height; j++)
-		{
-			auto tileSet = ob->getTileAt(Vec2(i, j));
-			if (tileSet != NULL)
-			{
-				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT);
-				physics->setDynamic(false);
-				physics->setCollisionBitmask(MainCharacter::OBSTACLE_BITMASK);
-				physics->setContactTestBitmask(true);
-				tileSet->setPhysicsBody(physics);
-			}
-		}
-	}
-
-	// Add upper tile map
-	upperTileMap->removeFromParent();
-	upperTileMap->setPosition(Vec2(0, 0));
-	layer->addChild(upperTileMap, 3);
-
-	// Add main character
-	mainCharacter = MainCharacter::GetInstance()->GetSprite();
-	mainCharacter->removeFromParent();
-	MainCharacter::GetInstance()->AddToLayer(layer);
-	auto obj = tileMap->objectGroupNamed(mc);
-	float x = obj->getObject(mc)["x"].asFloat();
-	float y = obj->getObject(mc)["y"].asFloat();
-	mainCharacter->setPosition(x, y);
-
-	// Get body
-	body = MainCharacter::GetInstance()->GetPhysicsBody();
-}
-
 void Level4Scene::AddListener()
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -211,11 +195,13 @@ void Level4Scene::AddListener()
 	touchListener->onTouchMoved = CC_CALLBACK_2(Level4Scene::OnTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level4Scene::SpecialAttack, this));
-	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level4Scene::Evade, this));
-	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level4Scene::NormalAttack, this));
+	// SKILLS
+	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level4Scene::SpecialAttack, this));
+	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level4Scene::Evade, this));
+	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level4Scene::NormalAttack, this));
 	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level4Scene::Defend, this));
 
+	// PAUSE GAME
 	m_buttons[4]->addClickEventListener([&](Ref* event) {
 		if (!m_buttons[5]->isVisible())
 		{
@@ -223,18 +209,44 @@ void Level4Scene::AddListener()
 			m_buttons[5]->setVisible(true);
 			m_buttons[6]->setVisible(true);
 			m_buttons[7]->setVisible(true);
+			paused->setVisible(true);
+			shader->setOpacity(200);
 			Director::getInstance()->pause();
+			if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+			{
+				MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+			}
+			if (tab->isVisible())
+			{
+				tab->setVisible(false);
+				health->setVisible(false);
+				attack->setVisible(false);
+				armor->setVisible(false);
+				speedBoot->setVisible(false);
+			}
+			m_buttons[8]->setEnabled(false);
+			m_buttons[9]->setEnabled(false);
+			m_buttons[10]->setEnabled(false);
+			m_buttons[11]->setEnabled(false);
 		}
 	});
 
+	// RESUME GAME
 	m_buttons[5]->addClickEventListener([&](Ref* event) {
 		m_buttons[4]->setVisible(true);
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(false);
 		m_buttons[7]->setVisible(false);
+		shader->setOpacity(0);
+		paused->setVisible(false);
 		Director::getInstance()->resume();
+		m_buttons[8]->setEnabled(true);
+		m_buttons[9]->setEnabled(true);
+		m_buttons[10]->setEnabled(true);
+		m_buttons[11]->setEnabled(true);
 	});
 
+	// GO TO HOMESCENE
 	m_buttons[6]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
@@ -243,6 +255,7 @@ void Level4Scene::AddListener()
 		runAction(gotoMap);
 	});
 
+	// RESTART GAME STAGE
 	m_buttons[7]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
@@ -251,45 +264,68 @@ void Level4Scene::AddListener()
 		runAction(gotoMap);
 	});
 
+	// USE HP POTION
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
+		if (MainCharacter::GetInstance()->GetPercentHP() < 100)
+		{
+			int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion);
+			MainCharacter::GetInstance()->GetInventory()->RemoveItem(21, index, ItemType::potion);
+			if (!MainCharacter::GetInstance()->GetInventory()->InventoryContains(21, ItemType::potion))
+			{
+				amountHP->setString("0");
+			}
+			else
+			{
+				amountHP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+					[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)]));
+			}
+		}
 	});
 
+	// USE MP POTION
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
+		if (MainCharacter::GetInstance()->GetPercentMP() < 100)
+		{
+			int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion);
+			MainCharacter::GetInstance()->GetInventory()->RemoveItem(22, index, ItemType::potion);
+			if (!MainCharacter::GetInstance()->GetInventory()->InventoryContains(22, ItemType::potion))
+			{
+				amountMP->setString("0");
+			}
+			else
+			{
+				amountMP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+					[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion)]));
+			}
+		}
 	});
 
+	// INVENTORY
 	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level4Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(Level4Scene::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+	// STATUS
+	m_buttons[8]->addClickEventListener(CC_CALLBACK_1(Level4Scene::ClickShowInfor, this));
 }
 
 bool Level4Scene::OnTouchBegan(Touch* touch, Event* event)
 {
-	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
-	mCurrentTouchPoint = touch->getLocation();
-	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
-	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
-	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
+	
 	return true;
 }
 
 bool Level4Scene::OnTouchEnded(Touch* touch, Event* event)
 {
-	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
-	mCurrentTouchPoint = Point(-1, -1);
+	
 	return true;
 }
 
 void Level4Scene::OnTouchMoved(Touch* touch, Event* event)
 {
-	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
-	mCurrentTouchPoint = touch->getLocation();
-	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
-	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
-	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
+	
 }
 
 bool Level4Scene::onContactBegin(PhysicsContact& contact)
@@ -342,6 +378,97 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 	// BULLET COLLIDE OBSTACLES
 	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
 
+	PhysicsBody* a = contact.getShapeA()->getBody();
+	PhysicsBody* b = contact.getShapeB()->getBody();
+
+	// COLLECT HEART CONTAINER
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::HEART_CONTAINER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::HEART_CONTAINER_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (heartContainer->isVisible())
+		{
+			MainCharacter::GetInstance()->TakeHeartContainer();
+			heartContainer->setVisible(false);
+			MainCharacter::GetInstance()->SetHeartCollected(currentStage);
+		}
+	}
+
+	// FLY SLASH COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK))
+	{
+		MainCharacter::GetInstance()->GetFlySlash()->Disappear();
+	}
+
+	// FLY SLASH DAMAGE ELISE
+	if ((a->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::ELISE_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ELISE_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetFlySlash()->GetSprite()->isVisible())
+		{
+			if (a->getCollisionBitmask() == MainCharacter::ELISE_MONSTER_BITMASK)
+			{
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
+			}
+			else if (b->getCollisionBitmask() == MainCharacter::ELISE_MONSTER_BITMASK)
+			{
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
+			}
+		}
+	}
+
+	// FLY SLASH DAMAGE MAOKAI
+	if ((a->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::MAOKAI_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MAOKAI_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetFlySlash()->GetSprite()->isVisible())
+		{
+			if (a->getCollisionBitmask() == MainCharacter::MAOKAI_MONSTER_BITMASK)
+			{
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
+			}
+			else if (b->getCollisionBitmask() == MainCharacter::MAOKAI_MONSTER_BITMASK)
+			{
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
+			}
+		}
+	}
+
+	// FLY SLASH DAMAGE WARWICK
+	if ((a->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::WARWICK_MONSTER_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::WARWICK_MONSTER_BITMASK && b->getCollisionBitmask() == MainCharacter::FLY_SLASH_BITMASK))
+	{
+		if (MainCharacter::GetInstance()->GetFlySlash()->GetSprite()->isVisible())
+		{
+			if (a->getCollisionBitmask() == MainCharacter::WARWICK_MONSTER_BITMASK)
+			{
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
+			}
+			else if (b->getCollisionBitmask() == MainCharacter::WARWICK_MONSTER_BITMASK)
+			{
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
+			}
+		}
+	}
+
+	//COLLECT MEAT ITEM
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(25);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(25);
+		}
+	}
+
 	return true;
 }
 
@@ -375,10 +502,6 @@ void Level4Scene::Defend(Ref* sender, ui::Widget::TouchEventType type)
 	if (type == ui::Widget::TouchEventType::BEGAN)
 	{
 		MainCharacter::GetInstance()->Defend();
-	}
-	if (type == ui::Widget::TouchEventType::ENDED)
-	{
-		MainCharacter::GetInstance()->StopDefend();
 	}
 }
 
@@ -548,9 +671,56 @@ void Level4Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 
 void Level4Scene::OpenInventory(cocos2d::Ref * sender)
 {
-	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	);
+	if (tab->isVisible())
+	{
+		tab->setVisible(false);
+		health->setVisible(false);
+		attack->setVisible(false);
+		armor->setVisible(false);
+		speedBoot->setVisible(false);
+	}
+}
+
+void Level4Scene::CreateTreasure()
+{
+	auto heartContainerGroup = tileMap->getObjectGroup("heartContainer");
+	heartContainer = ResourceManager::GetInstance()->GetSpriteById(29);
+	heartContainer->removeFromParent();
+	heartContainer->setVisible(true);
+	heartContainer->setPosition(Vec2(heartContainerGroup->getObject("heartContainer")["x"].asFloat()
+		, heartContainerGroup->getObject("heartContainer")["y"].asFloat()));
+	this->addChild(heartContainer);
+
+	auto physics = PhysicsBody::createBox(heartContainer->getContentSize(), PhysicsMaterial(0, 0, 0));
+	physics->setRotationEnable(false);
+	physics->setCollisionBitmask(MainCharacter::HEART_CONTAINER_BITMASK);
+	physics->setDynamic(false);
+	physics->setContactTestBitmask(true);
+	physics->setGravityEnable(false);
+	heartContainer->setPhysicsBody(physics);
+}
+
+void Level4Scene::ClickShowInfor(Ref * pSender)
+{
+	tab->setVisible(!tab->isVisible());
+	ShowInfor();
+	health->setVisible(!health->isVisible());
+	attack->setVisible(!attack->isVisible());
+	armor->setVisible(!armor->isVisible());
+	speedBoot->setVisible(!speedBoot->isVisible());
+	health->setString(std::to_string(MainCharacter::GetInstance()->GetCurrentHP()) + "/" + std::to_string(MainCharacter::GetInstance()->GetMaxHP()));
+	attack->setString(std::to_string(MainCharacter::GetInstance()->GetAttack()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetAttack() - MainCharacter::ATTACK) + ")");
+	armor->setString(std::to_string(MainCharacter::GetInstance()->GetDefend()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetDefend() - MainCharacter::DEFEND) + ")");
+	speedBoot->setString(std::to_string(MainCharacter::GetInstance()->GetSpeed()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetSpeed() - MainCharacter::SPEED) + ")");
+	if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	{
+		MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+	}
 }

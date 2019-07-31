@@ -49,7 +49,7 @@ Nokken::Nokken(Layer * layer, Vec2 pos, int group)
 	countingTime = 0;
 	coolDownAttack = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(35));
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(32));
 	sprite->setScale(0.5f);
 	bullet = new Bullet(sprite, MainCharacter::BULLET_BITMASK);
 	bullet->SetStep(6);

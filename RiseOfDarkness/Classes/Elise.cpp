@@ -7,7 +7,7 @@ Elise::Elise() {}
 
 Elise::Elise(Layer* layer, int direction, Vec2 pos, int group)
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(37));
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(35));
 	mSprite->setScale(1.0f);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
@@ -66,7 +66,7 @@ Elise::Elise(Layer* layer, int direction, Vec2 pos, int group)
 	coolDownAttack = 0;
 	preventRun = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(40));
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(38));
 	sprite->setScale(0.7f);
 	bullet = new Bullet(sprite, MainCharacter::BULLET_BITMASK);
 	bullet->SetStep(7);

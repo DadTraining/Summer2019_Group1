@@ -20,6 +20,16 @@ Bullet::~Bullet()
 {
 }
 
+void Bullet::SetStep(int step)
+{
+	this->RUN_STEP = step;
+}
+
+int Bullet::GetStep()
+{
+	return this->RUN_STEP;
+}
+
 void Bullet::setAlive(bool alive)
 {
 	mIsAlive = alive;

@@ -6,9 +6,7 @@
 class Bullet
 {
 private:
-
-	const int RUN_STEP = 5;
-
+	int RUN_STEP;
 	cocos2d::Sprite *mSprite;
 	cocos2d::PhysicsBody* mPhysicsBody;
 	bool mIsAlive;
@@ -25,6 +23,8 @@ public:
 	static const int RANGE = 250;
 	Bullet(cocos2d::Sprite *sprite, int BITMASK);
 	~Bullet();
+	void SetStep(int step);
+	int GetStep();
 	void setAlive(bool alive);
 	void fly(bool isRight);
 	bool isAlive();

@@ -23,7 +23,7 @@ public:
 	static const int NORMAL_ARROW_BITMASK = 105;
 	static const int BOWMOBLIN_BITMASK = 106;
 	static const int BOWMOBLIN_ARROW_BITMASK = 107;
-	static const int BULLET_ROPE_BITMASK = 108;
+	static const int BULLET_BITMASK = 108;
 	static const int ROPE_MONSTER_BITMASK = 109;
 	static const int HEART_CONTAINER_BITMASK = 110;
 	static const int FLY_SLASH_BITMASK = 111;

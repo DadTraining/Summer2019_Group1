@@ -29,7 +29,7 @@ bool Level1Scene::init()
 
 	MainCharacter::GetInstance()->Refresh();
 
-	currentStage = 1;
+	currentStage = 2;
 
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(3);
 	upperTileMap = ResourceManager::GetInstance()->GetTileMapById(4);

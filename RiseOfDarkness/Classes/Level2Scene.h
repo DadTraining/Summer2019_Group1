@@ -9,7 +9,7 @@ using namespace cocos2d;
 class Level2Scene : public Layer, GamePlay
 {
 private:
-	std::vector<Enemy*> m_enemies;
+	Sprite* heartContainer;
 public:
 	static cocos2d::Scene* CreateScene();
 
@@ -33,6 +33,8 @@ public:
 	virtual void Collision(PhysicsContact& contact, int bitmask1, int bitmask2, int type);
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
+	void CreateTreasure();
+	void ClickShowInfor(Ref* pSender);
 
 	CREATE_FUNC(Level2Scene);
 };

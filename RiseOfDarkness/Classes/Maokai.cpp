@@ -9,7 +9,7 @@ Maokai::Maokai()
 
 Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(36));
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(34));
 	mSprite->setScale(0.5f);
 	Size box;
 	box.width = mSprite->getContentSize().width / 2.5f;
@@ -52,7 +52,7 @@ Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 	countingTime = 0;
 	coolDownAttack = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(39));
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(37));
 	sprite->setScale(0.4f);
 	fire = new Fire(sprite, MainCharacter::FIRE_BITMASK);
 	fire->SetVisible(false);

@@ -210,3 +210,8 @@ Item* Enemy::GetItem()
 {
 	return item;
 }
+
+Fire* Enemy::GetFire()
+{
+	return nullptr;
+}

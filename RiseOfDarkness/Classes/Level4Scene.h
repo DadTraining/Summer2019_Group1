@@ -9,7 +9,7 @@ using namespace cocos2d;
 class Level4Scene : public Layer, GamePlay
 {
 private:
-	std::vector<Enemy*> m_enemies;
+	Sprite* heartContainer;
 public:
 	static cocos2d::Scene* CreateScene();
 
@@ -21,8 +21,6 @@ public:
 
 	void CreateMonster();
 
-	void CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* layer);
-
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);
 	void OnTouchMoved(Touch* touch, Event* event);
@@ -33,6 +31,8 @@ public:
 	virtual void Collision(PhysicsContact& contact, int bitmask1, int bitmask2, int type);
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
+	void CreateTreasure();
+	void ClickShowInfor(Ref* pSender);
 
 	CREATE_FUNC(Level4Scene);
 };

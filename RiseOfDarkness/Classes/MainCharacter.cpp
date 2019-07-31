@@ -152,7 +152,7 @@ void MainCharacter::CreateMainCharacter()
 	// CREATE PHYSICS BODY 
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.5;
-	box.height = mSprite->getContentSize().height / 3;
+	box.height = mSprite->getContentSize().height / 2;
 	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height));
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setRotationEnable(false);
