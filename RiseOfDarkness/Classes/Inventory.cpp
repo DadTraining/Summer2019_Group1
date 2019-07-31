@@ -152,6 +152,7 @@ void Inventory::AddItem(int id)
 			{
 				weapons[i] = new Item(database->items[index]);
 				weapons[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::weapon));
+				
 				break;
 			}
 		}
@@ -230,7 +231,7 @@ void Inventory::SellItem(int id, int index, ItemType type)
 			MainCharacter::GetInstance()->AddGold(slots[id]->GetSellCost());
 			amountLabels[id]->setString(to_string(itemAmount[id]));
 		}
-		log("removed item %d", id);
+		
 		break;
 	case ItemType::arrow:
 		arrowAmount[id]--;

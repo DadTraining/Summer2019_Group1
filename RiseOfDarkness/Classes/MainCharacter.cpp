@@ -56,7 +56,7 @@ void MainCharacter::CreateMainCharacter()
 	//=======================================================================================
 	//// sword
 	//inventory->AddItem(26);
-	//inventory->AddItem(27);
+	inventory->AddItem(27);
 	//inventory->AddItem(28);
 	//inventory->AddItem(29);
 	//inventory->AddItem(30);
