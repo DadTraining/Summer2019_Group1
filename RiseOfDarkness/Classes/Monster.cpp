@@ -7,7 +7,7 @@ Monster::Monster() {}
 
 Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 {
-	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(23));
+	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(32));
 	mSprite->setScale(1.7f);
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.2;
@@ -22,7 +22,7 @@ Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 	layer->addChild(mSprite);
 
 
-	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(12)));
+	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
 	layer->addChild(hpBar);
 	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
 	layer->addChild(hpLoadingBar);
@@ -66,9 +66,10 @@ Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 	coolDownAttack = 0;
 	preventRun = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(24));
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(33));
 	sprite->setScale(0.7f);
-	bullet = new Bullet(sprite, MainCharacter::BULLET_ROPE_BITMASK);
+	bullet = new Bullet(sprite, MainCharacter::BULLET_BITMASK);
+	bullet->SetStep(7);
 	bullet->SetVisible(false);
 	bullet->GetSprite()->getPhysicsBody()->setGroup(group);
 	bullet->SetDistance(0);

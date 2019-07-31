@@ -23,7 +23,7 @@ Nokken::Nokken(Layer * layer, Vec2 pos, int group)
 	mSprite->setPhysicsBody(mPhysicsBody);
 	layer->addChild(mSprite);
 
-	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(12)));
+	hpBar = ResourceManager::GetInstance()->DuplicateSprite((ResourceManager::GetInstance()->GetSpriteById(21)));
 	layer->addChild(hpBar);
 	hpLoadingBar = ui::LoadingBar::create("res/loadingbar/color_hp.png");
 	layer->addChild(hpLoadingBar);
@@ -49,9 +49,10 @@ Nokken::Nokken(Layer * layer, Vec2 pos, int group)
 	countingTime = 0;
 	coolDownAttack = 0;
 
-	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(32));
+	auto sprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(35));
 	sprite->setScale(0.5f);
-	bullet = new Bullet(sprite, MainCharacter::BULLET_ROPE_BITMASK);
+	bullet = new Bullet(sprite, MainCharacter::BULLET_BITMASK);
+	bullet->SetStep(6);
 	bullet->SetVisible(false);
 	bullet->GetSprite()->getPhysicsBody()->setGroup(group);
 	bullet->SetDirection(3);
@@ -99,7 +100,7 @@ void Nokken::Update(float deltaTime)
 	}
 	else
 	{
-		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
+		MainCharacter::GetInstance()->AddGold(MainCharacter::NOKKEN_MONSTER_GOLD);
 		bullet->SetVisible(false);
 	}
 }

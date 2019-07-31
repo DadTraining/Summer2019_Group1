@@ -51,13 +51,21 @@ bool Level2Scene::init()
 
 void Level2Scene::update(float deltaTime)
 {
+	UpdateController();
+
 	UpdateInfoBar();
 
 	MainCharacter::GetInstance()->Update(deltaTime);
 
 	SetCamera(mainCharacter->getPosition());
 
-	EnemyUpdate(deltaTime);
+	for (int i = 0; i < m_enemies.size(); i++)
+	{
+		if (m_enemies[i]->GetSprite()->isVisible())
+		{
+			m_enemies[i]->Update(deltaTime);
+		}
+	}
 
 	if (CheckClear())
 	{
@@ -70,9 +78,9 @@ void Level2Scene::update(float deltaTime)
 			m_buttons[5]->setVisible(false);
 			m_buttons[6]->setVisible(true);
 			m_buttons[7]->setVisible(true);
-			shader->setOpacity(200);
 		}
 	}
+
 	if (!MainCharacter::GetInstance()->IsAlive())
 	{
 		m_buttons[4]->setVisible(false);
@@ -80,13 +88,7 @@ void Level2Scene::update(float deltaTime)
 		m_buttons[6]->setVisible(true);
 		m_buttons[7]->setVisible(true);
 		gameover->setVisible(true);
-		shader->setOpacity(200);
 	}
-
-	UpdateJoystick();
-
-	MainCharacter::GetInstance()->GetFlySlash()->Update(deltaTime);
-
 	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }
 
@@ -94,14 +96,14 @@ void Level2Scene::CreateMonster()
 {
 	float x1, y1;
 	int direction1;
-	auto spearGoblinGroup = tileMap->getObjectGroup("nokken");
+	auto nokenGroup = tileMap->getObjectGroup("nokken");
 	int amount1 = 3;
 	char str1[10];
 	for (int i = 1; i <= amount1; i++)
 	{
 		sprintf(str1, "%02d", i);
-		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
-		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
+		x1 = nokenGroup->getObject(str1)["x"].asFloat();
+		y1 = nokenGroup->getObject(str1)["y"].asFloat();
 		Nokken *nokken = new Nokken(this, Vec2(x1, y1), i - 1);
 		nokken->GetPhysicsBody()->setGroup(i - 1);
 		m_enemies.push_back(nokken);
@@ -109,15 +111,15 @@ void Level2Scene::CreateMonster()
 
 	float x2, y2;
 	int direction2;
-	auto rope = tileMap->getObjectGroup("rope");
+	auto ropeGroup = tileMap->getObjectGroup("rope");
 	int amount2 = 4;
 	char str2[10];
 	for (int i = 1; i <= amount2; i++)
 	{
 		sprintf(str2, "%02d", i);
-		direction2 = rope->getObject(str2)["direction"].asInt();
-		x2 = rope->getObject(str2)["x"].asFloat();
-		y2 = rope->getObject(str2)["y"].asFloat();
+		direction2 = ropeGroup->getObject(str2)["direction"].asInt();
+		x2 = ropeGroup->getObject(str2)["x"].asFloat();
+		y2 = ropeGroup->getObject(str2)["y"].asFloat();
 		Monster *monster = new Monster(this, direction2, Vec2(x2, y2), i - 1 + amount1);
 		monster->GetPhysicsBody()->setGroup(i - 1 + amount1);
 		m_enemies.push_back(monster);
@@ -210,13 +212,11 @@ void Level2Scene::AddListener()
 	touchListener->onTouchMoved = CC_CALLBACK_2(Level2Scene::OnTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-	// SKILLS
-	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::SpecialAttack, this));
-	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Evade, this));
-	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::NormalAttack, this));
+	m_buttons[0]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::SpecialAttack, this));
+	m_buttons[1]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Evade, this));
+	m_buttons[2]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::NormalAttack, this));
 	m_buttons[3]->addTouchEventListener(CC_CALLBACK_2(Level2Scene::Defend, this));
 
-	// PAUSE GAME
 	m_buttons[4]->addClickEventListener([&](Ref* event) {
 		if (!m_buttons[5]->isVisible())
 		{
@@ -224,24 +224,18 @@ void Level2Scene::AddListener()
 			m_buttons[5]->setVisible(true);
 			m_buttons[6]->setVisible(true);
 			m_buttons[7]->setVisible(true);
-			paused->setVisible(true);
-			shader->setOpacity(200);
 			Director::getInstance()->pause();
 		}
 	});
 
-	// RESUME GAME
 	m_buttons[5]->addClickEventListener([&](Ref* event) {
 		m_buttons[4]->setVisible(true);
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(false);
 		m_buttons[7]->setVisible(false);
-		shader->setOpacity(0);
-		paused->setVisible(false);
 		Director::getInstance()->resume();
 	});
 
-	// GO TO HOMESCENE
 	m_buttons[6]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
@@ -250,7 +244,6 @@ void Level2Scene::AddListener()
 		runAction(gotoMap);
 	});
 
-	// RESTART GAME STAGE
 	m_buttons[7]->addClickEventListener([&](Ref* event) {
 		Director::getInstance()->resume();
 		auto gotoMap = CallFunc::create([] {
@@ -259,20 +252,14 @@ void Level2Scene::AddListener()
 		runAction(gotoMap);
 	});
 
-	// USE HP POTION
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(21, index, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(0, 0);
 	});
 
-	// USE MP POTION
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(22, index, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(1, 1);
 	});
 
-
-	// INVENTORY
 	m_buttons[11]->addClickEventListener(CC_CALLBACK_1(Level2Scene::OpenInventory, this));
 
 	auto contactListener = EventListenerPhysicsContact::create();
@@ -282,16 +269,28 @@ void Level2Scene::AddListener()
 
 bool Level2Scene::OnTouchBegan(Touch* touch, Event* event)
 {
+	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
+	mCurrentTouchPoint = touch->getLocation();
+	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
+	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
+	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 	return true;
 }
 
 bool Level2Scene::OnTouchEnded(Touch* touch, Event* event)
 {
+	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
+	mCurrentTouchPoint = Point(-1, -1);
 	return true;
 }
 
 void Level2Scene::OnTouchMoved(Touch* touch, Event* event)
 {
+	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
+	mCurrentTouchPoint = touch->getLocation();
+	auto distance = camera->getPosition() - Director::getInstance()->getVisibleSize() / 2;
+	mNextTouchPoint.x = mCurrentTouchPoint.x + distance.x;
+	mNextTouchPoint.y = mCurrentTouchPoint.y + distance.y;
 }
 
 bool Level2Scene::onContactBegin(PhysicsContact& contact)
@@ -321,7 +320,7 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	Collision(contact, MainCharacter::NORMAL_ARROW_BITMASK, MainCharacter::NOKKEN_MONSTER_BITMASK, 4);
 	
 	// BULLET DAMAGE MAIN CHARACTER
-	Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
+	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::MAIN_CHARACTER_BITMASK, 6);
 	
 	// ROPE MONSTER COLLIDE OBSTACLES
 	Collision(contact, MainCharacter::OBSTACLE_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 5);
@@ -330,7 +329,7 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	Collision(contact, MainCharacter::RIVER_BITMASK, MainCharacter::ROPE_MONSTER_BITMASK, 5);
 
 	// BULLET COLLIDE OBSTACLES
-	Collision(contact, MainCharacter::BULLET_ROPE_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
+	Collision(contact, MainCharacter::BULLET_BITMASK, MainCharacter::OBSTACLE_BITMASK, 7);
 
 	return true;
 }
@@ -408,30 +407,6 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 			{
 				mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
 				MainCharacter::GetInstance()->SetPreventRun(4);
-			}
-			else if (MainCharacter::GetInstance()->GetDirection() == 5)
-			{
-				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
-					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
-				MainCharacter::GetInstance()->SetPreventRun(5);
-			}
-			else if (MainCharacter::GetInstance()->GetDirection() == 6)
-			{
-				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
-					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
-				MainCharacter::GetInstance()->SetPreventRun(6);
-			}
-			else if (MainCharacter::GetInstance()->GetDirection() == 7)
-			{
-				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
-					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
-				MainCharacter::GetInstance()->SetPreventRun(7);
-			}
-			else if (MainCharacter::GetInstance()->GetDirection() == 8)
-			{
-				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
-					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
-				MainCharacter::GetInstance()->SetPreventRun(8);
 			}
 		}
 		break;
@@ -537,6 +512,7 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 
 void Level2Scene::OpenInventory(cocos2d::Ref * sender)
 {
+	MainCharacter::GetInstance()->GetInventory()->AutoArrange();
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())

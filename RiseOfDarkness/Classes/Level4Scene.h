@@ -1,15 +1,15 @@
-#ifndef LEVEL4_SCENE_H
-#define LEVEL4_SCENE_H
+#ifndef __LEVEL4_SCENE_H__
+#define __LEVEL4_SCENE_H__
 
 #include "GamePlay.h"
 #include "cocos2d.h"
-
+#include "Enemy.h"
 using namespace cocos2d;
 
 class Level4Scene : public Layer, GamePlay
 {
 private:
-	Sprite* heartContainer;
+	std::vector<Enemy*> m_enemies;
 public:
 	static cocos2d::Scene* CreateScene();
 
@@ -21,6 +21,8 @@ public:
 
 	void CreateMonster();
 
+	void CreatePhysicsWorld(const char* obstacle, const char* mc, Layer* layer);
+
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);
 	void OnTouchMoved(Touch* touch, Event* event);
@@ -28,11 +30,12 @@ public:
 	void SpecialAttack(Ref* sender, ui::Widget::TouchEventType type);
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
+	virtual void Collision(PhysicsContact& contact, int bitmask1, int bitmask2, int type);
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
-	void CreateTreasure();
 
 	CREATE_FUNC(Level4Scene);
 };
 
-#endif
+#endif // !__LEVEL4_SCENE_H__
+

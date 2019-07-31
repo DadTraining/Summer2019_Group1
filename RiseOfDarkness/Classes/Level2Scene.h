@@ -8,6 +8,8 @@ using namespace cocos2d;
 
 class Level2Scene : public Layer, GamePlay
 {
+private:
+	std::vector<Enemy*> m_enemies;
 public:
 	static cocos2d::Scene* CreateScene();
 
@@ -19,6 +21,8 @@ public:
 
 	void CreateMonster();
 
+	void CreatePhysicsWorld(const char* obstacle, const char* mc, const char* river, Layer* layer);
+
 	bool OnTouchBegan(Touch* touch, Event* event);
 	bool OnTouchEnded(Touch* touch, Event* event);
 	void OnTouchMoved(Touch* touch, Event* event);
@@ -26,10 +30,9 @@ public:
 	void SpecialAttack(Ref* sender, ui::Widget::TouchEventType type);
 	void Evade(Ref* sender, ui::Widget::TouchEventType type);
 	void Defend(Ref* sender, ui::Widget::TouchEventType type);
+	virtual void Collision(PhysicsContact& contact, int bitmask1, int bitmask2, int type);
 	bool onContactBegin(PhysicsContact& contact);
 	void OpenInventory(cocos2d::Ref * sender);
-	void CreatePhysicsWorld(const char * obstacle, const char * mc, const char * river, Layer * layer);
-	void Collision(PhysicsContact & contact, int bitmask1, int bitmask2, int type);
 
 	CREATE_FUNC(Level2Scene);
 };

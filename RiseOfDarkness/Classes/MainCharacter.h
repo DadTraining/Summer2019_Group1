@@ -29,6 +29,11 @@ public:
 	static const int FLY_SLASH_BITMASK = 111;
 	static const int RIVER_BITMASK = 112;
 	static const int NOKKEN_MONSTER_BITMASK = 113;
+	static const int MAOKAI_MONSTER_BITMASK = 118;
+	static const int ELISE_MONSTER_BITMASK = 119;
+	static const int WARWICK_MONSTER_BITMASK = 120;
+	static const int FIRE_BITMASK = 121;
+	static const int SCREEN_BORDER_BITMASK = 122;
 
 	static const int ARROW1_ITEM_BITMASK = 114;
 	static const int APPLE_ITEM_BITMASK = 115;
@@ -49,12 +54,18 @@ public:
 	static const int NORMAL_ARROW = 10;
 	static const int BOWMOBLIN_DAMAGE = 30;
 	static const int ROPE_MONSTER_DAMAGE = 35;
-	static const int FLY_SLASH_DAMAGE = 100;
+	static const int BULLET_DAMAGE = 35;
+	static const int FIRE_DAMAGE = 50;
+	static const int WARWICK_DAMAGE = 55;
 
 	// GOLD RECEIVE FROM KILL ENEMY
 	static const int BOWMOBLIN_GOLD = 50;
 	static const int SPEARMOBLIN_GOLD = 50;
 	static const int ROPE_MONSTER_GOLD = 40;
+	static const int NOKKEN_MONSTER_GOLD = 20;
+	static const int MAOKAI_MONSTER_GOLD = 35;
+	static const int ELISE_MONSTER_GOLD = 45;
+	static const int WARWICK_MONSTER_GOLD = 30;
 
 	static const int FRONT_IDLE = 0;
 	static const int BACK_IDLE = 1;
