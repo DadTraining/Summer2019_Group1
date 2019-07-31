@@ -472,7 +472,7 @@ void HomeScene::CreateShop()
 	int rows = 0;
 	for (int i = 17; i <= 20; i++)
 	{
-		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		auto itemSprite = Sprite::create("res/sprites/shop/item (" + std::to_string(i) + ").png");
 		itemSprite->setAnchorPoint(Point(0, 1));
 		itemSprite->setPosition(Vec2(25,
 			weaponscrollView->getInnerContainerSize().height-rows*itemSprite->getContentSize().height));
@@ -489,7 +489,7 @@ void HomeScene::CreateShop()
 	}
 	for (int i = 26; i <= 31; i++)
 	{
-		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		auto itemSprite = Sprite::create("res/sprites/shop/item (" + std::to_string(i) + ").png");
 		itemSprite->setAnchorPoint(Point(0, 1));
 		itemSprite->setPosition(Vec2(25,
 			weaponscrollView->getInnerContainerSize().height - rows*itemSprite->getContentSize().height));
@@ -544,7 +544,7 @@ void HomeScene::CreateShop()
 	rows = 0;
 	for (int i = 21; i <= 25; i++)
 	{
-		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		auto itemSprite = Sprite::create("res/sprites/shop/item (" + std::to_string(i) + ").png");
 		itemSprite->setAnchorPoint(Point(0, 1));
 		itemSprite->setPosition(Vec2(25,
 			potionScrollView->getInnerContainerSize().height - rows*itemSprite->getContentSize().height));
@@ -565,7 +565,7 @@ void HomeScene::CreateShop()
 	equipmentScrollView = ui::ScrollView::create();
 	equipmentScrollView->setDirection(ui::ScrollView::Direction::VERTICAL);
 	equipmentScrollView->setContentSize(Size(517, 387 - 88)); //517,387
-	equipmentScrollView->setInnerContainerSize(Size(517, 880));
+	equipmentScrollView->setInnerContainerSize(Size(517, 1440));
 	equipmentScrollView->setAnchorPoint(Vec2(0.5, 0.5));
 	equipmentScrollView->setPosition(Vec2(visibleSize / 2) - Vec2(0, 33));
 	equipmentScrollView->setVisible(false);
@@ -599,7 +599,7 @@ void HomeScene::CreateShop()
 	rows = 0;
 	for (int i = 1; i <= 16; i++)
 	{
-		auto itemSprite = Sprite::create("res/sprites/shop/itemShop (" + std::to_string(i) + ").png");
+		auto itemSprite = Sprite::create("res/sprites/shop/item (" + std::to_string(i) + ").png");
 		itemSprite->setAnchorPoint(Point(0, 1));
 		itemSprite->setPosition(Vec2(25,
 			equipmentScrollView->getInnerContainerSize().height - rows*itemSprite->getContentSize().height));
@@ -614,6 +614,7 @@ void HomeScene::CreateShop()
 		equipmentScrollView->addChild(buttonBuy, 56);
 		rows++;
 	}
+	
 }
 
 void HomeScene::ClickShowInfor(Ref * pSender)

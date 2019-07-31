@@ -53,70 +53,70 @@ void MainCharacter::CreateMainCharacter()
 		inventory->AddItem(24);
 		inventory->AddItem(25);
 	}
+	//=======================================================================================
+	//// sword
+	//inventory->AddItem(26);
+	//inventory->AddItem(27);
+	//inventory->AddItem(28);
+	//inventory->AddItem(29);
+	//inventory->AddItem(30);
+	//inventory->AddItem(31);
 
-	// sword
-	inventory->AddItem(26);
-	inventory->AddItem(27);
-	inventory->AddItem(28);
-	inventory->AddItem(29);
-	inventory->AddItem(30);
-	inventory->AddItem(31);
+	//// bow
+	//inventory->AddItem(17);
+	//inventory->AddItem(18);
+	//inventory->AddItem(19);
+	//inventory->AddItem(20);
 
-	// bow
-	inventory->AddItem(17);
-	inventory->AddItem(18);
-	inventory->AddItem(19);
-	inventory->AddItem(20);
+	//// armor
+	//inventory->AddItem(1);
+	//inventory->AddItem(2);
+	//inventory->AddItem(3);
+	//inventory->AddItem(4);
+	//inventory->AddItem(5);
 
-	// armor
-	inventory->AddItem(1);
-	inventory->AddItem(2);
-	inventory->AddItem(3);
-	inventory->AddItem(4);
-	inventory->AddItem(5);
+	//// boot
+	//inventory->AddItem(13);
+	//inventory->AddItem(14);
+	//inventory->AddItem(15);
+	//inventory->AddItem(16);
 
-	// boot
-	inventory->AddItem(13);
-	inventory->AddItem(14);
-	inventory->AddItem(15);
-	inventory->AddItem(16);
+	//// arrows
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	inventory->AddItem(6);
+	//}
 
-	// arrows
-	for (int i = 0; i < 20; i++)
-	{
-		inventory->AddItem(6);
-	}
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	inventory->AddItem(7);
+	//}
 
-	for (int i = 0; i < 20; i++)
-	{
-		inventory->AddItem(7);
-	}
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	inventory->AddItem(8);
+	//}
 
-	for (int i = 0; i < 20; i++)
-	{
-		inventory->AddItem(8);
-	}
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	inventory->AddItem(9);
+	//}
 
-	for (int i = 0; i < 20; i++)
-	{
-		inventory->AddItem(9);
-	}
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	inventory->AddItem(10);
+	//}
 
-	for (int i = 0; i < 20; i++)
-	{
-		inventory->AddItem(10);
-	}
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	inventory->AddItem(11);
+	//}
 
-	for (int i = 0; i < 20; i++)
-	{
-		inventory->AddItem(11);
-	}
-
-	for (int i = 0; i < 20; i++)
-	{
-		inventory->AddItem(12);
-	}
-
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	inventory->AddItem(12);
+	//}
+	//===========================================================================================
 
 	//Initial Items
 	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(26)]); //sword
@@ -177,7 +177,7 @@ void MainCharacter::CreateMainCharacter()
 	maxMP = 100;
 	currentHP = maxMP;
 	currentMP = maxMP;
-	gold = 2000;
+	gold = 20000;
 	preventRun = 0;
 	pace = std::sqrt(2 * speed*speed) / 2;
 
