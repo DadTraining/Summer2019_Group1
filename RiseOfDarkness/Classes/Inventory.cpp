@@ -403,7 +403,7 @@ void Inventory::RemoveItem(int id,int index,ItemType type)
 	case ItemType::potion:
 		for (int i = 0; i < inventory.size(); i++)
 		{
-			if (slots[i]->GetID() == id && (id == 21 || id == 22) && slots[i]->GetID() != 99 && i == index)
+			if (slots[i]->GetID() == id && (id == 21 || id == 22 || id == 23 || id == 24 || id == 25) && slots[i]->GetID() != 99 && i == index)
 			{
 				if (MainCharacter::GetInstance()->TakePotion(id))
 				{

@@ -23,7 +23,7 @@ private:
 	Action* mAction[9];
 public:
 	Warwick();
-	Warwick(Layer* layer, int direction, Vec2 pos);
+	Warwick(Layer* layer, int direction, Vec2 pos, int group);
 	~Warwick();
 
 	void Update(float deltaTime);

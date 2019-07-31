@@ -11,7 +11,7 @@ USING_NS_CC;
 Scene* Level3Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level3Scene::create();
 
@@ -72,7 +72,6 @@ void Level3Scene::update(float deltaTime)
 		{
 			MainCharacter::GetInstance()->IncreaseStage();
 		}
-		Director::getInstance()->pause();
 		clear->setVisible(true);
 		m_buttons[4]->setVisible(false);
 		m_buttons[5]->setVisible(false);

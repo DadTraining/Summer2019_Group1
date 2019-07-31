@@ -59,6 +59,18 @@ Nokken::Nokken(Layer * layer, Vec2 pos, int group)
 	bullet->SetRotate(0);
 	bullet->SetDistance(0);
 	layer->addChild(sprite, 7);
+
+	item = new Item(MainCharacter::GetInstance()->GetInventory()->database->items[MainCharacter::GetInstance()->GetInventory()->GetIndexByID(24)]);
+	item->GetIcon()->setVisible(false);
+	auto itemPhysics = PhysicsBody::createBox(item->GetIcon()->getContentSize(), PhysicsMaterial(0, 0, 0));
+	itemPhysics->setRotationEnable(false);
+	itemPhysics->setGravityEnable(false);
+	itemPhysics->setDynamic(false);
+	itemPhysics->setGroup(group);
+	itemPhysics->setContactTestBitmask(false);
+	itemPhysics->setCollisionBitmask(MainCharacter::MUSHROOM_ITEM_BITMASK);
+	item->GetIcon()->setPhysicsBody(itemPhysics);
+	layer->addChild(item->GetIcon(), 7);
 }
 
 Nokken::~Nokken()
@@ -102,6 +114,9 @@ void Nokken::Update(float deltaTime)
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::NOKKEN_MONSTER_GOLD);
 		bullet->SetVisible(false);
+		item->GetIcon()->setPosition(mSprite->getPosition());
+		item->GetIcon()->setVisible(true);
+		item->GetIcon()->getPhysicsBody()->setContactTestBitmask(true);
 	}
 }
 

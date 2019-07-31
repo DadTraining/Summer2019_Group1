@@ -59,6 +59,18 @@ Maokai::Maokai(Layer * layer, Vec2 pos, int group)
 	fire->GetSprite()->getPhysicsBody()->setGroup(group);
 	fire->SetDistance(0);
 	layer->addChild(sprite, 7);
+
+	item = new Item(MainCharacter::GetInstance()->GetInventory()->database->items[MainCharacter::GetInstance()->GetInventory()->GetIndexByID(23)]);
+	item->GetIcon()->setVisible(false);
+	auto itemPhysics = PhysicsBody::createBox(item->GetIcon()->getContentSize(), PhysicsMaterial(0, 0, 0));
+	itemPhysics->setRotationEnable(false);
+	itemPhysics->setGravityEnable(false);
+	itemPhysics->setDynamic(false);
+	itemPhysics->setGroup(group);
+	itemPhysics->setContactTestBitmask(false);
+	itemPhysics->setCollisionBitmask(MainCharacter::APPLE_ITEM_BITMASK);
+	item->GetIcon()->setPhysicsBody(itemPhysics);
+	layer->addChild(item->GetIcon(), 7);
 }
 
 Maokai::~Maokai()
@@ -107,6 +119,9 @@ void Maokai::Update(float deltaTime)
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::MAOKAI_MONSTER_GOLD);
 		fire->SetVisible(false);
+		item->GetIcon()->setPosition(mSprite->getPosition());
+		item->GetIcon()->setVisible(true);
+		item->GetIcon()->getPhysicsBody()->setContactTestBitmask(true);
 	}
 }
 

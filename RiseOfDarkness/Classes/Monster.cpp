@@ -74,6 +74,18 @@ Monster::Monster(Layer* layer, int direction, Vec2 pos, int group)
 	bullet->GetSprite()->getPhysicsBody()->setGroup(group);
 	bullet->SetDistance(0);
 	layer->addChild(sprite, 7);
+
+	item = new Item(MainCharacter::GetInstance()->GetInventory()->database->items[MainCharacter::GetInstance()->GetInventory()->GetIndexByID(25)]);
+	item->GetIcon()->setVisible(false);
+	auto itemPhysics = PhysicsBody::createBox(item->GetIcon()->getContentSize(), PhysicsMaterial(0, 0, 0));
+	itemPhysics->setRotationEnable(false);
+	itemPhysics->setGravityEnable(false);
+	itemPhysics->setDynamic(false);
+	itemPhysics->setGroup(group);
+	itemPhysics->setContactTestBitmask(false);
+	itemPhysics->setCollisionBitmask(MainCharacter::MEAT_ITEM_BITMASK);
+	item->GetIcon()->setPhysicsBody(itemPhysics);
+	layer->addChild(item->GetIcon(), 7);
 }
 
 Monster::~Monster()
@@ -129,6 +141,9 @@ void Monster::Update(float deltaTime)
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::ROPE_MONSTER_GOLD);
 		bullet->SetVisible(false);
+		item->GetIcon()->setPosition(mSprite->getPosition());
+		item->GetIcon()->setVisible(true);
+		item->GetIcon()->getPhysicsBody()->setContactTestBitmask(true);
 	}
 }
 

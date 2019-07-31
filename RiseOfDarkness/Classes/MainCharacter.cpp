@@ -153,7 +153,7 @@ void MainCharacter::CreateMainCharacter()
 	Size box;
 	box.width = mSprite->getContentSize().width / 1.5;
 	box.height = mSprite->getContentSize().height / 2;
-	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height));
+	mPhysicsBody = PhysicsBody::createBox(box, PhysicsMaterial(0, 0, 0), Vec2(0, -box.height / 2));
 	mPhysicsBody->setGravityEnable(false);
 	mPhysicsBody->setRotationEnable(false);
 	mPhysicsBody->setDynamic(false);
@@ -173,7 +173,7 @@ void MainCharacter::CreateMainCharacter()
 	maxMP = 100;
 	currentHP = maxMP;
 	currentMP = maxMP;
-	gold = 200;
+	gold = 10000;
 	preventRun = 0;
 	pace = std::sqrt(2 * speed*speed) / 2;
 
@@ -1026,6 +1026,24 @@ bool MainCharacter::TakePotion(int index)
 			{
 				currentMP = maxMP;
 			}
+			return true;
+		}
+		return false;
+	case 23:
+		if (currentHP < maxHP || currentMP < maxMP)
+		{
+			currentHP += 30;
+			currentMP += 5;
+			return true;
+		}
+		return false;
+	case 24:
+		return false;
+	case 25:
+		if (currentHP < maxHP || currentMP < maxMP)
+		{
+			currentHP += 50;
+			currentMP += 20;
 			return true;
 		}
 		return false;

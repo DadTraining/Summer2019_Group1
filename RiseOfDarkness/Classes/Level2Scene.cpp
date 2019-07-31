@@ -74,7 +74,6 @@ void Level2Scene::update(float deltaTime)
 		{
 			MainCharacter::GetInstance()->IncreaseStage();
 		}
-		Director::getInstance()->pause();
 		clear->setVisible(true);
 		m_buttons[4]->setVisible(false);
 		m_buttons[5]->setVisible(false);
@@ -466,11 +465,11 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 	{
 		if (MainCharacter::GetInstance()->GetFlySlash()->GetSprite()->isVisible())
 		{
-			if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			if (a->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
 			{
 				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
-			else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			else if (b->getCollisionBitmask() == MainCharacter::ROPE_MONSTER_BITMASK)
 			{
 				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
@@ -495,6 +494,23 @@ bool Level2Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	//COLLECT MUSHROOM ITEM
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MUSHROOM_ITEM_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MUSHROOM_ITEM_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::MUSHROOM_ITEM_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(24);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::MUSHROOM_ITEM_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(24);
+		}
+	}
 	return true;
 }
 
@@ -567,6 +583,30 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 			{
 				mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
 				MainCharacter::GetInstance()->SetPreventRun(4);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 5)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(5);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 6)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(6);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 7)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(7);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 8)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(8);
 			}
 		}
 		break;

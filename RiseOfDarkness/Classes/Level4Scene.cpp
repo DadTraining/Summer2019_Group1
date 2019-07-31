@@ -79,7 +79,6 @@ void Level4Scene::update(float deltaTime)
 		{
 			MainCharacter::GetInstance()->IncreaseStage();
 		}
-		Director::getInstance()->pause();
 		clear->setVisible(true);
 		m_buttons[4]->setVisible(false);
 		m_buttons[5]->setVisible(false);
@@ -181,7 +180,7 @@ void Level4Scene::CreateMonster()
 		direction3 = warwickGroup->getObject(str3)["direction"].asInt();
 		x3 = warwickGroup->getObject(str3)["x"].asFloat();
 		y3 = warwickGroup->getObject(str3)["y"].asFloat();
-		Warwick *warwick = new Warwick(this, direction3, Vec2(x3, y3));
+		Warwick *warwick = new Warwick(this, direction3, Vec2(x3, y3), i - 1 + amount1 + amount2);
 		warwick->GetPhysicsBody()->setGroup(i - 1 + amount1 + amount2);
 		m_enemies.push_back(warwick);
 	}
@@ -469,6 +468,24 @@ bool Level4Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	//COLLECT APPLE ITEM
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::APPLE_ITEM_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::APPLE_ITEM_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::APPLE_ITEM_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(23);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::APPLE_ITEM_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(23);
+		}
+	}
+
 	return true;
 }
 
@@ -541,6 +558,30 @@ void Level4Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 			{
 				mainCharacter->setPositionX(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetSpeed());
 				MainCharacter::GetInstance()->SetPreventRun(4);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 5)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(5);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 6)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() + MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(6);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 7)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() - MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(7);
+			}
+			else if (MainCharacter::GetInstance()->GetDirection() == 8)
+			{
+				mainCharacter->setPosition(Vec2(mainCharacter->getPositionX() - MainCharacter::GetInstance()->GetPace(),
+					mainCharacter->getPositionY() + MainCharacter::GetInstance()->GetPace()));
+				MainCharacter::GetInstance()->SetPreventRun(8);
 			}
 		}
 		break;

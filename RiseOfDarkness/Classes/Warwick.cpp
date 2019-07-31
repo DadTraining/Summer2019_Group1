@@ -5,7 +5,7 @@
 
 Warwick::Warwick() {}
 
-Warwick::Warwick(Layer* layer, int direction, Vec2 pos)
+Warwick::Warwick(Layer* layer, int direction, Vec2 pos, int group)
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(36));
 	mSprite->setScale(1.0f);
@@ -58,6 +58,18 @@ Warwick::Warwick(Layer* layer, int direction, Vec2 pos)
 	countingTime = 0;
 	coolDownAttack = 0;
 	preventRun = 0;
+
+	item = new Item(MainCharacter::GetInstance()->GetInventory()->database->items[MainCharacter::GetInstance()->GetInventory()->GetIndexByID(25)]);
+	item->GetIcon()->setVisible(false);
+	auto itemPhysics = PhysicsBody::createBox(item->GetIcon()->getContentSize(), PhysicsMaterial(0, 0, 0));
+	itemPhysics->setRotationEnable(false);
+	itemPhysics->setGravityEnable(false);
+	itemPhysics->setDynamic(false);
+	itemPhysics->setGroup(group);
+	itemPhysics->setContactTestBitmask(false);
+	itemPhysics->setCollisionBitmask(MainCharacter::MEAT_ITEM_BITMASK);
+	item->GetIcon()->setPhysicsBody(itemPhysics);
+	layer->addChild(item->GetIcon(), 7);
 }
 
 Warwick::~Warwick()
@@ -105,6 +117,9 @@ void Warwick::Update(float deltaTime)
 	else
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::WARWICK_MONSTER_GOLD);
+		item->GetIcon()->setPosition(mSprite->getPosition());
+		item->GetIcon()->setVisible(true);
+		item->GetIcon()->getPhysicsBody()->setContactTestBitmask(true);
 	}
 }
 
