@@ -41,7 +41,11 @@ LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/SneakyJoystickSkinnedBase.cpp \
                    $(LOCAL_PATH)/../../../Classes/FlySlash.cpp \
                    $(LOCAL_PATH)/../../../Classes/Level4Scene.cpp \
-                   $(LOCAL_PATH)/../../../Classes/Nokken.cpp
+                   $(LOCAL_PATH)/../../../Classes/Nokken.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Elise.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Fire.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Maokai.cpp \
+                   $(LOCAL_PATH)/../../../Classes/Warwick.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

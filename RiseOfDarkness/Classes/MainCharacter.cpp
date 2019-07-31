@@ -651,19 +651,19 @@ void MainCharacter::Evade()
 		{
 		case 1:
 			SetState(ROLL_BACK);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, 50)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, 100)));
 			break;
 		case 2:
 			SetState(ROLL_FRONT);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -50)));
+			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -100)));
 			break;
 		case 3:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(-50, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(-100, 0)));
 			break;
 		case 4:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(50, 0)));
+			mSprite->runAction(MoveBy::create(1.0f, Vec2(100, 0)));
 			break;
 		case 5:
 			if (currentState == BACK_IDLE || currentState == GO_UP || BACK_SHIELD)
