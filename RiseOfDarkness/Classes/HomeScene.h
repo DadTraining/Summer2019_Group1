@@ -30,6 +30,8 @@ public:
 	void OpenPotionShop();
 	void OpenEquipmentShop();
 	void CreateShop();
+	void ItemClick(Ref*,int);
+	void AddEventForButton(ui::Button*,int);
 	void CreateAllButton(Layer* layer);
 	void ClickShowInfor(Ref* pSender);
 	void ClickBuyItem(Ref* sender, int id);

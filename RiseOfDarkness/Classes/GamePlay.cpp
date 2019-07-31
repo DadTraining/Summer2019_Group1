@@ -375,7 +375,12 @@ void GamePlay::SetCamera(Vec2 pos)
 }
 
 void GamePlay::OpenInventory(cocos2d::Ref * sender)
-{
+{	
+	log("inventory");
+	for (int i = 0; i < 5; i++)
+	{
+		MainCharacter::GetInstance()->GetInventory()->GetTab(i)->removeAllChildren();
+	}
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
@@ -442,7 +447,7 @@ void GamePlay::ShowInventoryGrid()
 			}
 			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->removeFromParent();
 			// get tab to add item
-			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(weapons[i]->GetIcon(), 21);
+			MainCharacter::GetInstance()->GetInventory()->GetTab(0)->addChild(weapons[i]->GetIcon(), 99);
 			weapons[i]->GetIcon()->setCameraMask(2);
 			MainCharacter::GetInstance()->GetInventory()->weapons[i]->GetIcon()->setPosition(
 				Vec2(64 * cols + 32,

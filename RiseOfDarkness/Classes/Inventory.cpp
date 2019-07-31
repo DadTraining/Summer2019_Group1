@@ -152,7 +152,12 @@ void Inventory::AddItem(int id)
 			{
 				weapons[i] = new Item(database->items[index]);
 				weapons[i]->GetIcon()->addClickEventListener(CC_CALLBACK_1(Inventory::ItemClick, this, i, ItemType::weapon));
-				
+				weapons[i]->GetIcon()->setPressedActionEnabled(true);
+				weapons[i]->GetIcon()->setTouchEnabled(true);
+				weapons[i]->GetIcon()->setTitleText("SWORD");
+				std::string s=weapons[i]->GetIcon()->getCallbackName();
+				log("%s",s);
+				log(" ssd");
 				break;
 			}
 		}

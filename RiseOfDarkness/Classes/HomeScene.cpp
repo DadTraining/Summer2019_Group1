@@ -163,6 +163,11 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 
 void HomeScene::OpenInventory(cocos2d::Ref * sender)
 {
+	log("inventory");
+	for (int i = 0; i < 5; i++)
+	{
+		MainCharacter::GetInstance()->GetInventory()->GetTab(i)->removeAllChildren();
+	}
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
@@ -615,6 +620,16 @@ void HomeScene::CreateShop()
 		rows++;
 	}
 	
+}
+
+void HomeScene::ItemClick(Ref *sender, int id)
+{
+	log("clicked");
+}
+
+void HomeScene::AddEventForButton(ui::Button * btn,int id)
+{
+	btn->addClickEventListener(CC_CALLBACK_1(HomeScene::ItemClick, this, id));
 }
 
 void HomeScene::ClickShowInfor(Ref * pSender)

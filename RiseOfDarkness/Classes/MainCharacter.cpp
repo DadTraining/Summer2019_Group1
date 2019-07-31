@@ -60,7 +60,7 @@ void MainCharacter::CreateMainCharacter()
 	//inventory->AddItem(28);
 	//inventory->AddItem(29);
 	//inventory->AddItem(30);
-	//inventory->AddItem(31);
+	inventory->AddItem(31);
 
 	//// bow
 	//inventory->AddItem(17);
