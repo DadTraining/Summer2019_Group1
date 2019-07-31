@@ -58,6 +58,8 @@ void HomeScene::update(float deltaTime)
 	RunActionNPC();
 
 	UpdateJoystick();
+
+	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }
 
 void HomeScene::AddListener()

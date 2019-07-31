@@ -159,8 +159,8 @@ void ResourceManager::Init(const std::string &path)
 
 	m_sprites[16]->setScale(1.2);
 
-	m_sprites[25]->setScale(1.5);
-	m_sprites[26]->setScale(0.5);
+	m_sprites[25]->setScale(1.1);
+	m_sprites[26]->setScale(0.4);
 
 	m_sprites[27]->setScaleX(Director::getInstance()->getVisibleSize().width / m_sprites[27]->getBoundingBox().size.width);
 	m_sprites[27]->setScaleY(Director::getInstance()->getVisibleSize().height / m_sprites[27]->getBoundingBox().size.height);
@@ -168,7 +168,6 @@ void ResourceManager::Init(const std::string &path)
 	m_sprites[28]->setScale(0.3);
 
 	m_sprites[29]->setScale(0.4);
-
 }
 
 Sprite* ResourceManager::GetSpriteById(int id)
