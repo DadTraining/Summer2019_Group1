@@ -45,26 +45,85 @@ void MainCharacter::CreateMainCharacter()
 	auto grid = Sprite::create("res/sprites/item/gridInventory.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 5; i++)
 	{
+		inventory->AddItem(21);
+		inventory->AddItem(22);
+		inventory->AddItem(23);
+		inventory->AddItem(24);
 		inventory->AddItem(25);
-		inventory->AddItem(26);
 	}
-	inventory->AddItem(38);
-	inventory->AddItem(1);
-	inventory->AddItem(13);
-	inventory->AddItem(18);
 
-	//Initial Items
-	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(37)]); //sword
-	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(17)]); //bow
-	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]); //null
-	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]);
-	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]);
-	for (int i = 0; i < 10; i++)
+	// sword
+	inventory->AddItem(26);
+	inventory->AddItem(27);
+	inventory->AddItem(28);
+	inventory->AddItem(29);
+	inventory->AddItem(30);
+	inventory->AddItem(31);
+
+	// bow
+	inventory->AddItem(17);
+	inventory->AddItem(18);
+	inventory->AddItem(19);
+	inventory->AddItem(20);
+
+	// armor
+	inventory->AddItem(1);
+	inventory->AddItem(2);
+	inventory->AddItem(3);
+	inventory->AddItem(4);
+	inventory->AddItem(5);
+
+	// boot
+	inventory->AddItem(13);
+	inventory->AddItem(14);
+	inventory->AddItem(15);
+	inventory->AddItem(16);
+
+	// arrows
+	for (int i = 0; i < 20; i++)
 	{
 		inventory->AddItem(6);
 	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventory->AddItem(7);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventory->AddItem(8);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventory->AddItem(9);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventory->AddItem(10);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventory->AddItem(11);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventory->AddItem(12);
+	}
+
+
+	//Initial Items
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(26)]); //sword
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(17)]); //bow
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(1)]); //armor
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(13)]); //boot
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]); //arrow
 
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
@@ -902,7 +961,7 @@ bool MainCharacter::TakePotion(int index)
 {
 	switch (index)
 	{
-	case 25:
+	case 21:
 		if (currentHP < maxHP)
 		{
 			currentHP += HP;
@@ -913,7 +972,7 @@ bool MainCharacter::TakePotion(int index)
 			return true;
 		}
 		return false;
-	case 26:
+	case 22:
 		if (currentMP < maxMP)
 		{
 			currentMP += MP;

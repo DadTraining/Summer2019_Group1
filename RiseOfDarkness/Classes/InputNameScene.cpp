@@ -107,7 +107,7 @@ bool InputNameScene::init()
 			if (MainCharacter::GetInstance()->GetName() != "")
 			{
 				auto gotoNext = CallFunc::create([]() {
-					Director::getInstance()->replaceScene(HomeScene::CreateScene());
+					Director::getInstance()->replaceScene(Level1Scene::CreateScene());
 				});
 				runAction(gotoNext);
 			}

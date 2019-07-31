@@ -86,6 +86,8 @@ void Level4Scene::update(float deltaTime)
 	UpdateJoystick();
 
 	MainCharacter::GetInstance()->GetFlySlash()->Update(deltaTime);
+
+	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }
 
 void Level4Scene::CreateMonster()
@@ -182,14 +184,14 @@ void Level4Scene::AddListener()
 
 	// USE HP POTION
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(25, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(25, index, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(22, index, ItemType::potion);
 	});
 
 	// USE MP POTION
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(26, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(26, index, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(22, index, ItemType::potion);
 	});
 
 

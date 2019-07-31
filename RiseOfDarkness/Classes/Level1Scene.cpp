@@ -64,16 +64,16 @@ void Level1Scene::update(float deltaTime)
 	if (CheckClear())
 	{
 		if (MainCharacter::GetInstance()->GetStageLevel() == currentStage)
-		{
-			Director::getInstance()->pause();
-			MainCharacter::GetInstance()->IncreaseStage();
-			clear->setVisible(true);
-			m_buttons[4]->setVisible(false);
-			m_buttons[5]->setVisible(false);
-			m_buttons[6]->setVisible(true);
-			m_buttons[7]->setVisible(true);
-			shader->setOpacity(200);
+		{		
+			MainCharacter::GetInstance()->IncreaseStage();	
 		}
+		Director::getInstance()->pause();
+		clear->setVisible(true);
+		m_buttons[4]->setVisible(false);
+		m_buttons[5]->setVisible(false);
+		m_buttons[6]->setVisible(true);
+		m_buttons[7]->setVisible(true);
+		shader->setOpacity(200);
 	}
 	if (!MainCharacter::GetInstance()->IsAlive())
 	{
@@ -88,6 +88,9 @@ void Level1Scene::update(float deltaTime)
 	UpdateJoystick();
 
 	MainCharacter::GetInstance()->GetFlySlash()->Update(deltaTime);
+
+	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
+
 }
 
 void Level1Scene::CreateMonster()
@@ -184,14 +187,37 @@ void Level1Scene::AddListener()
 
 	// USE HP POTION
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(25, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(25, index, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(21, index, ItemType::potion);
+		if (MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+			[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)] >= 1)
+		{
+			amountHP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+				[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)]));
+		}
 	});
 
 	// USE MP POTION
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(26, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(26, index, ItemType::potion);
+		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion);
+		MainCharacter::GetInstance()->GetInventory()->RemoveItem(22, index, ItemType::potion);
+		if (amountMP->getString() == "2")
+		{
+			amountMP->setString("1");
+		}
+		else if (amountMP->getString() == "1")
+		{
+			amountMP->setString("0");
+		}
+		else if(amountMP->getString() == "0")
+		{
+			
+		}
+		else
+		{
+			amountMP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+				[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion)]));
+		}
 	});
 
 	// INVENTORY

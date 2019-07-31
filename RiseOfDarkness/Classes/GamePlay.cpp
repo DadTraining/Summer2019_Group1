@@ -282,6 +282,16 @@ void GamePlay::CreateAllButton(Layer* layer)
 	m_buttons.push_back(hpButton);
 	hpButton->setCameraMask(2);
 
+	// AMOUNT OF HEALTH POTION
+	amountHP = get->GetLabelById(5);
+	amountHP->removeFromParent();
+	amountHP->setCameraMask(2);
+	amountHP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+		[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)]));
+	amountHP->setAnchorPoint(Vec2(1, 0));
+	amountHP->setPosition(Vec2(hpButton->getPositionX() + hpButton->getBoundingBox().size.width / 2, hpButton->getPositionY()));
+	layer->addChild(amountHP, 5);
+
 	// MP BUTTON ID 10
 	auto mpButton = get->GetButtonById(21);
 	mpButton->removeFromParent();
@@ -290,6 +300,16 @@ void GamePlay::CreateAllButton(Layer* layer)
 	layer->addChild(mpButton, 4);
 	m_buttons.push_back(mpButton);
 	mpButton->setCameraMask(2);
+
+	// AMOUNT OF MANA POTION
+	amountMP = get->GetLabelById(6);
+	amountMP->removeFromParent();
+	amountMP->setCameraMask(2);
+	amountMP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+		[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion)]));
+	amountMP->setAnchorPoint(Vec2(1, 0));
+	amountMP->setPosition(Vec2(mpButton->getPositionX() + mpButton->getBoundingBox().size.width / 2, mpButton->getPositionY()));
+	layer->addChild(amountMP, 5);
 
 	//BUTTON OPEN INVENTORY 4
 	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
@@ -530,7 +550,6 @@ void GamePlay::EnemyUpdate(float deltaTime)
 			m_enemies[i]->Update(deltaTime);
 		}
 	}
-	gold->setString(std::to_string(MainCharacter::GetInstance()->GetGold()));
 }
 
 void GamePlay::CreateJoystick(Layer* layer)
