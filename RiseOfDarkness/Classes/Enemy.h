@@ -5,6 +5,7 @@
 #include "ui/CocosGUI.h"
 #include "Arrow.h"
 #include "Bullet.h"
+#include "Item.h"
 
 using namespace cocos2d;
 
@@ -21,6 +22,7 @@ protected:
 	int currentState;
 	int preventRun;
 	int speed;
+	Item* item;
 public:
 	Enemy();
 	virtual ~Enemy();
@@ -41,6 +43,7 @@ public:
 	virtual bool Target(float attackRange);
 	virtual Arrow* GetArrow();
 	virtual Bullet* GetBullet();
+	virtual Item* GetItem();
 };
 
 #endif

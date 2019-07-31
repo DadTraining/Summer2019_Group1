@@ -189,7 +189,39 @@ void Inventory::SellItem(int id, int index, ItemType type)
 	case ItemType::weapon:
 		if (targetID>=0)
 		{
-			MainCharacter::GetInstance()->AddGold(weapons[id]->GetSellCost());
+			switch (weapons[id]->GetID())
+			{
+			case 26:
+				MainCharacter::GetInstance()->AddGold(100);
+				break;
+			case 27:
+				MainCharacter::GetInstance()->AddGold(150);
+				break;
+			case 28:
+				MainCharacter::GetInstance()->AddGold(250);
+				break;
+			case 29:
+				MainCharacter::GetInstance()->AddGold(350);
+				break;
+			case 30:
+				MainCharacter::GetInstance()->AddGold(500);
+				break;
+			case 31:
+				MainCharacter::GetInstance()->AddGold(1500);
+				break;
+			case 17:
+				MainCharacter::GetInstance()->AddGold(250);
+				break;
+			case 18:
+				MainCharacter::GetInstance()->AddGold(250);
+				break;
+			case 19:
+				MainCharacter::GetInstance()->AddGold(500);
+				break;
+			case 20:
+				MainCharacter::GetInstance()->AddGold(1000);
+				break;
+			}
 		}
 		GetTab(0)->removeChild(weapons[id]->GetIcon());
 		targetID = -1;
@@ -198,7 +230,24 @@ void Inventory::SellItem(int id, int index, ItemType type)
 	case ItemType::armor:
 		if (targetID >= 0)
 		{
-			MainCharacter::GetInstance()->AddGold(armors[id]->GetSellCost());
+			switch (armors[id]->GetID())
+			{
+			case 1:
+				MainCharacter::GetInstance()->AddGold(150);
+				break;
+			case 2:
+				MainCharacter::GetInstance()->AddGold(250);
+				break;
+			case 3:
+				MainCharacter::GetInstance()->AddGold(500);
+				break;
+			case 4:
+				MainCharacter::GetInstance()->AddGold(1000);
+				break;
+			case 5:
+				MainCharacter::GetInstance()->AddGold(2500);
+				break;
+			}
 		}
 		GetTab(2)->removeChild(armors[id]->GetIcon());
 		targetID = -1;
@@ -207,7 +256,21 @@ void Inventory::SellItem(int id, int index, ItemType type)
 	case ItemType::boots:
 		if (targetID >= 0)
 		{
-			MainCharacter::GetInstance()->AddGold(boots[id]->GetSellCost());
+			switch (boots[id]->GetID())
+			{
+			case 13:
+				MainCharacter::GetInstance()->AddGold(100);
+				break;
+			case 14:
+				MainCharacter::GetInstance()->AddGold(250);
+				break;
+			case 15:
+				MainCharacter::GetInstance()->AddGold(500);
+				break;
+			case 16:
+				MainCharacter::GetInstance()->AddGold(1000);
+				break;
+			}
 		}
 		GetTab(4)->removeChild(boots[id]->GetIcon());
 		targetID = -1;
@@ -226,7 +289,25 @@ void Inventory::SellItem(int id, int index, ItemType type)
 		}
 		else
 		{
-			MainCharacter::GetInstance()->AddGold(slots[id]->GetSellCost());
+			switch (slots[id]->GetID())
+			{
+			case 21:
+				MainCharacter::GetInstance()->AddGold(12);
+				break;
+			case 22:
+				MainCharacter::GetInstance()->AddGold(10);
+				break;
+			case 23:
+				MainCharacter::GetInstance()->AddGold(11);
+				break;
+			case 24:
+				MainCharacter::GetInstance()->AddGold(7);
+				break;
+			case 25:
+				MainCharacter::GetInstance()->AddGold(22);
+				break;
+
+			}
 			amountLabels[id]->setString(to_string(itemAmount[id]));
 		}
 		log("removed item %d", id);
@@ -244,7 +325,30 @@ void Inventory::SellItem(int id, int index, ItemType type)
 		}
 		else
 		{
-			MainCharacter::GetInstance()->AddGold(arrows[id]->GetSellCost());
+			switch (arrows[id]->GetID())
+			{
+			case 6:
+				MainCharacter::GetInstance()->AddGold(1);
+				break;
+			case 7:
+				MainCharacter::GetInstance()->AddGold(2);
+				break;
+			case 8:
+				MainCharacter::GetInstance()->AddGold(4);
+				break;
+			case 9:
+				MainCharacter::GetInstance()->AddGold(6);
+				break;
+			case 10:
+				MainCharacter::GetInstance()->AddGold(7);
+				break;
+			case 11:
+				MainCharacter::GetInstance()->AddGold(10);
+				break;
+			case 12:
+				MainCharacter::GetInstance()->AddGold(12);
+				break;
+			}
 			amountArrowLabels[id]->setString(to_string(arrowAmount[id]));
 		}
 		break;

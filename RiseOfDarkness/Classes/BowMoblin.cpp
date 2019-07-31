@@ -73,6 +73,19 @@ BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos, int group)
 	arrow->GetSprite()->getPhysicsBody()->setGroup(group);
 	arrow->SetDistance(0);
 	layer->addChild(sprite, 7);
+
+	item = new Item(MainCharacter::GetInstance()->GetInventory()->database->items[MainCharacter::GetInstance()->GetInventory()->GetIndexByID(6)]);
+	item->GetIcon()->setVisible(false);
+	auto itemPhysics = PhysicsBody::createBox(item->GetIcon()->getContentSize(), PhysicsMaterial(0, 0, 0));
+	itemPhysics->setRotationEnable(false);
+	itemPhysics->setGravityEnable(false);
+	itemPhysics->setDynamic(false);
+	itemPhysics->setGroup(group);
+	itemPhysics->setContactTestBitmask(false);
+	itemPhysics->setCollisionBitmask(MainCharacter::ARROW1_ITEM_BITMASK);
+	item->GetIcon()->setPhysicsBody(itemPhysics);
+
+	layer->addChild(item->GetIcon(), 7);
 }
 
 BowMoblin::~BowMoblin()
@@ -127,6 +140,9 @@ void BowMoblin::Update(float deltaTime)
 	else
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::BOWMOBLIN_GOLD);
+		item->GetIcon()->setPosition(mSprite->getPosition());
+		item->GetIcon()->setVisible(true);
+		item->GetIcon()->getPhysicsBody()->setContactTestBitmask(true);
 	}
 }
 

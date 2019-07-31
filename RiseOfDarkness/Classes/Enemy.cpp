@@ -205,3 +205,8 @@ Bullet* Enemy::GetBullet()
 {
 	return nullptr;
 }
+
+Item* Enemy::GetItem()
+{
+	return item;
+}

@@ -5,7 +5,7 @@
 
 SpearMoblin::SpearMoblin(){}
 
-SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
+SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos, int group)
 {
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(15));
 	mSprite->setScale(1.5);
@@ -17,6 +17,7 @@ SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
 	mPhysicsBody->setCollisionBitmask(MainCharacter::SPEARMOBLIN_BITMASK);
 	mPhysicsBody->setContactTestBitmask(true);
 	mPhysicsBody->setDynamic(false);
+	mPhysicsBody->setGroup(group);
 	mPhysicsBody->setGravityEnable(false);
 	mSprite->setPhysicsBody(mPhysicsBody);
 	layer->addChild(mSprite);
@@ -67,6 +68,19 @@ SpearMoblin::SpearMoblin(Layer* layer, int direction, Vec2 pos)
 	countingTime = 0;
 	coolDownAttack = 0;
 	preventRun = 0;
+
+	item = new Item(MainCharacter::GetInstance()->GetInventory()->database->items[MainCharacter::GetInstance()->GetInventory()->GetIndexByID(25)]);
+	item->GetIcon()->setVisible(false);
+	auto itemPhysics = PhysicsBody::createBox(item->GetIcon()->getContentSize(), PhysicsMaterial(0, 0, 0));
+	itemPhysics->setRotationEnable(false);
+	itemPhysics->setGravityEnable(false);
+	itemPhysics->setDynamic(false);
+	itemPhysics->setGroup(group);
+	itemPhysics->setContactTestBitmask(false);
+	itemPhysics->setCollisionBitmask(MainCharacter::MEAT_ITEM_BITMASK);
+	item->GetIcon()->setPhysicsBody(itemPhysics);
+
+	layer->addChild(item->GetIcon(), 7);
 }
 
 SpearMoblin::~SpearMoblin()
@@ -117,6 +131,9 @@ void SpearMoblin::Update(float deltaTime)
 	else
 	{
 		MainCharacter::GetInstance()->AddGold(MainCharacter::SPEARMOBLIN_GOLD);
+		item->GetIcon()->setPosition(mSprite->getPosition());
+		item->GetIcon()->setVisible(true);
+		item->GetIcon()->getPhysicsBody()->setContactTestBitmask(true);
 	}
 }
 

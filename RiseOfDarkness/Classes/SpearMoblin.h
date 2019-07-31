@@ -28,7 +28,7 @@ private:
 	Pierce* pierce;
 public:
 	SpearMoblin();
-	SpearMoblin(Layer* layer, int direction, Vec2 pos);
+	SpearMoblin(Layer* layer, int direction, Vec2 pos, int group);
 	~SpearMoblin();
 
 	void Update(float deltaTime);

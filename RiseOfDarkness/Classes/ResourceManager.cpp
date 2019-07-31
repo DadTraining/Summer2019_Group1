@@ -168,6 +168,23 @@ void ResourceManager::Init(const std::string &path)
 	m_sprites[28]->setScale(0.3);
 
 	m_sprites[29]->setScale(0.4);
+
+	m_labels[7]->setSystemFontSize(20);
+	//m_labels[7]->setColor(Color3B::RED);
+
+	m_labels[8]->setSystemFontSize(20);
+	//m_labels[8]->setColor(Color3B::RED);
+
+	m_labels[9]->setSystemFontSize(20);
+	//m_labels[9]->setColor(Color3B::RED);
+
+	m_labels[10]->setSystemFontSize(20);
+	//m_labels[10]->setColor(Color3B::RED);
+
+	m_labels[11]->setSystemFontSize(20);
+	//[11]->setColor(Color3B::RED);
+
+	m_sprites[33]->setScale(0.15);
 }
 
 Sprite* ResourceManager::GetSpriteById(int id)

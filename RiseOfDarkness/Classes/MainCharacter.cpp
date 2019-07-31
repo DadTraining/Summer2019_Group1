@@ -45,7 +45,7 @@ void MainCharacter::CreateMainCharacter()
 	auto grid = Sprite::create("res/sprites/item/gridInventory.png");
 	grid->retain();
 	inventory = new Inventory(grid);
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		inventory->AddItem(21);
 		inventory->AddItem(22);
@@ -55,7 +55,6 @@ void MainCharacter::CreateMainCharacter()
 	}
 
 	// sword
-	inventory->AddItem(26);
 	inventory->AddItem(27);
 	inventory->AddItem(28);
 	inventory->AddItem(29);
@@ -63,20 +62,17 @@ void MainCharacter::CreateMainCharacter()
 	inventory->AddItem(31);
 
 	// bow
-	inventory->AddItem(17);
 	inventory->AddItem(18);
 	inventory->AddItem(19);
 	inventory->AddItem(20);
 
 	// armor
-	inventory->AddItem(1);
 	inventory->AddItem(2);
 	inventory->AddItem(3);
 	inventory->AddItem(4);
 	inventory->AddItem(5);
 
 	// boot
-	inventory->AddItem(13);
 	inventory->AddItem(14);
 	inventory->AddItem(15);
 	inventory->AddItem(16);
@@ -169,15 +165,15 @@ void MainCharacter::CreateMainCharacter()
 	stageLevel = 4;
 	direction = 2;
 	currentState = FRONT_IDLE;
-	speed = SPEED;
-	attack = ATTACK;
-	defend = DEFEND;
+	attack = ATTACK + 20;
+	defend = DEFEND + 10;
+	speed = SPEED + 1;
 	countingTime = 0;
 	maxHP = 500;
 	maxMP = 100;
 	currentHP = maxMP;
 	currentMP = maxMP;
-	gold = 2000;
+	gold = 200;
 	preventRun = 0;
 	pace = std::sqrt(2 * speed*speed) / 2;
 
@@ -195,6 +191,11 @@ void MainCharacter::CreateMainCharacter()
 
 	flySlash = new FlySlash();
 	flySlash->GetSprite()->retain();
+
+	for (int i = 0; i < 10; i++)
+	{
+		heartContainerCollect.push_back(false);
+	}
 }
 
 void MainCharacter::Refresh()
@@ -722,6 +723,7 @@ void MainCharacter::Run(float percentSpeed)
 	if ((currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD || currentState == FRONT_IDLE
 		|| currentState == LEFT_IDLE || currentState == BACK_IDLE || currentState == GO_UP || currentState == GO_LEFT || currentState == GO_DOWN) && currentHP > 0)
 	{
+		pace = std::sqrt(2 * speed*speed) / 2;
 		switch (direction)
 		{
 		case 1:
@@ -822,7 +824,7 @@ void MainCharacter::Run(float percentSpeed)
 void MainCharacter::GetDamage(int damage)
 {
 	currentHP += defend - damage;
-	slash->GetSprite()->setPosition(Vec2(-1, -1));
+	slash->GetSprite()->setPosition(Vec2(-100, -100));
 	switch (direction)
 	{
 	case 1:
@@ -831,8 +833,52 @@ void MainCharacter::GetDamage(int damage)
 	case 2:
 		SetState(FRONT_GET_DAMAGE);
 		break;
-	default:
+	case 3:
 		SetState(LEFT_GET_DAMAGE);
+		break;
+	case 4:
+		SetState(LEFT_GET_DAMAGE);
+		break;
+	case 5:
+		if (currentState == BACK_IDLE || currentState == GO_UP || currentState == BACK_SLASH || currentState == BACK_ARCHERY)
+		{
+			SetState(BACK_GET_DAMAGE);
+		}
+		else
+		{
+			SetState(LEFT_GET_DAMAGE);
+		}
+		break;
+	case 6:
+		if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SLASH || currentState == FRONT_ARCHERY)
+		{
+			SetState(FRONT_GET_DAMAGE);
+		}
+		else
+		{
+			SetState(LEFT_GET_DAMAGE);
+		}
+		break;
+	case 7:
+		if (currentState == BACK_IDLE || currentState == GO_UP || currentState == BACK_SLASH || currentState == BACK_ARCHERY)
+		{
+			SetState(BACK_GET_DAMAGE);
+		}
+		else
+		{
+			SetState(LEFT_GET_DAMAGE);
+		}
+		break;
+	case 8:
+		if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SLASH || currentState == FRONT_ARCHERY)
+		{
+			SetState(FRONT_GET_DAMAGE);
+		}
+		else
+		{
+			SetState(LEFT_GET_DAMAGE);
+		}
+		break;
 	}
 }
 
@@ -1038,5 +1084,121 @@ std::vector<Item*> MainCharacter::GetEquipedItem()
 
 void MainCharacter::EquipedItem(int index, Item item)
 {
+	mItems[index]->GetIcon()->removeFromParent();
 	mItems[index] = new Item(item);
+	switch (index)
+	{
+	case 0:
+		TakeSword(mItems[0]->GetID());
+		break;
+	case 2:
+		TakeArmor(mItems[2]->GetID());
+		break;
+	case 3:
+		TakeBoots(mItems[3]->GetID());
+		break;
+	default:
+		break;
+	}
+}
+
+int MainCharacter::GetMaxHP()
+{
+	return maxHP;
+}
+
+int MainCharacter::GetCurrentHP()
+{
+	return currentHP;
+}
+
+int MainCharacter::GetMaxMP()
+{
+	return maxMP;
+}
+
+int MainCharacter::GetCurrentMP()
+{
+	return maxMP;
+}
+
+int MainCharacter::GetDefend()
+{
+	return defend;
+}
+
+void MainCharacter::TakeSword(int index)
+{
+	switch (index)
+	{
+	case 26:
+		attack = ATTACK + 20;
+		break;
+	case 27:
+		attack = ATTACK + 40;
+		break;
+	case 28:
+		attack = ATTACK + 60;
+		break;
+	case 29:
+		attack = ATTACK + 80;
+		break;
+	case 30:
+		attack = ATTACK + 90;
+		break;
+	case 31:
+		attack = ATTACK + 100;
+		break;
+	}
+}
+
+void MainCharacter::TakeArmor(int index)
+{
+	switch (index)
+	{
+	case 1:
+		defend = DEFEND + 10;
+		break;
+	case 2:
+		defend = DEFEND + 14;
+		break;
+	case 3:
+		defend = DEFEND + 18;
+		break;
+	case 4:
+		defend = DEFEND + 22;
+		break;
+	case 5:
+		defend = DEFEND + 26;
+		break;
+	}
+}
+
+void MainCharacter::TakeBoots(int index)
+{
+	switch (index)
+	{
+	case 13:
+		speed = SPEED + 1;
+		break;
+	case 14:
+		speed = SPEED + 2;
+		break;
+	case 15:
+		speed = SPEED + 3;
+		break;
+	case 16:
+		speed = SPEED + 4;
+		break;
+	}
+}
+
+bool MainCharacter::GetCheckHeartCollect(int stage)
+{
+	return heartContainerCollect[stage - 1];
+}
+
+void MainCharacter::SetHeartCollected(int stage)
+{
+	heartContainerCollect[stage - 1] = true;
 }

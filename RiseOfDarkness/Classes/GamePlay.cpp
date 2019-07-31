@@ -199,6 +199,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	auto mainCharacterFace = get->GetButtonById(25);
 	mainCharacterFace->setAnchorPoint(Vec2(0, 1));
 	mainCharacterFace->removeFromParent();
+	mainCharacterFace->setEnabled(true);
 	mainCharacterFace->setPosition(Vec2(0, visibleSize.height));
 	layer->addChild(mainCharacterFace, 4);
 	mainCharacterFace->setCameraMask(2);
@@ -277,6 +278,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	auto hpButton = get->GetButtonById(20);
 	hpButton->removeFromParent();
 	hpButton->setAnchorPoint(Vec2(0.5, 0));
+	hpButton->setEnabled(true);
 	hpButton->setPosition(Vec2(evade->getPositionX() - 20 - evade->getBoundingBox().size.width * 1.5, 20));
 	layer->addChild(hpButton, 4);
 	m_buttons.push_back(hpButton);
@@ -286,8 +288,15 @@ void GamePlay::CreateAllButton(Layer* layer)
 	amountHP = get->GetLabelById(5);
 	amountHP->removeFromParent();
 	amountHP->setCameraMask(2);
-	amountHP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
-		[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)]));
+	if (!MainCharacter::GetInstance()->GetInventory()->InventoryContains(21, ItemType::potion))
+	{
+		amountHP->setString("0");
+	}
+	else
+	{
+		amountHP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+			[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)]));
+	}
 	amountHP->setAnchorPoint(Vec2(1, 0));
 	amountHP->setPosition(Vec2(hpButton->getPositionX() + hpButton->getBoundingBox().size.width / 2, hpButton->getPositionY()));
 	layer->addChild(amountHP, 5);
@@ -296,6 +305,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	auto mpButton = get->GetButtonById(21);
 	mpButton->removeFromParent();
 	mpButton->setAnchorPoint(Vec2(0.5, 0));
+	mpButton->setEnabled(true);
 	mpButton->setPosition(Vec2(hpButton->getPositionX() - hpButton->getBoundingBox().size.width - 20, 20));
 	layer->addChild(mpButton, 4);
 	m_buttons.push_back(mpButton);
@@ -305,17 +315,25 @@ void GamePlay::CreateAllButton(Layer* layer)
 	amountMP = get->GetLabelById(6);
 	amountMP->removeFromParent();
 	amountMP->setCameraMask(2);
-	amountMP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
-		[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion)]));
+	if (!MainCharacter::GetInstance()->GetInventory()->InventoryContains(22, ItemType::potion))
+	{
+		amountMP->setString("0");
+	}
+	else
+	{
+		amountMP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+			[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion)]));
+	}
 	amountMP->setAnchorPoint(Vec2(1, 0));
 	amountMP->setPosition(Vec2(mpButton->getPositionX() + mpButton->getBoundingBox().size.width / 2, mpButton->getPositionY()));
 	layer->addChild(amountMP, 5);
 
-	//BUTTON OPEN INVENTORY 4
+	//BUTTON OPEN INVENTORY 11
 	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
 	buttonOpenInventory->retain();
 	layer->addChild(buttonOpenInventory, 4);
 	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
+	buttonOpenInventory->setEnabled(true);
 	buttonOpenInventory->setPosition(Vec2(mpButton->getPositionX() - mpButton->getBoundingBox().size.width - 20, 40));
 	m_buttons.push_back(buttonOpenInventory);
 	buttonOpenInventory->setCameraMask(2);
@@ -343,6 +361,61 @@ void GamePlay::CreateAllButton(Layer* layer)
 	direction->setCameraMask(2);
 	direction->setRotation(-90);
 	m_sprites.push_back(direction);
+
+	// ENEMY ICON SPRITE ID 6
+	auto enemyIcon = get->GetSpriteById(33);
+	enemyIcon->removeFromParent();
+	enemyIcon->setCameraMask(2);
+	enemyIcon->setAnchorPoint(Vec2(0, 1));
+	enemyIcon->setPosition(Vec2(0, infoBarPosition.y - infoBarSize.height));
+	layer->addChild(enemyIcon, 4);
+	m_sprites.push_back(enemyIcon);
+
+	amountEnemy = get->GetLabelById(12);
+	amountEnemy->removeFromParent();
+	amountEnemy->setCameraMask(2);
+	amountEnemy->setAnchorPoint(Vec2(0, 0.5));
+	amountEnemy->setPosition(Vec2(enemyIcon->getBoundingBox().size.width, enemyIcon->getPositionY() - enemyIcon->getBoundingBox().size.height / 2 - 5));
+	layer->addChild(amountEnemy, 4);
+
+	health = get->GetLabelById(7);
+	health->removeFromParent();
+	health->setCameraMask(2);
+	health->setVisible(false);
+	health->setAnchorPoint(Vec2(0, 0.5));
+	health->setPosition(Vec2(visibleSize.width / 2 - 30, visibleSize.height / 2 + 83));
+	health->setString(std::to_string(MainCharacter::GetInstance()->GetCurrentHP()) + "/" + std::to_string(MainCharacter::GetInstance()->GetMaxHP()));
+	layer->addChild(health, 24);
+
+	attack = get->GetLabelById(8);
+	attack->removeFromParent();
+	attack->setCameraMask(2);
+	attack->setVisible(false);
+	attack->setAnchorPoint(Vec2(0, 0.5));
+	attack->setPosition(Vec2(visibleSize.width / 2 - 30, visibleSize.height / 2 + 24));
+	attack->setString(std::to_string(MainCharacter::GetInstance()->GetAttack()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetAttack() - MainCharacter::ATTACK) + ")");
+	layer->addChild(attack, 24);
+
+	armor = get->GetLabelById(9);
+	armor->removeFromParent();
+	armor->setCameraMask(2);
+	armor->setVisible(false);
+	armor->setAnchorPoint(Vec2(0, 0.5));
+	armor->setPosition(Vec2(visibleSize.width / 2 - 30, visibleSize.height / 2 - 33));
+	armor->setString(std::to_string(MainCharacter::GetInstance()->GetDefend()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetDefend() - MainCharacter::DEFEND) + ")");
+	layer->addChild(armor, 24);
+
+	speedBoot = get->GetLabelById(10);
+	speedBoot->removeFromParent();
+	speedBoot->setCameraMask(2);
+	speedBoot->setVisible(false);
+	speedBoot->setAnchorPoint(Vec2(0, 0.5));
+	speedBoot->setPosition(Vec2(visibleSize.width / 2 - 30, visibleSize.height / 2 - 84));
+	speedBoot->setString(std::to_string(MainCharacter::GetInstance()->GetSpeed()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetSpeed() - MainCharacter::SPEED) + ")");
+	layer->addChild(speedBoot, 24);
 
 	SetCamera(MainCharacter::GetInstance()->GetSprite()->getPosition());
 }
@@ -686,4 +759,17 @@ void GamePlay::ShowInfor()
 		rows++;
 		items[i]->GetIcon()->setCameraMask(2);
 	}
+}
+
+int GamePlay::GetAliveEnemies()
+{
+	int amount = 0;
+	for (int i = 0; i < m_enemies.size(); i++)
+	{
+		if (m_enemies[i]->GetSprite()->isVisible())
+		{
+			amount++;
+		}
+	}
+	return amount;
 }

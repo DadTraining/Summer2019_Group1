@@ -13,7 +13,7 @@ using namespace cocos2d;
 
 class MainCharacter
 {
-public:
+public: 
 	// BIT MASK
 	static const int MAIN_CHARACTER_BITMASK = 100;
 	static const int OBSTACLE_BITMASK = 101;
@@ -30,12 +30,17 @@ public:
 	static const int RIVER_BITMASK = 112;
 	static const int NOKKEN_MONSTER_BITMASK = 113;
 
+	static const int ARROW1_ITEM_BITMASK = 114;
+	static const int APPLE_ITEM_BITMASK = 115;
+	static const int MUSHROOM_ITEM_BITMASK = 116;
+	static const int MEAT_ITEM_BITMASK = 117;
+
 	// POTION
 	static const int HP = 50;
 	static const int MP = 20;
 
 	// STATUS
-	static const int SPEED = 2;
+	static const int SPEED = 1;
 	static const int ATTACK = 20;
 	static const int DEFEND = 10;
 
@@ -87,10 +92,15 @@ private:
 	std::vector<int> mAllItems;
 	std::vector<Item*> mItems;
 	Inventory *inventory;
-
+	std::vector<bool> heartContainerCollect;
 public:
 	int GetSpeed();
 	int GetAttack();
+	int GetMaxHP();
+	int GetCurrentHP();
+	int GetMaxMP();
+	int GetCurrentMP();
+	int GetDefend();
 	std::string GetName();
 	int GetStageLevel();
 	Inventory *GetInventory();
@@ -101,6 +111,12 @@ public:
 	void TakeHeartContainer();
 	void EquipedItem(int index, Item item);
 	std::vector<Item*> GetEquipedItem();
+	bool TakePotion(int index);
+	void TakeSword(int index);
+	void TakeArmor(int index);
+	void TakeBoots(int index);
+	bool GetCheckHeartCollect(int stage);
+	void SetHeartCollected(int stage);
 
 public:
 	static MainCharacter* GetInstance();
@@ -131,7 +147,6 @@ public:
 	void GetDamage(int damage);
 	bool IsAlive();
 	void SetPreventRun(int prevent);
-	bool TakePotion(int index);
 	void IncreaseStage();
 	float GetPace();
 	FlySlash* GetFlySlash();

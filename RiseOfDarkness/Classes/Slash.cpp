@@ -7,7 +7,7 @@ Slash::Slash()
 	mSprite = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(14));
 	mSprite->setVisible(false);
 	mSprite->retain();
-	mPhysicsBody = PhysicsBody::createBox(mSprite->getContentSize(), PhysicsMaterial(0, 0, 0));
+	mPhysicsBody = PhysicsBody::createBox(Size(mSprite->getContentSize().width, mSprite->getContentSize().height + 20), PhysicsMaterial(0, 0, 0));
 	mPhysicsBody->setRotationEnable(false);
 	mPhysicsBody->setCollisionBitmask(MainCharacter::SLASH_BITMASK);
 	mPhysicsBody->setDynamic(false);

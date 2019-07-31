@@ -103,7 +103,7 @@ void Level4Scene::CreateMonster()
 		direction1 = spearGoblinGroup->getObject(str1)["direction"].asInt();
 		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
 		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
-		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1));
+		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1), i-1);
 		spearMoblin->GetPhysicsBody()->setGroup(i - 1);
 		m_enemies.push_back(spearMoblin);
 	}

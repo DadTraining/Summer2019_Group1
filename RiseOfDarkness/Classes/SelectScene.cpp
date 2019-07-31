@@ -51,6 +51,7 @@ bool SelectScene::init()
 	btcont->setPosition(Vec2(visibleSize.width / 4 + origin.x, visibleSize.height / 1.6 + origin.y));
 	btcont->setScale(0.65);
 	this->addChild(btcont, 1);
+	btcont->setEnabled(false);
 	//===================
 	
 	auto button2 = ResourceManager::GetInstance()->GetButtonById(3)->clone(); //Button::create("/res/buttons/chose.png");
@@ -79,7 +80,7 @@ bool SelectScene::init()
 	btcont2->setPosition(Vec2(visibleSize.width / 4.35 + button2->getContentSize().width + origin.x, visibleSize.height / 1.6 + origin.y));
 	btcont2->setScale(0.65);
 	this->addChild(btcont2, 1);
-
+	btcont2->setEnabled(false);
 
 	//========================
 	auto button3 = ResourceManager::GetInstance()->GetButtonById(3)->clone(); //Button::create("/res/buttons/chose.png");
@@ -107,21 +108,26 @@ bool SelectScene::init()
 	btcont3->setPosition(Vec2(visibleSize.width / 5 + button2->getContentSize().width * 2, visibleSize.height / 1.6 + origin.y));
 	btcont3->setScale(0.65);
 	this->addChild(btcont3, 1);
+	btcont3->setEnabled(false);
 	//========================
 	auto buttondelete = ResourceManager::GetInstance()->GetButtonById(5)->clone(); //Button::create("/res/buttons/delete.png");
 	buttondelete->setPosition(Vec2(visibleSize.width / 4+ origin.x, visibleSize.height / 2.75 + origin.y));
 	buttondelete->setScale(0.75);
 	this->addChild(buttondelete);
+	buttondelete->setEnabled(false);
 
 	auto buttondelete2 = ResourceManager::GetInstance()->GetButtonById(5)->clone(); //Button::create("/res/buttons/delete.png");
 	buttondelete2->setPosition(Vec2(visibleSize.width / 4.35 + button2->getContentSize().width + origin.x, visibleSize.height / 2.75 + origin.y));
 	buttondelete2->setScale(0.75);
 	this->addChild(buttondelete2);
+	buttondelete2->setEnabled(false);
 	
 	auto buttondelete3 = ResourceManager::GetInstance()->GetButtonById(5)->clone(); //Button::create("/res/buttons/delete.png");
 	buttondelete3->setPosition(Vec2(visibleSize.width / 5 + button2->getContentSize().width*2 + origin.x, visibleSize.height / 2.75 + origin.y));
 	buttondelete3->setScale(0.75);
 	this->addChild(buttondelete3);
+	buttondelete3->setEnabled(false);
+
 	//=============
 	//auto text = ResourceManager::GetInstance()->DuplicateSprite(ResourceManager::GetInstance()->GetSpriteById(4));//Sprite::create("/res/sprites/h.png");
 	//text->setAnchorPoint(Vec2(0, 0));

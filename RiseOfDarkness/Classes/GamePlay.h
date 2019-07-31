@@ -17,7 +17,7 @@ protected:
 	PhysicsBody* body;
 	std::vector<ui::Button*> m_buttons;
 	std::vector<Sprite*> m_sprites;
-	Label* mName, *gameover, *clear, *gold, *paused, *amountHP, *amountMP;
+	Label* mName, *gameover, *clear, *gold, *paused, *amountHP, *amountMP, *health, *attack, *armor, *speedBoot, *amountEnemy;
 	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
 	std::vector<Enemy*> m_enemies;
 	int currentStage;
@@ -48,6 +48,7 @@ public:
 
 	virtual void InitChest(Layer* layer);
 	virtual void ShowInfor();
+	virtual int GetAliveEnemies();
 };
 
 #endif

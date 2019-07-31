@@ -11,7 +11,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -42,8 +42,11 @@ bool Level1Scene::init()
 
 	CreateMonster();
 
-	CreateTreasure();
-
+	if (!MainCharacter::GetInstance()->GetCheckHeartCollect(currentStage))
+	{
+		CreateTreasure();
+	}
+	
 	InitChest(this);
 
 	scheduleUpdate();
@@ -53,6 +56,8 @@ bool Level1Scene::init()
 
 void Level1Scene::update(float deltaTime)
 {
+	amountEnemy->setString("X " + std::to_string(GetAliveEnemies()));
+
 	UpdateInfoBar();
 
 	MainCharacter::GetInstance()->Update(deltaTime);
@@ -74,6 +79,22 @@ void Level1Scene::update(float deltaTime)
 		m_buttons[6]->setVisible(true);
 		m_buttons[7]->setVisible(true);
 		shader->setOpacity(200);
+		if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+		{
+			MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+		}
+		if (tab->isVisible())
+		{
+			tab->setVisible(false);
+			health->setVisible(false);
+			attack->setVisible(false);
+			armor->setVisible(false);
+			speedBoot->setVisible(false);
+		}
+		m_buttons[8]->setEnabled(false);
+		m_buttons[9]->setEnabled(false);
+		m_buttons[10]->setEnabled(false);
+		m_buttons[11]->setEnabled(false);
 	}
 	if (!MainCharacter::GetInstance()->IsAlive())
 	{
@@ -83,6 +104,22 @@ void Level1Scene::update(float deltaTime)
 		m_buttons[7]->setVisible(true);
 		gameover->setVisible(true);
 		shader->setOpacity(200);
+		if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+		{
+			MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+		}
+		if (tab->isVisible())
+		{
+			tab->setVisible(false);
+			health->setVisible(false);
+			attack->setVisible(false);
+			armor->setVisible(false);
+			speedBoot->setVisible(false);
+		}
+		m_buttons[8]->setEnabled(false);
+		m_buttons[9]->setEnabled(false);
+		m_buttons[10]->setEnabled(false);
+		m_buttons[11]->setEnabled(false);
 	}
 
 	UpdateJoystick();
@@ -106,8 +143,7 @@ void Level1Scene::CreateMonster()
 		direction1 = spearGoblinGroup->getObject(str1)["direction"].asInt();
 		x1 = spearGoblinGroup->getObject(str1)["x"].asFloat();
 		y1 = spearGoblinGroup->getObject(str1)["y"].asFloat();
-		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1));
-		spearMoblin->GetPhysicsBody()->setGroup(i - 1);
+		SpearMoblin *spearMoblin = new SpearMoblin(this, direction1, Vec2(x1, y1), i - 1);
 		m_enemies.push_back(spearMoblin);
 	}
 
@@ -123,7 +159,6 @@ void Level1Scene::CreateMonster()
 		x2 = bowGoblinGroup->getObject(str2)["x"].asFloat();
 		y2 = bowGoblinGroup->getObject(str2)["y"].asFloat();
 		BowMoblin *bowMoblin = new BowMoblin(this, direction2, Vec2(x2, y2), i - 1 + amount1);
-		bowMoblin->GetPhysicsBody()->setGroup(i - 1 + amount1);
 		m_enemies.push_back(bowMoblin);
 	}
 }
@@ -153,6 +188,22 @@ void Level1Scene::AddListener()
 			paused->setVisible(true);
 			shader->setOpacity(200);
 			Director::getInstance()->pause();
+			if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+			{
+				MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+			}
+			if (tab->isVisible())
+			{
+				tab->setVisible(false);
+				health->setVisible(false);
+				attack->setVisible(false);
+				armor->setVisible(false);
+				speedBoot->setVisible(false);
+			}
+			m_buttons[8]->setEnabled(false);
+			m_buttons[9]->setEnabled(false);
+			m_buttons[10]->setEnabled(false);
+			m_buttons[11]->setEnabled(false);
 		}
 	});
 
@@ -165,6 +216,10 @@ void Level1Scene::AddListener()
 		shader->setOpacity(0);
 		paused->setVisible(false);
 		Director::getInstance()->resume();
+		m_buttons[8]->setEnabled(true);
+		m_buttons[9]->setEnabled(true);
+		m_buttons[10]->setEnabled(true);
+		m_buttons[11]->setEnabled(true);
 	});
 
 	// GO TO HOMESCENE
@@ -187,36 +242,37 @@ void Level1Scene::AddListener()
 
 	// USE HP POTION
 	m_buttons[9]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(21, index, ItemType::potion);
-		if (MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
-			[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)] >= 1)
+		if (MainCharacter::GetInstance()->GetPercentHP() < 100)
 		{
-			amountHP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
-				[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)]));
+			int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion);
+			MainCharacter::GetInstance()->GetInventory()->RemoveItem(21, index, ItemType::potion);
+			if (!MainCharacter::GetInstance()->GetInventory()->InventoryContains(21, ItemType::potion))
+			{
+				amountHP->setString("0");
+			}
+			else
+			{
+				amountHP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+					[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(21, ItemType::potion)]));
+			}
 		}
 	});
 
 	// USE MP POTION
 	m_buttons[10]->addClickEventListener([&](Ref* event) {
-		int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion);
-		MainCharacter::GetInstance()->GetInventory()->RemoveItem(22, index, ItemType::potion);
-		if (amountMP->getString() == "2")
+		if (MainCharacter::GetInstance()->GetPercentMP() < 100)
 		{
-			amountMP->setString("1");
-		}
-		else if (amountMP->getString() == "1")
-		{
-			amountMP->setString("0");
-		}
-		else if(amountMP->getString() == "0")
-		{
-			
-		}
-		else
-		{
-			amountMP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
-				[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion)]));
+			int index = MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion);
+			MainCharacter::GetInstance()->GetInventory()->RemoveItem(22, index, ItemType::potion);
+			if (!MainCharacter::GetInstance()->GetInventory()->InventoryContains(22, ItemType::potion))
+			{
+				amountMP->setString("0");
+			}
+			else
+			{
+				amountMP->setString(std::to_string(MainCharacter::GetInstance()->GetInventory()->GetItemAmount(0)
+					[MainCharacter::GetInstance()->GetInventory()->GetIdByIcon(22, ItemType::potion)]));
+			}
 		}
 	});
 
@@ -410,6 +466,7 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		{
 			MainCharacter::GetInstance()->TakeHeartContainer();
 			heartContainer->setVisible(false);
+			MainCharacter::GetInstance()->SetHeartCollected(currentStage);
 		}
 	}
 
@@ -428,11 +485,11 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		{
 			if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 			{
-				m_enemies[a->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
 			else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 			{
-				m_enemies[b->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
 		}
 	}
@@ -445,15 +502,50 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		{
 			if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 			{
-				m_enemies[a->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
 			else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 			{
-				m_enemies[b->getGroup()]->GetDamage(MainCharacter::FLY_SLASH_DAMAGE);
+				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
 		}
 	}
 
+	//COLLECT ARROW ITEM
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::ARROW1_ITEM_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::ARROW1_ITEM_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::ARROW1_ITEM_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(6);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::ARROW1_ITEM_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(6);
+		}
+	}
+
+	//COLLECT MEAT ITEM
+	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[a->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(25);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::MEAT_ITEM_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->getPhysicsBody()->setContactTestBitmask(false);
+			m_enemies[b->getGroup()]->GetItem()->GetIcon()->setVisible(false);
+			MainCharacter::GetInstance()->GetInventory()->AddItem(25);
+		}
+	}
 	return true;
 }
 
@@ -496,6 +588,14 @@ void Level1Scene::OpenInventory(cocos2d::Ref * sender)
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	);
+	if (tab->isVisible())
+	{
+		tab->setVisible(false);
+		health->setVisible(false);
+		attack->setVisible(false);
+		armor->setVisible(false);
+		speedBoot->setVisible(false);
+	}
 }
 
 void Level1Scene::CreateTreasure()
@@ -503,6 +603,7 @@ void Level1Scene::CreateTreasure()
 	auto heartContainerGroup = tileMap->getObjectGroup("heartContainer");
 	heartContainer = ResourceManager::GetInstance()->GetSpriteById(29);
 	heartContainer->removeFromParent();
+	heartContainer->setVisible(true);
 	heartContainer->setPosition(Vec2(heartContainerGroup->getObject("heartContainer")["x"].asFloat()
 		, heartContainerGroup->getObject("heartContainer")["y"].asFloat()));
 	this->addChild(heartContainer);
@@ -520,4 +621,19 @@ void Level1Scene::ClickShowInfor(Ref * pSender)
 {
 	tab->setVisible(!tab->isVisible());
 	ShowInfor();
+	health->setVisible(!health->isVisible());
+	attack->setVisible(!attack->isVisible());
+	armor->setVisible(!armor->isVisible());
+	speedBoot->setVisible(!speedBoot->isVisible());
+	health->setString(std::to_string(MainCharacter::GetInstance()->GetCurrentHP()) + "/" + std::to_string(MainCharacter::GetInstance()->GetMaxHP()));
+	attack->setString(std::to_string(MainCharacter::GetInstance()->GetAttack()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetAttack() - MainCharacter::ATTACK) + ")");
+	armor->setString(std::to_string(MainCharacter::GetInstance()->GetDefend()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetDefend() - MainCharacter::DEFEND) + ")");
+	speedBoot->setString(std::to_string(MainCharacter::GetInstance()->GetSpeed()) + " (+"
+		+ std::to_string(MainCharacter::GetInstance()->GetSpeed() - MainCharacter::SPEED) + ")");
+	if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
+	{
+		MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
+	}
 }
