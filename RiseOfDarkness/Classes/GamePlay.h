@@ -26,6 +26,7 @@ protected:
 	Sprite* shader;
 	float activeRunRange;
 	ui::Layout* tab;
+	ui::Button* nextStage;
 public:
 	GamePlay();
 	virtual ~GamePlay();

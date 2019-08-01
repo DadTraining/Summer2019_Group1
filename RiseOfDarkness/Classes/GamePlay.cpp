@@ -171,6 +171,13 @@ void GamePlay::CreateAllButton(Layer* layer)
 	retry->setCameraMask(2);
 	m_buttons.push_back(retry);
 
+	nextStage = get->GetButtonById(26);
+	nextStage->removeFromParent();
+	nextStage->setVisible(false);
+	nextStage->setPosition(Vec2(visibleSize.width / 2 + home->getBoundingBox().size.width, visibleSize.height / 2));
+	layer->addChild(nextStage, 8);
+	nextStage->setCameraMask(2);
+
 	// GAMEOVER TEXT
 	gameover = get->GetLabelById(1);
 	gameover->setString("GAMEOVER!");

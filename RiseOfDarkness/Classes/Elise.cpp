@@ -123,7 +123,7 @@ void Elise::Update(float deltaTime)
 		}
 		else if (Detect(DETECT_RANGE))
 		{
-			speed = 4;
+			speed = 3;
 			Run();
 		}
 		else

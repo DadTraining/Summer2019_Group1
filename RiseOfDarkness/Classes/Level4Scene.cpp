@@ -43,6 +43,8 @@ bool Level4Scene::init()
 
 	CreatePhysicsWorld("ob", "mc", this);
 
+	CreateMonster();
+
 	CreateAllButton(this);
 
 	AddListener();
@@ -83,11 +85,16 @@ void Level4Scene::update(float deltaTime)
 		{
 			MainCharacter::GetInstance()->IncreaseStage();
 		}
+		if (!clear->isVisible())
+		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/win.wav", false);
+		}
 		clear->setVisible(true);
 		m_buttons[4]->setVisible(false);
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(true);
-		m_buttons[7]->setVisible(true);
+		//m_buttons[7]->setVisible(true);
+		nextStage->setVisible(true);
 		shader->setOpacity(200);
 		if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
 		{
@@ -127,6 +134,10 @@ void Level4Scene::update(float deltaTime)
 			armor->setVisible(false);
 			speedBoot->setVisible(false);
 			arrowAttack->setVisible(false);
+		}
+		if (m_buttons[8]->isEnabled())
+		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/lose2.wav", false);
 		}
 		m_buttons[8]->setEnabled(false);
 		m_buttons[9]->setEnabled(false);
@@ -314,6 +325,14 @@ void Level4Scene::AddListener()
 
 	// STATUS
 	m_buttons[8]->addClickEventListener(CC_CALLBACK_1(Level4Scene::ClickShowInfor, this));
+
+	nextStage->addClickEventListener([&](Ref* event) {
+		CreateMonster();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(Level4Scene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
 }
 
 bool Level4Scene::OnTouchBegan(Touch* touch, Event* event)
@@ -707,7 +726,6 @@ void Level4Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
 			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
 		{
-			log("GET...GET");
 			MainCharacter::GetInstance()->GetDamage(MainCharacter::WARWICK_DAMAGE);
 		}
 		break;

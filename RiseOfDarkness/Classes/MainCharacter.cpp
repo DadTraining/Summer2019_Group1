@@ -402,6 +402,7 @@ void MainCharacter::Defend()
 		{
 			flySlash->SetDirection(direction);
 			flySlash->SetPosition();
+			SimpleAudioEngine::getInstance()->playEffect("audio/slash/ultiSlash.mp3", false);
 			switch (direction)
 			{
 			case 1:
@@ -551,6 +552,7 @@ void MainCharacter::SpecialAttack()
 	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE || currentState == BACK_IDLE
 		|| currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD)
 	{
+		SimpleAudioEngine::getInstance()->playEffect("audio/archery/arrow.wav", false);
 		switch (direction)
 		{
 		case 1:
@@ -594,6 +596,7 @@ void MainCharacter::NormalAttack()
 	if (currentState == GO_UP || currentState == GO_DOWN || currentState == GO_LEFT || currentState == FRONT_IDLE || currentState == LEFT_IDLE 
 		|| currentState == BACK_IDLE || currentState == FRONT_SHIELD || currentState == BACK_SHIELD || currentState == LEFT_SHIELD)
 	{
+		SimpleAudioEngine::getInstance()->playEffect("audio/slash/slash.mp3", false);
 		switch (direction)
 		{
 		case 1:
@@ -852,6 +855,7 @@ void MainCharacter::GetDamage(int damage)
 {
 	currentHP += defend - damage;
 	slash->GetSprite()->setPosition(Vec2(-100, -100));
+	SimpleAudioEngine::getInstance()->playEffect("audio/hit.mp3", false);
 	switch (direction)
 	{
 	case 1:
@@ -1155,11 +1159,13 @@ int MainCharacter::GetGold()
 void MainCharacter::AddGold(int numb)
 {
 	gold += numb;
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 }
 
 void MainCharacter::SubGold(int numb)
 {
 	gold -= numb;
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 }
 
 float MainCharacter::GetPace()
@@ -1174,6 +1180,7 @@ int MainCharacter::GetHeartContainer()
 
 void MainCharacter::TakeHeartContainer()
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/takeHeartContainer/confirm.wav", false);
 	heartContainer++;
 	maxHP += 200;
 	currentHP = maxHP;
@@ -1242,6 +1249,7 @@ int MainCharacter::GetDefend()
 
 void MainCharacter::TakeSword(int index)
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/metalClash.wav", false);
 	switch (index)
 	{
 	case 26:
@@ -1267,6 +1275,7 @@ void MainCharacter::TakeSword(int index)
 
 void MainCharacter::TakeArmor(int index)
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/clothInventory.wav", false);
 	switch (index)
 	{
 	case 1:
@@ -1289,6 +1298,7 @@ void MainCharacter::TakeArmor(int index)
 
 void MainCharacter::TakeBoots(int index)
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/leatherInventory.wav", false);
 	switch (index)
 	{
 	case 13:

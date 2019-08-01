@@ -43,11 +43,11 @@ bool Level2Scene::init()
 
 	CreatePhysicsWorld("obstacles", "mc", "river", this);
 
+	CreateMonster();
+
 	CreateAllButton(this);
 
 	AddListener();
-
-	CreateMonster();
 
 	if (!MainCharacter::GetInstance()->GetCheckHeartCollect(currentStage))
 	{
@@ -79,11 +79,16 @@ void Level2Scene::update(float deltaTime)
 		{
 			MainCharacter::GetInstance()->IncreaseStage();
 		}
+		if (!clear->isVisible())
+		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/win.wav", false);
+		}
 		clear->setVisible(true);
 		m_buttons[4]->setVisible(false);
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(true);
-		m_buttons[7]->setVisible(true);
+		//m_buttons[7]->setVisible(true);
+		nextStage->setVisible(true);
 		shader->setOpacity(200);
 		if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
 		{
@@ -124,6 +129,10 @@ void Level2Scene::update(float deltaTime)
 			armor->setVisible(false);
 			speedBoot->setVisible(false);
 			arrowAttack->setVisible(false);
+		}
+		if (m_buttons[8]->isEnabled())
+		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/lose2.wav", false);
 		}
 		m_buttons[8]->setEnabled(false);
 		m_buttons[9]->setEnabled(false);
@@ -373,6 +382,14 @@ void Level2Scene::AddListener()
 
 	// STATUS
 	m_buttons[8]->addClickEventListener(CC_CALLBACK_1(Level2Scene::ClickShowInfor, this));
+
+	nextStage->addClickEventListener([&](Ref* event) {
+		CreateMonster();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(Level1Scene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
 }
 
 bool Level2Scene::OnTouchBegan(Touch* touch, Event* event)
@@ -638,7 +655,6 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
 			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
 		{
-			SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 			if (a->getCollisionBitmask() == bitmask2)
 			{
 				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
@@ -688,7 +704,6 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
 			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
 		{
-			SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 			MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
 			if (a->getCollisionBitmask() == bitmask1)
 			{

@@ -28,8 +28,6 @@ bool InputNameScene::init()
 		return false;
 	}
 
-	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
-
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 

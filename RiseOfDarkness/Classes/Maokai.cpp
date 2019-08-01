@@ -167,6 +167,7 @@ void Maokai::Idle()
 
 void Maokai::Attack()
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/maokai/fire.wav", false);
 	if (!fire->IsVisible())
 	{
 		fire->SetPosition(mSprite->getPosition());

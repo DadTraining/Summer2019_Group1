@@ -40,6 +40,8 @@ bool Level3Scene::init()
 
 	CreatePhysicsWorld("obstacles", "mc", this);
 
+	CreateMonster();
+
 	CreateAllButton(this);
 
 	AddListener();
@@ -76,11 +78,16 @@ void Level3Scene::update(float deltaTime)
 		{
 			MainCharacter::GetInstance()->IncreaseStage();
 		}
+		if (!clear->isVisible())
+		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/win.wav", false);
+		}
 		clear->setVisible(true);
 		m_buttons[4]->setVisible(false);
 		m_buttons[5]->setVisible(false);
 		m_buttons[6]->setVisible(true);
-		m_buttons[7]->setVisible(true);
+		//m_buttons[7]->setVisible(true);
+		nextStage->setVisible(true);
 		shader->setOpacity(200);
 		if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
 		{
@@ -120,6 +127,10 @@ void Level3Scene::update(float deltaTime)
 			armor->setVisible(false);
 			speedBoot->setVisible(false);
 			arrowAttack->setVisible(false);
+		}
+		if (m_buttons[8]->isEnabled())
+		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/lose2.wav", false);
 		}
 		m_buttons[8]->setEnabled(false);
 		m_buttons[9]->setEnabled(false);
@@ -386,7 +397,6 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
 	{
-		SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
@@ -417,7 +427,6 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 	if ((a->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK))
 	{
-		SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
 	}
 
@@ -456,7 +465,6 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
 	{
-		SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
 		{
 			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());

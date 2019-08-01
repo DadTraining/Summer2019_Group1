@@ -79,7 +79,7 @@ res/sprites/gameplay/fire.png
 38
 res/sprites/gameplay/bullet3.png
 #BUTTON
-26
+27
 0
 res/buttons/mainMenu/exitButtonNormal.png
 res/buttons/mainMenu/exitButtonPressed.png
@@ -158,6 +158,9 @@ res/buttons/gameplay/homeButtonPressed.png
 25
 res/buttons/gameplay/mainCharacterFaceButtonNormal.png
 res/buttons/gameplay/mainCharacterFaceButtonPressed.png
+26
+res/buttons/gameplay/nextStageNormal.png
+res/buttons/gameplay/nextStagePressed.png
 #ANIMATE
 71
 0

@@ -2,7 +2,9 @@
 #include "ui/CocosGUI.h"
 #include "MainMenuScene.h"
 #include "ResourceManager.h"
+#include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
 USING_NS_CC;
 
 Scene* LoadingScene::CreateScene()
@@ -16,6 +18,8 @@ bool LoadingScene::init()
 	{
 		return false;
 	}
+
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("audio/loadingScene/loading.wav", true);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();

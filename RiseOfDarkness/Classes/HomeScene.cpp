@@ -27,6 +27,9 @@ bool HomeScene::init()
 		return false;
 	}
 
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("audio/homeScene/home.mp3", true);
+
 	MainCharacter::GetInstance()->Refresh();
 
 	tileMap = ResourceManager::GetInstance()->GetTileMapById(0);

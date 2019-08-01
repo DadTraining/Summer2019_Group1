@@ -21,7 +21,7 @@ bool MainMenuScene::init()
 		return false;
 	}
 
-	
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("audio/mainMenu/menu.wav", true);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();

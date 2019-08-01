@@ -119,7 +119,7 @@ void SpearMoblin::Update(float deltaTime)
 		}
 		else if (Detect(DETECT_RANGE))
 		{
-			speed = 3;
+			speed = 2;
 			Run();
 		}
 		else
@@ -241,6 +241,7 @@ void SpearMoblin::Run()
 
 void SpearMoblin::Attack()
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/spearMoblin/spear.mp3", false);
 	switch (direction)
 	{
 	case 1:
