@@ -362,10 +362,10 @@
   </object>
  </objectgroup>
  <objectgroup id="19" name="nokken">
-  <object id="38" name="01" type="3" x="110" y="174">
+  <object id="38" name="01" type="3" x="239" y="147">
    <ellipse/>
   </object>
-  <object id="39" name="02" type="3" x="498" y="114">
+  <object id="39" name="02" type="3" x="689" y="50">
    <ellipse/>
   </object>
   <object id="40" name="03" type="3" x="944" y="208">

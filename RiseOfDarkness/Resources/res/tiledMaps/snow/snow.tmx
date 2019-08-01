@@ -190,7 +190,7 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="maokai">
-  <object id="3" name="03" x="80" y="112"/>
+  <object id="3" name="03" x="143" y="208"/>
   <object id="4" name="02" x="368" y="144"/>
   <object id="5" name="01" x="689.333" y="80"/>
   <object id="24" name="04" x="497.333" y="301.333"/>
@@ -202,13 +202,13 @@
   </object>
  </objectgroup>
  <objectgroup id="10" name="elise">
-  <object id="14" name="05" x="145.333" y="177.333">
+  <object id="14" name="05" x="591.333" y="206.333">
    <properties>
     <property name="direction" value="1"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="15" name="04" x="653.333" y="113.333">
+  <object id="15" name="04" x="815.333" y="304.333">
    <properties>
     <property name="direction" value="3"/>
    </properties>
