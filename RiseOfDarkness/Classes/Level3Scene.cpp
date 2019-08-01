@@ -448,7 +448,38 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 			m_enemies[b->getGroup()]->ReverseDirection();
 		}
 	}
+	//==================
+	// MAIN CHARACTER SLASH BOWMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	{
+		SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+		}
+	}
 
+	//ARROW DAMAGE BOWMOBLIN
+
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+		}
+	}
 	// BOWMOBLIN COLLIDE OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))

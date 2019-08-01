@@ -380,7 +380,38 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
 	}
-	
+	//=======================
+	// MAIN CHARACTER SLASH BOWMOBLIN
+	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
+	{
+		SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
+		}
+	}
+
+	//ARROW DAMAGE BOWMOBLIN
+
+	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
+		}
+	}
 	// MAIN CHARACTER SLASH SPEARMOBLIN
 	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
@@ -395,7 +426,7 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
 		}
 	}
-	
+
 	// MAIN CHARACTER'S ARROW COLLIDE SPEARMOBLIN
 	if ((a->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::NORMAL_ARROW_BITMASK))
@@ -535,6 +566,8 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+
+	
 	//COLLECT ARROW ITEM
 	if ((a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::ARROW1_ITEM_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::ARROW1_ITEM_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK))

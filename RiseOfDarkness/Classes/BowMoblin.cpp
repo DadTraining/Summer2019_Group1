@@ -64,7 +64,7 @@ BowMoblin::BowMoblin(Layer* layer, int direction, Vec2 pos, int group)
 
 	maxHP = HP;
 	currentHP = maxHP;
-	speed = 3;
+	speed = 2;
 
 	countingTime = 0;
 	coolDownAttack = 0;

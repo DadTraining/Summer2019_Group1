@@ -56,7 +56,7 @@ Warwick::Warwick(Layer* layer, int direction, Vec2 pos, int group)
 
 	maxHP = HP;
 	currentHP = maxHP;
-	speed = 5;
+	speed = 3;
 
 	countingTime = 0;
 	coolDownAttack = 0;
