@@ -46,8 +46,6 @@ bool Level3Scene::init()
 
 	AddListener();
 
-	CreateMonster();
-
 	if (!MainCharacter::GetInstance()->GetCheckHeartCollect(currentStage))
 	{
 		CreateTreasure();

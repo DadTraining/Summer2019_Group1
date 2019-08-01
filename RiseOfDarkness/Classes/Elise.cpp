@@ -262,7 +262,6 @@ void Elise::Run()
 
 void Elise::Attack()
 {
-
 	if (!bullet->IsVisible())
 	{
 		bullet->SetRotate(180);

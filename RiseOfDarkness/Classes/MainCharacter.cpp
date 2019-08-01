@@ -969,7 +969,7 @@ int MainCharacter::GetArrowAttack()
 
 void MainCharacter::TakeArrowAttack(int id)
 {
-	log("%d", id);
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/metalClash.wav", false);
 	switch (id)
 	{
 	case 6:
@@ -1005,6 +1005,7 @@ int MainCharacter::GetArrowRange()
 
 void MainCharacter::TakeBow(int id)
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/metalClash.wav", false);
 	switch (id)
 	{
 	case 17:

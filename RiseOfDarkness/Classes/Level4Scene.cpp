@@ -49,8 +49,6 @@ bool Level4Scene::init()
 
 	AddListener();
 
-	CreateMonster();
-
 	auto snow = ParticleSnow::create();
 	snow->setPositionY(Director::getInstance()->getVisibleSize().height * 2.2);
 	addChild(snow, 12);
