@@ -185,6 +185,15 @@ void ResourceManager::Init(const std::string &path)
 	//[11]->setColor(Color3B::RED);
 
 	m_sprites[33]->setScale(0.15);
+	m_sprites[33]->setOpacity(150);
+
+	m_sprites[11]->setOpacity(150);
+	m_sprites[12]->setOpacity(150);
+	m_sprites[13]->setOpacity(150);
+
+	//m_loadingbar[1]->setOpacity(150);
+	//m_loadingbar[2]->setOpacity(150);
+
 }
 
 Sprite* ResourceManager::GetSpriteById(int id)
