@@ -30,12 +30,13 @@ private:
 	ItemType itemType;
 	WeaponType weaponType;
 	bool itemStackable;
+	cocos2d::Sprite* info;
 public:
-	Item(std::string name, int id, std::string desc, int power, int sellCost, ItemType type, WeaponType wType);
+	Item(std::string name, int id, std::string desc, int power, int sellCost,cocos2d::Sprite* info, ItemType type, WeaponType wType);
 	Item(std::string name);
 	cocos2d::ui::Button* GetIcon();
 	int GetID();
-	
+	cocos2d::Sprite* GetInfo();
 	bool IsStackable();
 	Item(const Item*);
 	std::string GetDesc();
@@ -47,5 +48,5 @@ public:
 	int GetSellCost();
 	Item();
 	~Item();
-	Item(std::string name, int id, std::string desc, int power, int sellCost, ItemType type);
+	Item(std::string name, int id, std::string desc, int power, int sellCost, cocos2d::Sprite* info, ItemType type);
 };

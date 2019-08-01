@@ -40,7 +40,7 @@ Item::~Item()
 {
 }
 
-Item::Item(std::string name, int id, std::string desc, int power, int Cost, ItemType type)
+Item::Item(std::string name, int id, std::string desc, int power, int Cost, cocos2d::Sprite* info, ItemType type)
 {
 	itemID = id;
 	itemName = name;
@@ -52,9 +52,11 @@ Item::Item(std::string name, int id, std::string desc, int power, int Cost, Item
 	weaponType = WeaponType::other;
 	itemIcon = (cocos2d::ui::Button*)cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
 	itemIcon->retain();
+	this->info = info;
+	this->info->retain();
 }
 
-Item::Item(std::string name, int id, std::string desc, int power, int Cost, ItemType type, WeaponType wType)
+Item::Item(std::string name, int id, std::string desc, int power, int Cost, cocos2d::Sprite* info, ItemType type, WeaponType wType)
 {
 	itemID = id;
 	itemName = name;
@@ -62,6 +64,8 @@ Item::Item(std::string name, int id, std::string desc, int power, int Cost, Item
 	itemPower = power;
 	sellCost = Cost;
 	itemType = type;
+	this->info = info;
+	this->info->retain();
 	itemStackable = ((type == ItemType::potion || type==ItemType::arrow) ? true : false);
 	weaponType = wType;
 	itemIcon = (cocos2d::ui::Button*)cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
@@ -86,6 +90,11 @@ int Item::GetID()
 	return itemID;
 }
 
+cocos2d::Sprite * Item::GetInfo()
+{
+	return info;
+}
+
 bool Item::IsStackable()
 {
 	return itemStackable;
@@ -102,6 +111,7 @@ Item::Item(const Item *item)
 	itemStackable = item->itemStackable;
 	itemIcon = (cocos2d::ui::Button*)item->itemIcon->clone();
 	itemIcon->retain();
+	info = item->info;
 	weaponType = item->weaponType;
 }
 

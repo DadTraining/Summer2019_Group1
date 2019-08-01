@@ -851,7 +851,11 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		btnUse->removeFromParent();
 		GetTab(1)->addChild(btnUse, 99);
 		GetTab(1)->addChild(btnSell, 99);
-		
+		slots[id]->GetInfo()->removeFromParent();
+		slots[id]->GetInfo()->setAnchorPoint(Vec2(0, 1));
+		GetTab(1)->addChild(slots[id]->GetInfo(), 99);
+		slots[id]->GetInfo()->setPosition(GetSize());
+		slots[id]->GetInfo()->setCameraMask(2);
 		if (slots[id]->GetIcon() != NULL)
 		{
 			clickBox->removeFromParent();
@@ -870,7 +874,11 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		btnUse->removeFromParent();
 		GetTab(0)->addChild(btnUse, 99);
 		GetTab(0)->addChild(btnSell, 99);
-		log("weapon %d click", id);
+		weapons[id]->GetInfo()->removeFromParent();
+		weapons[id]->GetInfo()->setAnchorPoint(Vec2(0, 1));
+		GetTab(0)->addChild(weapons[id]->GetInfo(), 99);
+		weapons[id]->GetInfo()->setPosition(GetSize());
+		weapons[id]->GetInfo()->setCameraMask(2);
 		
 		if (weapons[id]->GetIcon() != NULL)
 		{
@@ -891,7 +899,11 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		btnUse->removeFromParent();
 		GetTab(3)->addChild(btnUse, 99);
 		GetTab(3)->addChild(btnSell, 99);
-		
+		arrows[id]->GetInfo()->removeFromParent();
+		arrows[id]->GetInfo()->setAnchorPoint(Vec2(0, 1));
+		GetTab(3)->addChild(arrows[id]->GetInfo(), 99);
+		arrows[id]->GetInfo()->setPosition(GetSize());
+		arrows[id]->GetInfo()->setCameraMask(2);
 		if (arrows[id]->GetIcon() != NULL)
 		{
 			clickBox->removeFromParent();
@@ -911,6 +923,11 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		btnUse->removeFromParent();
 		GetTab(2)->addChild(btnUse, 99);
 		GetTab(2)->addChild(btnSell, 99);
+		armors[id]->GetInfo()->removeFromParent();
+		armors[id]->GetInfo()->setAnchorPoint(Vec2(0, 1));
+		GetTab(2)->addChild(armors[id]->GetInfo(), 99);
+		armors[id]->GetInfo()->setPosition(GetSize());
+		armors[id]->GetInfo()->setCameraMask(2);
 		if (armors[id]->GetIcon() != NULL)
 		{
 			clickBox->removeFromParent();
@@ -930,6 +947,11 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		btnUse->removeFromParent();
 		GetTab(4)->addChild(btnUse, 99);
 		GetTab(4)->addChild(btnSell, 99);
+		boots[id]->GetInfo()->removeFromParent();
+		boots[id]->GetInfo()->setAnchorPoint(Vec2(0, 1));
+		GetTab(4)->addChild(boots[id]->GetInfo(), 99);
+		boots[id]->GetInfo()->setPosition(GetSize());
+		boots[id]->GetInfo()->setCameraMask(2);
 		if (boots[id]->GetIcon() != NULL)
 		{
 			clickBox->removeFromParent();
