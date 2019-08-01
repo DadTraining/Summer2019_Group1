@@ -15,7 +15,7 @@ private:
 	static const int DETECT_RANGE = 150;
 	static const int ATTACK_RANGE = 150;
 	static const int ATTACK_COOLDOWN = 2;
-	static const int REVIVE_TIME = 4;
+	static const int REVIVE_TIME = 10;
 	static const int HP_REVIVE = 10;
 
 	Action* mAction[2];

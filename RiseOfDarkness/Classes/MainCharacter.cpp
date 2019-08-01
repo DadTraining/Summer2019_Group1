@@ -174,7 +174,7 @@ void MainCharacter::CreateMainCharacter()
 	defend = DEFEND + 10;
 	speed = SPEED + 1;
 	countingTime = 0;
-	maxHP = 500;
+	maxHP = 300;
 	maxMP = 100;
 	currentHP = maxMP;
 	currentMP = maxMP;

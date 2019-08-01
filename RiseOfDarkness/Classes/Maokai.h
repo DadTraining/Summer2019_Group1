@@ -12,12 +12,12 @@ private:
 	static const int ATTACK = 1;
 	static const int FIRE = 2;
 
-	static const int HP = 300;
+	static const int HP = 600;
 	static const int DETECT_RANGE = 200;
 	static const int ATTACK_RANGE = 200;
-	static const int ATTACK_COOLDOWN = 3;
+	static const int ATTACK_COOLDOWN = 2;
 	static const int REVIVE_TIME = 4;
-	static const int HP_REVIVE = 10;
+	static const int HP_REVIVE = 50;
 
 	Action* mAction[2];
 	Fire* fire;

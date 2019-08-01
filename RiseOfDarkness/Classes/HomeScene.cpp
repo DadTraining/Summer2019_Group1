@@ -956,7 +956,7 @@ void HomeScene::OpenClosePotionShop(cocos2d::Ref * pSender)
 
 void HomeScene::OpenCloseEquipmentShop(cocos2d::Ref * pSender)
 {
-	m_buttons[5]->setVisible(!m_buttons[4]->isVisible());
+	m_buttons[5]->setVisible(!m_buttons[5]->isVisible());
 	equipmentScrollView->setVisible(!equipmentScrollView->isVisible());
 	m_sprites[10]->setVisible(!m_sprites[10]->isVisible());
 	m_sprites[11]->setVisible(!m_sprites[11]->isVisible());

@@ -50,13 +50,13 @@ public:
 	static const int DEFEND = 10;
 
 	// DAMAGE ALL CHARACTER
-	static const int SPEARMOBLIN_DAMAGE = 40;
+	static const int SPEARMOBLIN_DAMAGE = 50;
 	static const int NORMAL_ARROW = 10;
-	static const int BOWMOBLIN_DAMAGE = 30;
+	static const int BOWMOBLIN_DAMAGE = 45;
 	static const int ROPE_MONSTER_DAMAGE = 35;
 	static const int BULLET_DAMAGE = 35;
-	static const int FIRE_DAMAGE = 50;
-	static const int WARWICK_DAMAGE = 55;
+	static const int FIRE_DAMAGE = 70;
+	static const int WARWICK_DAMAGE = 75;
 
 	// GOLD RECEIVE FROM KILL ENEMY
 	static const int BOWMOBLIN_GOLD = 50;
