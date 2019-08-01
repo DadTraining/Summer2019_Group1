@@ -313,6 +313,7 @@ void HomeScene::CreateAllButton(Layer* layer)
 	direction->setPosition(Vec2(visibleSize.width - 70, visibleSize.height - 70));
 	direction->setCameraMask(2);
 	direction->setRotation(-90);
+	direction->setVisible(false);
 	m_sprites.push_back(direction);
 
 	// GO TO MAP BUTTON ID 1

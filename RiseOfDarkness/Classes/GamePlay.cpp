@@ -363,6 +363,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	direction->setPosition(Vec2(pause->getPositionX() - pause->getBoundingBox().size.width / 2, pause->getPositionY() - direction->getBoundingBox().size.width - 10));
 	direction->setCameraMask(2);
 	direction->setRotation(-90);
+	direction->setVisible(false);
 	m_sprites.push_back(direction);
 
 	// ENEMY ICON SPRITE ID 6

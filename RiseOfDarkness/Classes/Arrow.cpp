@@ -70,7 +70,7 @@ void Arrow::update(float deltaTime)
 		break;
 	}
 	//out of range
-	if (GetDistance()>=RANGE)
+	if (GetDistance()>=MainCharacter::GetInstance()->GetArrowRange())
 	{
 		//setAlive(false);
 		mSprite->setVisible(false);

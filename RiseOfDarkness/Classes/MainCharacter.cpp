@@ -183,6 +183,7 @@ void MainCharacter::CreateMainCharacter()
 	currentMP = maxMP;
 	gold = 10000;
 	preventRun = 0;
+	arrowRange = 250;
 	pace = std::sqrt(2 * speed*speed) / 2;
 
 	slash = new Slash();
@@ -955,6 +956,32 @@ PhysicsBody* MainCharacter::GetPhysicsBody()
 	return mPhysicsBody;
 }
 
+int MainCharacter::GetArrowRange()
+{
+	return arrowRange;
+}
+
+void MainCharacter::TakeBow(int id)
+{
+	switch (id)
+	{
+	case 17:
+		arrowRange = 250;
+		break;
+	case 18:
+		arrowRange = 300;
+		break;
+	case 19:
+		arrowRange = 350;
+		break;
+	case 20:
+		arrowRange = 400;
+		break;
+ 	default:
+		break;
+	}
+}
+
 int MainCharacter::GetSpeed()
 {
 	return speed;
@@ -1138,6 +1165,9 @@ void MainCharacter::EquipedItem(int index, Item item)
 		break;
 	case 3:
 		TakeBoots(mItems[3]->GetID());
+		break;
+	case 4:
+		TakeBow(mItems[4]->GetID());
 		break;
 	default:
 		break;

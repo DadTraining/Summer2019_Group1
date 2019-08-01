@@ -847,6 +847,7 @@ void Inventory::ItemClick(cocos2d::Ref *pSender, int id, ItemType type)
 		if (targetID >= 0)
 		{
 			btnSell->addClickEventListener(CC_CALLBACK_1(Inventory::btnSellItem, this, id, type));
+			btnUse->addClickEventListener(CC_CALLBACK_1(Inventory::EquipItem, this, id, type, WeaponType::other));
 		}
 		break;
 	case ItemType::armor:
@@ -969,6 +970,24 @@ void Inventory::EquipItem(cocos2d::Ref *pSender,int id, ItemType type,WeaponType
 				RemoveItem(boots[targetID]->GetID(), targetID, ItemType::boots);
 				item = new Item(mItems[3]);
 				AddItem(item->GetID());
+			}
+		}
+		break;
+	case ItemType::arrow:
+		if (targetID >= 0)
+		{
+			if (mItems[4]->GetID() == 99)
+			{
+				MainCharacter::GetInstance()->MainCharacter::EquipedItem(4, arrows[targetID]);
+				//RemoveItem(arrows[targetID]->GetID(), targetID, ItemType::arrow);
+			}
+			else
+			{
+				int index = targetID;
+				MainCharacter::GetInstance()->MainCharacter::EquipedItem(4, arrows[targetID]);
+				//RemoveItem(arrows[targetID]->GetID(), targetID, ItemType::arrow);
+				item = new Item(mItems[4]);
+				//AddItem(item->GetID());
 			}
 		}
 		break;

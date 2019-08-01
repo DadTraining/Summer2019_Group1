@@ -95,6 +95,7 @@ private:
 	int speed;
 	int attack;
 	int defend;
+	int arrowRange;
 	int heartContainer;
 	std::string mName;
 	float maxHP, currentHP, maxMP, currentMP;
@@ -105,6 +106,8 @@ private:
 	Inventory *inventory;
 	std::vector<bool> heartContainerCollect;
 public:
+	int GetArrowRange();
+	void TakeBow(int id);
 	int GetSpeed();
 	int GetAttack();
 	int GetMaxHP();
