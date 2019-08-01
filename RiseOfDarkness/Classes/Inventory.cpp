@@ -26,6 +26,62 @@ Inventory::~Inventory()
 {
 }
 
+int Inventory::GetCapacity(ItemType type)
+{
+	int size = 0;
+	switch (type)
+	{
+	case ItemType::weapon:
+		size = 0;
+		for (int i = 0; i < weapons.size(); i++)
+		{
+			if (weapons[i]->GetID() != 99)
+				size++;
+		}
+		return size;
+		break;
+	case ItemType::potion:
+		size = 0;
+		for (int i = 0; i < slots.size(); i++)
+		{
+			if (slots[i]->GetID() != 99)
+				size++;
+		}
+		return size;
+		break;
+	case ItemType::armor:
+		size = 0;
+		for (int i = 0; i < armors.size(); i++)
+		{
+			if (armors[i]->GetID() != 99)
+				size++;
+		}
+		return size;
+		break;
+	case ItemType::boots:
+		size = 0;
+		for (int i = 0; i < boots.size(); i++)
+		{
+			if (boots[i]->GetID() != 99)
+				size++;
+		}
+		return size;
+		break;
+	case ItemType::arrow:
+		size = 0;
+		for (int i = 0; i < arrows.size(); i++)
+		{
+			if (arrows[i]->GetID() != 99)
+				size++;
+		}
+		return size;
+		break;
+	default:
+		return 0;
+		break;
+	}
+}
+
 void Inventory::Init(cocos2d::Sprite* sprite)
 {
 	clickBox = Sprite::create("res/sprites/item/click.png");

@@ -205,6 +205,7 @@ void HomeScene::OpenInventory(cocos2d::Ref * sender)
 		attack->setVisible(false);
 		armor->setVisible(false);
 		speedBoot->setVisible(false);
+		arrowAttack->setVisible(false);
 	}
 }
 
@@ -373,6 +374,15 @@ void HomeScene::CreateAllButton(Layer* layer)
 	speedBoot->setString(std::to_string(MainCharacter::GetInstance()->GetSpeed()) + " (+"
 		+ std::to_string(MainCharacter::GetInstance()->GetSpeed() - MainCharacter::SPEED) + ")");
 	layer->addChild(speedBoot, 24);
+
+	arrowAttack = get->GetLabelById(11);
+	arrowAttack->removeFromParent();
+	arrowAttack->setCameraMask(2);
+	arrowAttack->setVisible(false);
+	arrowAttack->setAnchorPoint(Vec2(0, 0.5));
+	arrowAttack->setPosition(Vec2(visibleSize.width / 2 - 30, visibleSize.height / 2 - 140));
+	arrowAttack->setString(std::to_string(MainCharacter::GetInstance()->GetArrowAttack()));
+	layer->addChild(arrowAttack, 24);
 
 	SetCamera(MainCharacter::GetInstance()->GetSprite()->getPosition());
 }
@@ -706,6 +716,7 @@ void HomeScene::ClickShowInfor(Ref * pSender)
 	attack->setVisible(!attack->isVisible());
 	armor->setVisible(!armor->isVisible());
 	speedBoot->setVisible(!speedBoot->isVisible());
+	arrowAttack->setVisible(!arrowAttack->isVisible());
 	health->setString(std::to_string(MainCharacter::GetInstance()->GetCurrentHP()) + "/" + std::to_string(MainCharacter::GetInstance()->GetMaxHP()));
 	attack->setString(std::to_string(MainCharacter::GetInstance()->GetAttack()) + " (+"
 		+ std::to_string(MainCharacter::GetInstance()->GetAttack() - MainCharacter::ATTACK) + ")");
@@ -713,6 +724,7 @@ void HomeScene::ClickShowInfor(Ref * pSender)
 		+ std::to_string(MainCharacter::GetInstance()->GetDefend() - MainCharacter::DEFEND) + ")");
 	speedBoot->setString(std::to_string(MainCharacter::GetInstance()->GetSpeed()) + " (+"
 		+ std::to_string(MainCharacter::GetInstance()->GetSpeed() - MainCharacter::SPEED) + ")");
+	arrowAttack->setString(std::to_string(MainCharacter::GetInstance()->GetArrowAttack()));
 	if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	{
 		MainCharacter::GetInstance()->GetInventory()->SetVisible(false);
@@ -725,216 +737,216 @@ void HomeScene::ClickBuyItem(Ref * sender, int id)
 	switch (id)
 	{
 	case 1:
-		if (MainCharacter::GetInstance()->GetGold()>=300)
+		if (MainCharacter::GetInstance()->GetGold() >= 300 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::armor)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(300);
 		}
 		break;
 	case 2:
-		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		if (MainCharacter::GetInstance()->GetGold() >= 500 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::armor)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(500);
 		}
 		break;
 	case 3:
-		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		if (MainCharacter::GetInstance()->GetGold() >= 1000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::armor)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(1000);
 		}
 		break;
 	case 4:
-		if (MainCharacter::GetInstance()->GetGold() >= 2000)
+		if (MainCharacter::GetInstance()->GetGold() >= 2000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::armor)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(2000);
 		}
 		break;
 	case 5:
-		if (MainCharacter::GetInstance()->GetGold() >= 5000)
+		if (MainCharacter::GetInstance()->GetGold() >= 5000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::armor)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(5000);
 		}
 		break;
 	case 6:
-		if (MainCharacter::GetInstance()->GetGold() >= 3)
+		if (MainCharacter::GetInstance()->GetGold() >= 3 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::arrow)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(3);
 		}
 		break;
 	case 7:
-		if (MainCharacter::GetInstance()->GetGold() >= 5)
+		if (MainCharacter::GetInstance()->GetGold() >= 5 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::arrow)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(5);
 		}
 		break;
 	case 8:
-		if (MainCharacter::GetInstance()->GetGold() >= 8)
+		if (MainCharacter::GetInstance()->GetGold() >= 8 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::arrow)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(8);
 		}
 		break;
 	case 9:
-		if (MainCharacter::GetInstance()->GetGold() >= 12)
+		if (MainCharacter::GetInstance()->GetGold() >= 12 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::arrow)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(12);
 		}
 		break;
 	case 10:
-		if (MainCharacter::GetInstance()->GetGold() >= 15)
+		if (MainCharacter::GetInstance()->GetGold() >= 15 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::arrow)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(15);
 		}
 		break;
 	case 11:
-		if (MainCharacter::GetInstance()->GetGold() >= 20)
+		if (MainCharacter::GetInstance()->GetGold() >= 20 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::arrow)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(20);
 		}
 		break;
 	case 12:
-		if (MainCharacter::GetInstance()->GetGold() >= 25)
+		if (MainCharacter::GetInstance()->GetGold() >= 25 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::arrow)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(25);
 		}
 		break;
 	case 13:
-		if (MainCharacter::GetInstance()->GetGold() >= 200)
+		if (MainCharacter::GetInstance()->GetGold() >= 200 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::boots)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(200);
 		}
 		break;
 	case 14:
-		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		if (MainCharacter::GetInstance()->GetGold() >= 500 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::boots)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(500);
 		}
 		break;
 	case 15:
-		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		if (MainCharacter::GetInstance()->GetGold() >= 1000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::boots)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(1000);
 		}
 		break;
 	case 16:
-		if (MainCharacter::GetInstance()->GetGold() >= 2000)
+		if (MainCharacter::GetInstance()->GetGold() >= 2000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::boots)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(2000);
 		}
 		break;
 	case 17:
-		if (MainCharacter::GetInstance()->GetGold() >= 200)
+		if (MainCharacter::GetInstance()->GetGold() >= 200 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(200);
 		}
 		break;
 	case 18:
-		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		if (MainCharacter::GetInstance()->GetGold() >= 500 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(500);
 		}
 		break;
 	case 19:
-		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		if (MainCharacter::GetInstance()->GetGold() >= 1000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(1000);
 		}
 		break;
 	case 20:
-		if (MainCharacter::GetInstance()->GetGold() >= 2000)
+		if (MainCharacter::GetInstance()->GetGold() >= 2000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(2000);
 		}
 		break;
 	case 21:
-		if (MainCharacter::GetInstance()->GetGold() >= 25)
+		if (MainCharacter::GetInstance()->GetGold() >= 25 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::potion)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(25);
 		}
 		break;
 	case 22:
-		if (MainCharacter::GetInstance()->GetGold() >= 20)
+		if (MainCharacter::GetInstance()->GetGold() >= 20 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::potion)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(20);
 		}
 		break;
 	case 23:
-		if (MainCharacter::GetInstance()->GetGold() >= 22)
+		if (MainCharacter::GetInstance()->GetGold() >= 22 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::potion)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(22);
 		}
 		break;
 	case 24:
-		if (MainCharacter::GetInstance()->GetGold() >= 15)
+		if (MainCharacter::GetInstance()->GetGold() >= 15 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::potion)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(15);
 		}
 		break;
 	case 25:
-		if (MainCharacter::GetInstance()->GetGold() >= 45)
+		if (MainCharacter::GetInstance()->GetGold() >= 45 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::potion)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(45);
 		}
 		break;
 	case 26:
-		if (MainCharacter::GetInstance()->GetGold() >= 200)
+		if (MainCharacter::GetInstance()->GetGold() >= 200 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(200);
 		}
 		break;
 	case 27:
-		if (MainCharacter::GetInstance()->GetGold() >= 300)
+		if (MainCharacter::GetInstance()->GetGold() >= 300 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(300);
 		}
 		break;
 	case 28:
-		if (MainCharacter::GetInstance()->GetGold() >= 500)
+		if (MainCharacter::GetInstance()->GetGold() >= 500 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(500);
 		}
 		break;
 	case 29:
-		if (MainCharacter::GetInstance()->GetGold() >= 700)
+		if (MainCharacter::GetInstance()->GetGold() >= 700 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(700);
 		}
 		break;
 	case 30:
-		if (MainCharacter::GetInstance()->GetGold() >= 1000)
+		if (MainCharacter::GetInstance()->GetGold() >= 1000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(1000);
 		}
 	case 31:
-		if (MainCharacter::GetInstance()->GetGold() >= 3000)
+		if (MainCharacter::GetInstance()->GetGold() >= 3000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(3000);
@@ -943,8 +955,8 @@ void HomeScene::ClickBuyItem(Ref * sender, int id)
 	default:
 		break;
 	}
-	
-	
+
+
 }
 
 void HomeScene::OpenCloseWeaponShop(Ref * pSender)

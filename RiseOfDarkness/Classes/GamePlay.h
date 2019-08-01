@@ -17,7 +17,7 @@ protected:
 	PhysicsBody* body;
 	std::vector<ui::Button*> m_buttons;
 	std::vector<Sprite*> m_sprites;
-	Label* mName, *gameover, *clear, *gold, *paused, *amountHP, *amountMP, *health, *attack, *armor, *speedBoot, *amountEnemy;
+	Label* mName, *gameover, *clear, *gold, *paused, *amountHP, *amountMP, *health, *attack, *armor, *speedBoot, *amountEnemy, *arrowAttack;
 	ui::LoadingBar *hpLoadingBar, *mpLoadingBar;
 	std::vector<Enemy*> m_enemies;
 	int currentStage;

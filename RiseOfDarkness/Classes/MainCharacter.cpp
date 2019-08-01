@@ -122,12 +122,13 @@ void MainCharacter::CreateMainCharacter()
 	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(17)]); //bow
 	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(1)]); //armor
 	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(13)]); //boot
-	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]); //arrow
+	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(6)]); //arrow
 
 	EquipedItem(0, inventory->database->items[inventory->database->GetIndexByID(26)]);
 	EquipedItem(1, inventory->database->items[inventory->database->GetIndexByID(17)]);
 	EquipedItem(2, inventory->database->items[inventory->database->GetIndexByID(1)]);
 	EquipedItem(3, inventory->database->items[inventory->database->GetIndexByID(13)]);
+	EquipedItem(4, inventory->database->items[inventory->database->GetIndexByID(6)]);
 
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
@@ -174,6 +175,7 @@ void MainCharacter::CreateMainCharacter()
 	direction = 2;
 	currentState = FRONT_IDLE;
 	attack = ATTACK + 20;
+	arrowAttack = 30;
 	defend = DEFEND + 10;
 	speed = SPEED + 1;
 	countingTime = 0;
@@ -956,6 +958,42 @@ PhysicsBody* MainCharacter::GetPhysicsBody()
 	return mPhysicsBody;
 }
 
+int MainCharacter::GetArrowAttack()
+{
+	return arrowAttack;
+}
+
+void MainCharacter::TakeArrowAttack(int id)
+{
+	log("%d", id);
+	switch (id)
+	{
+	case 6:
+		arrowAttack = 30;
+		break;
+	case 7:
+		arrowAttack = 35;
+		break;
+	case 8:
+		arrowAttack = 40;
+		break;
+	case 9:
+		arrowAttack = 45;
+		break;
+	case 10:
+		arrowAttack = 50;
+		break;
+	case 11:
+		arrowAttack = 60;
+		break;
+	case 12:
+		arrowAttack = 70;
+		break;
+	default:
+		break;
+	}
+}
+
 int MainCharacter::GetArrowRange()
 {
 	return arrowRange;
@@ -1166,8 +1204,11 @@ void MainCharacter::EquipedItem(int index, Item item)
 	case 3:
 		TakeBoots(mItems[3]->GetID());
 		break;
+	case 1:
+		TakeBow(mItems[1]->GetID());
+		break;
 	case 4:
-		TakeBow(mItems[4]->GetID());
+		TakeArrowAttack(mItems[4]->GetID());
 		break;
 	default:
 		break;

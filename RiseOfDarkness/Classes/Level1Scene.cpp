@@ -95,8 +95,9 @@ void Level1Scene::update(float deltaTime)
 			attack->setVisible(false);
 			armor->setVisible(false);
 			speedBoot->setVisible(false);
+			arrowAttack->setVisible(false);
 		}
-		m_buttons[8]->setEnabled(false);
+		//m_buttons[8]->setEnabled(false);
 		m_buttons[9]->setEnabled(false);
 		m_buttons[10]->setEnabled(false);
 		m_buttons[11]->setEnabled(false);
@@ -120,6 +121,7 @@ void Level1Scene::update(float deltaTime)
 			attack->setVisible(false);
 			armor->setVisible(false);
 			speedBoot->setVisible(false);
+			arrowAttack->setVisible(false);
 		}
 		m_buttons[8]->setEnabled(false);
 		m_buttons[9]->setEnabled(false);
@@ -204,6 +206,7 @@ void Level1Scene::AddListener()
 				attack->setVisible(false);
 				armor->setVisible(false);
 				speedBoot->setVisible(false);
+				arrowAttack->setVisible(false);
 			}
 			m_buttons[8]->setEnabled(false);
 			m_buttons[9]->setEnabled(false);
@@ -403,12 +406,12 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	{
 		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
 		{
-			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetArrowAttack());
 			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
 		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
 		{
-			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetArrowAttack());
 			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
 		}
 	}
@@ -433,12 +436,12 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	{
 		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_enemies[a->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetArrowAttack());
 			MainCharacter::GetInstance()->GetListArrow()[b->getGroup()]->SetVisible(false);
 		}
 		else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
-			m_enemies[b->getGroup()]->GetDamage(MainCharacter::NORMAL_ARROW);
+			m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetArrowAttack());
 			MainCharacter::GetInstance()->GetListArrow()[a->getGroup()]->SetVisible(false);
 		}
 	}
@@ -656,6 +659,7 @@ void Level1Scene::OpenInventory(cocos2d::Ref * sender)
 		attack->setVisible(false);
 		armor->setVisible(false);
 		speedBoot->setVisible(false);
+		arrowAttack->setVisible(false);
 	}
 }
 
@@ -686,6 +690,7 @@ void Level1Scene::ClickShowInfor(Ref * pSender)
 	attack->setVisible(!attack->isVisible());
 	armor->setVisible(!armor->isVisible());
 	speedBoot->setVisible(!speedBoot->isVisible());
+	arrowAttack->setVisible(!arrowAttack->isVisible());
 	health->setString(std::to_string(MainCharacter::GetInstance()->GetCurrentHP()) + "/" + std::to_string(MainCharacter::GetInstance()->GetMaxHP()));
 	attack->setString(std::to_string(MainCharacter::GetInstance()->GetAttack()) + " (+"
 		+ std::to_string(MainCharacter::GetInstance()->GetAttack() - MainCharacter::ATTACK) + ")");
@@ -693,6 +698,7 @@ void Level1Scene::ClickShowInfor(Ref * pSender)
 		+ std::to_string(MainCharacter::GetInstance()->GetDefend() - MainCharacter::DEFEND) + ")");
 	speedBoot->setString(std::to_string(MainCharacter::GetInstance()->GetSpeed()) + " (+"
 		+ std::to_string(MainCharacter::GetInstance()->GetSpeed() - MainCharacter::SPEED) + ")");
+	arrowAttack->setString(std::to_string(MainCharacter::GetInstance()->GetArrowAttack()));
 	if (MainCharacter::GetInstance()->GetInventory()->IsVisible())
 	{
 		MainCharacter::GetInstance()->GetInventory()->SetVisible(false);

@@ -56,7 +56,7 @@ Warwick::Warwick(Layer* layer, int direction, Vec2 pos, int group)
 
 	maxHP = HP;
 	currentHP = maxHP;
-	speed = 3;
+	speed = 1;
 
 	countingTime = 0;
 	coolDownAttack = 0;
@@ -104,10 +104,12 @@ void Warwick::Update(float deltaTime)
 		}
 		else if (Detect(DETECT_RANGE))
 		{
+			speed = 4;
 			Run();
 		}
 		else
 		{
+			speed = 1;
 			Run();
 		}
 		coolDownAttack += deltaTime;

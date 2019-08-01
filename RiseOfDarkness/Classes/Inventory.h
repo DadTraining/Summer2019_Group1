@@ -36,6 +36,7 @@ public:
 	std::vector<Item*> armors;
 	std::vector<Item*> boots;
 	int GetIdByIcon(int, ItemType);
+	int GetCapacity(ItemType);
 	int GetIndexByID(int);
 	void StackItem(int id, ItemType type);
 	void AutoArrange();  //arrange list item after remove an item

@@ -94,6 +94,7 @@ private:
 	int stageLevel;
 	int speed;
 	int attack;
+	int arrowAttack;
 	int defend;
 	int arrowRange;
 	int heartContainer;
@@ -106,6 +107,8 @@ private:
 	Inventory *inventory;
 	std::vector<bool> heartContainerCollect;
 public:
+	int GetArrowAttack();
+	void TakeArrowAttack(int id);
 	int GetArrowRange();
 	void TakeBow(int id);
 	int GetSpeed();

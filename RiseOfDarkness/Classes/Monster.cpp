@@ -123,10 +123,12 @@ void Monster::Update(float deltaTime)
 		}
 		else if (Detect(DETECT_RANGE))
 		{
+			speed = 2;
 			Run();
 		}
 		else
 		{
+			speed = 1;
 			Run();
 		}
 		coolDownAttack += deltaTime;
