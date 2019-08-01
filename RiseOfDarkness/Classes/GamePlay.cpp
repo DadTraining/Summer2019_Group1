@@ -682,6 +682,7 @@ void GamePlay::InitChest(Layer* layer)
 void GamePlay::ShowInfor()
 {
 	int rows = 0;
+	tab->removeAllChildren();
 	auto items = MainCharacter::GetInstance()->GetEquipedItem();
 	for (int i = 0; i < items.size(); i++)
 	{

@@ -21,7 +21,10 @@ public:
 	static const int RIGHT = 1;
 	static const int UP = 2;
 	static const int DOWN = 3;
-
+	static const int TOPLEFT = 4;
+	static const int TOPRIGHT = 5;
+	static const int RIGHTBOT = 6;
+	static const int LEFTBOT = 7;
 	static const int RANGE = 250;
 	Arrow(cocos2d::Sprite *sprite, int BITMASK);
 	~Arrow();

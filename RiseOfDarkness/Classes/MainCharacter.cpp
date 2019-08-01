@@ -553,6 +553,22 @@ void MainCharacter::SpecialAttack()
 			SetState(LEFT_ARCHERY);
 			Fire(1);
 			break;
+		case 5:
+			SetState(LEFT_ARCHERY);
+			Fire(4);
+			break;
+		case 7:
+			SetState(LEFT_ARCHERY);
+			Fire(5);
+			break;
+		case 6:
+			SetState(LEFT_ARCHERY);
+			Fire(7);
+			break;
+		case 8:
+			SetState(FRONT_ARCHERY);
+			Fire(6);
+			break;
 		default:
 			SetState(LEFT_ARCHERY);
 			Fire(0);

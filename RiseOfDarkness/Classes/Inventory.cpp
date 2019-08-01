@@ -816,7 +816,7 @@ void Inventory::EquipItem(cocos2d::Ref *pSender,int id, ItemType type,WeaponType
 			{
 				int index = targetID;
 				MainCharacter::GetInstance()->MainCharacter::EquipedItem(2, armors[targetID]);
-				RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::armor);
+				RemoveItem(armors[targetID]->GetID(), targetID, ItemType::armor);
 				item = new Item(mItems[2]);
 				AddItem(item->GetID());
 			}

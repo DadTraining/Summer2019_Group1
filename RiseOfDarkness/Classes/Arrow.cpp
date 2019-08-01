@@ -40,40 +40,44 @@ void Arrow::update(float deltaTime)
 {
 	SetDistance(GetDistance() + RUN_STEP);
 	int direction = this->GetDirection();
-	if (direction==LEFT)
+	switch (direction)
 	{
+	case LEFT:
 		SetPosition(GetPosition() + Vec2(-RUN_STEP, 0));
-	}
-	else
-	{
-		if (direction==UP)
-		{
-			//SetRotate(90);
-			SetPosition(GetPosition() + Vec2(0, RUN_STEP));
-		}
-		else
-		{
-			if (direction==DOWN)
-			{
-				//SetRotate(360 - 90);
-				SetPosition(GetPosition() + Vec2(0, -RUN_STEP));
-			}
-			else
-			{
-				//SetFlipX(true);
-				SetPosition(GetPosition() + Vec2(+RUN_STEP, 0));
-			}
-		}
+		break;
+	case RIGHT:
+		SetPosition(GetPosition() + Vec2(+RUN_STEP, 0));
+		break;
+	case UP:
+		SetPosition(GetPosition() + Vec2(0, RUN_STEP));
+		break;
+	case DOWN:
+		SetPosition(GetPosition() + Vec2(0, -RUN_STEP));
+		break;
+	case TOPLEFT:
+		SetPosition(GetPosition() + Vec2(-RUN_STEP, RUN_STEP));
+		break;
+	case TOPRIGHT:
+		SetPosition(GetPosition() + Vec2(RUN_STEP, RUN_STEP));
+		break;
+	case RIGHTBOT:
+		SetPosition(GetPosition() + Vec2(RUN_STEP, -RUN_STEP));
+		break;
+	case LEFTBOT:
+		SetPosition(GetPosition() + Vec2(-RUN_STEP, -RUN_STEP));
+		break;
+	default:
+		break;
 	}
 
-		//out of range
-		if (GetDistance()>=RANGE)
-		{
-			//setAlive(false);
-			mSprite->setVisible(false);
-			mSprite->setPosition(Vec2(-10, -10));
-			SetDistance(0);
-		}
+	//out of range
+	if (GetDistance()>=RANGE)
+	{
+		//setAlive(false);
+		mSprite->setVisible(false);
+		mSprite->setPosition(Vec2(-10, -10));
+		SetDistance(0);
+	}
 }
 
 void Arrow::SetVisible(bool b)
@@ -114,6 +118,18 @@ void Arrow::SetDirection(int d)
 		break;
 	case RIGHT:
 		SetRotate(180);
+		break;
+	case TOPLEFT:
+		SetRotate(45);
+		break;
+	case TOPRIGHT:
+		SetRotate(45+90);
+		break;
+	case RIGHTBOT:
+		SetRotate(180+45);
+		break;
+	case LEFTBOT:
+		SetRotate(360-45);
 		break;
 	default:
 		SetRotate(0);
