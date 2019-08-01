@@ -945,6 +945,7 @@ void HomeScene::ClickBuyItem(Ref * sender, int id)
 			MainCharacter::GetInstance()->GetInventory()->AddItem(id);
 			MainCharacter::GetInstance()->SubGold(1000);
 		}
+		break;
 	case 31:
 		if (MainCharacter::GetInstance()->GetGold() >= 3000 && MainCharacter::GetInstance()->GetInventory()->GetCapacity(ItemType::weapon)<24)
 		{

@@ -426,7 +426,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	arrowAttack->setCameraMask(2);
 	arrowAttack->setVisible(false);
 	arrowAttack->setAnchorPoint(Vec2(0, 0.5));
-	arrowAttack->setPosition(Vec2(visibleSize.width / 2 - 30, visibleSize.height / 2 - 100));
+	arrowAttack->setPosition(Vec2(visibleSize.width / 2 - 30, visibleSize.height / 2 - 140));
 	arrowAttack->setString(std::to_string(MainCharacter::GetInstance()->GetArrowAttack()));
 	layer->addChild(arrowAttack, 24);
 
