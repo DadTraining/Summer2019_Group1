@@ -26,14 +26,14 @@ private:
 	std::string itemDesc;
 	int itemPower;
 	int sellCost;
-	cocos2d::ui::Widget* itemIcon;
+	cocos2d::ui::Button* itemIcon;
 	ItemType itemType;
 	WeaponType weaponType;
 	bool itemStackable;
 public:
 	Item(std::string name, int id, std::string desc, int power, int sellCost, ItemType type, WeaponType wType);
 	Item(std::string name);
-	cocos2d::ui::Widget* GetIcon();
+	cocos2d::ui::Button* GetIcon();
 	int GetID();
 	
 	bool IsStackable();

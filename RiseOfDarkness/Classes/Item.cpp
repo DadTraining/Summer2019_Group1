@@ -50,7 +50,7 @@ Item::Item(std::string name, int id, std::string desc, int power, int Cost, Item
 	itemType = type;
 	itemStackable = ((type == ItemType::potion || type== ItemType::arrow )? true : false);
 	weaponType = WeaponType::other;
-	itemIcon = cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
+	itemIcon = (cocos2d::ui::Button*)cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
 	itemIcon->retain();
 }
 
@@ -64,7 +64,7 @@ Item::Item(std::string name, int id, std::string desc, int power, int Cost, Item
 	itemType = type;
 	itemStackable = ((type == ItemType::potion || type==ItemType::arrow) ? true : false);
 	weaponType = wType;
-	itemIcon = cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
+	itemIcon = (cocos2d::ui::Button*)cocos2d::ui::Button::create("res/" + name + ".png")->Button::clone();
 	itemIcon->retain();
 }
 
@@ -72,11 +72,11 @@ Item::Item(std::string name)
 {
 	itemID = 99;
 	itemStackable = false;
-	itemIcon = cocos2d::ui::Button::create("res/" + name + ".png")->clone();
+	itemIcon = (cocos2d::ui::Button*)cocos2d::ui::Button::create("res/" + name + ".png")->clone();
 	itemIcon->retain();
 }
 
-cocos2d::ui::Widget * Item::GetIcon()
+cocos2d::ui::Button * Item::GetIcon()
 {
 	return itemIcon;
 }
@@ -100,7 +100,7 @@ Item::Item(const Item *item)
 	sellCost = item->sellCost;
 	itemType = item->itemType;
 	itemStackable = item->itemStackable;
-	itemIcon = item->itemIcon->clone();
+	itemIcon = (cocos2d::ui::Button*)item->itemIcon->clone();
 	itemIcon->retain();
 	weaponType = item->weaponType;
 }

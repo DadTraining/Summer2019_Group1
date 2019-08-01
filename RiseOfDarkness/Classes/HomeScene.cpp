@@ -187,6 +187,10 @@ bool HomeScene::onContactBegin(PhysicsContact& contact)
 
 void HomeScene::OpenInventory(cocos2d::Ref * sender)
 {
+	for (int i = 0; i < 5; i++)
+	{
+		MainCharacter::GetInstance()->GetInventory()->GetTab(i)->removeAllChildren();
+	}
 	GamePlay::ShowInventoryGrid();
 	MainCharacter::GetInstance()->GetInventory()->SetVisible(
 		!(MainCharacter::GetInstance()->GetInventory()->IsVisible())
