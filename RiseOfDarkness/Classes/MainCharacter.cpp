@@ -1,6 +1,9 @@
 #include "MainCharacter.h"
 #include "ResourceManager.h"
 #include <math.h>
+#include "SimpleAudioEngine.h"
+
+using namespace CocosDenshion;
 
 MainCharacter* MainCharacter::m_instance = nullptr;
 

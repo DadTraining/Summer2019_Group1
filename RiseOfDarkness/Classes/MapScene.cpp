@@ -7,7 +7,9 @@
 #include "Level2Scene.h"
 #include "Level3Scene.h"
 #include "Level4Scene.h"
+#include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
 using namespace std;
 USING_NS_CC;
 
@@ -31,6 +33,9 @@ bool MapScene::init()
 	}
 
 	lv = MainCharacter::GetInstance()->GetStageLevel();
+
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("audio/map/map4.mp3", true);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto btnMap = ResourceManager::GetInstance()->GetTileMapById(2);//TMXTiledMap::create("res/tiledMaps/SelectScene/selectMap.tmx");

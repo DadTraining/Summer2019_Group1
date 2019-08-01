@@ -3,10 +3,13 @@
 #include "ui/CocosGUI.h"
 #include "cocos2d.h"
 #include "MainCharacter.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 using namespace std;
 using namespace ui;
+using namespace CocosDenshion;
+
 Inventory::Inventory(cocos2d::Sprite* sprite)
 {
 	Init(sprite);
@@ -184,6 +187,7 @@ void Inventory::AddItem(int id)
 
 void Inventory::SellItem(int id, int index, ItemType type)
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 	switch (type)
 	{
 	case ItemType::weapon:
@@ -193,33 +197,43 @@ void Inventory::SellItem(int id, int index, ItemType type)
 			{
 			case 26:
 				MainCharacter::GetInstance()->AddGold(100);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 27:
 				MainCharacter::GetInstance()->AddGold(150);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 28:
 				MainCharacter::GetInstance()->AddGold(250);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 29:
 				MainCharacter::GetInstance()->AddGold(350);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 30:
 				MainCharacter::GetInstance()->AddGold(500);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 31:
 				MainCharacter::GetInstance()->AddGold(1500);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 17:
 				MainCharacter::GetInstance()->AddGold(250);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 18:
 				MainCharacter::GetInstance()->AddGold(250);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 19:
 				MainCharacter::GetInstance()->AddGold(500);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 20:
 				MainCharacter::GetInstance()->AddGold(1000);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			}
 		}
@@ -234,18 +248,23 @@ void Inventory::SellItem(int id, int index, ItemType type)
 			{
 			case 1:
 				MainCharacter::GetInstance()->AddGold(150);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 2:
 				MainCharacter::GetInstance()->AddGold(250);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 3:
 				MainCharacter::GetInstance()->AddGold(500);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 4:
 				MainCharacter::GetInstance()->AddGold(1000);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 5:
 				MainCharacter::GetInstance()->AddGold(2500);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			}
 		}
@@ -260,15 +279,19 @@ void Inventory::SellItem(int id, int index, ItemType type)
 			{
 			case 13:
 				MainCharacter::GetInstance()->AddGold(100);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 14:
 				MainCharacter::GetInstance()->AddGold(250);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 15:
 				MainCharacter::GetInstance()->AddGold(500);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 16:
 				MainCharacter::GetInstance()->AddGold(1000);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			}
 		}
@@ -293,18 +316,23 @@ void Inventory::SellItem(int id, int index, ItemType type)
 			{
 			case 21:
 				MainCharacter::GetInstance()->AddGold(12);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 22:
 				MainCharacter::GetInstance()->AddGold(10);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 23:
 				MainCharacter::GetInstance()->AddGold(11);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 24:
 				MainCharacter::GetInstance()->AddGold(7);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 25:
 				MainCharacter::GetInstance()->AddGold(22);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 
 			}
@@ -329,24 +357,31 @@ void Inventory::SellItem(int id, int index, ItemType type)
 			{
 			case 6:
 				MainCharacter::GetInstance()->AddGold(1);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 7:
 				MainCharacter::GetInstance()->AddGold(2);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 8:
 				MainCharacter::GetInstance()->AddGold(4);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 9:
 				MainCharacter::GetInstance()->AddGold(6);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 10:
 				MainCharacter::GetInstance()->AddGold(7);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 11:
 				MainCharacter::GetInstance()->AddGold(10);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			case 12:
 				MainCharacter::GetInstance()->AddGold(12);
+				SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 				break;
 			}
 			amountArrowLabels[id]->setString(to_string(arrowAmount[id]));
@@ -913,7 +948,7 @@ void Inventory::EquipItem(cocos2d::Ref *pSender,int id, ItemType type,WeaponType
 			{
 				int index = targetID;
 				MainCharacter::GetInstance()->MainCharacter::EquipedItem(2, armors[targetID]);
-				RemoveItem(weapons[targetID]->GetID(), targetID, ItemType::armor);
+				RemoveItem(armors[targetID]->GetID(), targetID, ItemType::armor);
 				item = new Item(mItems[2]);
 				AddItem(item->GetID());
 			}

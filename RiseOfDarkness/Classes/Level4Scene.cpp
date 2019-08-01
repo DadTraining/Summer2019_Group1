@@ -6,7 +6,9 @@
 #include "Maokai.h"
 #include "Elise.h"
 #include "Warwick.h"
+#include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
 using namespace std;
 
 USING_NS_CC;
@@ -29,6 +31,8 @@ bool Level4Scene::init()
 	{
 		return false;
 	}
+
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
 
 	MainCharacter::GetInstance()->Refresh();
 

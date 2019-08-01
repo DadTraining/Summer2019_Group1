@@ -2,8 +2,11 @@
 #include "MapScene.h"
 #include "MainCharacter.h"
 #include "ResourceManager.h"
+#include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
 USING_NS_CC;
+
 
 Scene* HomeScene::CreateScene()
 {
@@ -597,12 +600,12 @@ void HomeScene::CreateShop()
 	potionScrollView->setScrollBarOpacity(0);
 	addChild(potionScrollView, 25);
 	// SPRITE ID 8
-	auto shopPotion = Sprite::create("res/sprites/shop/weaponShop.png");
+	auto shopPotion = Sprite::create("res/sprites/shop/potionShop.png");
 	shopPotion->setPosition(visibleSize / 2);
 	shopPotion->setCameraMask(2);
 	shopPotion->setVisible(false);
 	addChild(shopPotion, 4);
-	auto shopPotionUP = Sprite::create("res/sprites/shop/weaponShopUp.png");
+	auto shopPotionUP = Sprite::create("res/sprites/shop/potionShopUp.png");
 	shopPotionUP->setPosition(visibleSize / 2);
 	shopPotionUP->setCameraMask(2);
 	addChild(shopPotionUP, 99);
@@ -652,12 +655,12 @@ void HomeScene::CreateShop()
 	equipmentScrollView->setScrollBarOpacity(0);
 	addChild(equipmentScrollView, 25);
 	// SPRITE ID 8
-	auto shopEquipment = Sprite::create("res/sprites/shop/weaponShop.png");
+	auto shopEquipment = Sprite::create("res/sprites/shop/equipmentShop.png");
 	shopEquipment->setPosition(visibleSize / 2);
 	shopEquipment->setCameraMask(2);
 	shopEquipment->setVisible(false);
 	addChild(shopEquipment, 4);
-	auto shopEquipmentUp = Sprite::create("res/sprites/shop/weaponShopUp.png");
+	auto shopEquipmentUp = Sprite::create("res/sprites/shop/equipmentShopUp.png");
 	shopEquipmentUp->setPosition(visibleSize / 2);
 	shopEquipmentUp->setCameraMask(2);
 	addChild(shopEquipmentUp, 99);
@@ -717,6 +720,7 @@ void HomeScene::ClickShowInfor(Ref * pSender)
 
 void HomeScene::ClickBuyItem(Ref * sender, int id)
 {
+	SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 	switch (id)
 	{
 	case 1:

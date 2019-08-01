@@ -2,6 +2,9 @@
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include <math.h>
+#include "SimpleAudioEngine.h"
+
+using namespace CocosDenshion;
 
 GamePlay::GamePlay() {}
 GamePlay::~GamePlay() 

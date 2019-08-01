@@ -7,8 +7,10 @@
 #include "MainCharacter.h"
 #include "Level1Scene.h"
 #include "Level3Scene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 Scene* InputNameScene::CreateScene()
 {
@@ -25,6 +27,8 @@ bool InputNameScene::init()
 	{
 		return false;
 	}
+
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();

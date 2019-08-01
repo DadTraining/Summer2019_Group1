@@ -5,6 +5,9 @@
 #include "HomeScene.h"
 #include "Monster.h"
 #include "Nokken.h"
+#include "SimpleAudioEngine.h"
+#include "Level1Scene.h"
+using namespace CocosDenshion;
 
 using namespace std;
 
@@ -28,6 +31,8 @@ bool Level2Scene::init()
 	{
 		return false;
 	}
+
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
 
 	MainCharacter::GetInstance()->Refresh();
 
@@ -630,6 +635,7 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
 			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
 		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 			if (a->getCollisionBitmask() == bitmask2)
 			{
 				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
@@ -679,6 +685,7 @@ void Level2Scene::Collision(PhysicsContact & contact, int bitmask1, int bitmask2
 		if ((a->getCollisionBitmask() == bitmask1 && b->getCollisionBitmask() == bitmask2)
 			|| (a->getCollisionBitmask() == bitmask2 && b->getCollisionBitmask() == bitmask1))
 		{
+			SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 			MainCharacter::GetInstance()->GetDamage(MainCharacter::BOWMOBLIN_DAMAGE);
 			if (a->getCollisionBitmask() == bitmask1)
 			{

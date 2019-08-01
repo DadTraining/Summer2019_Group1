@@ -2,6 +2,9 @@
 #include "ResourceManager.h"
 #include "MainCharacter.h"
 #include <math.h>
+#include "SimpleAudioEngine.h"
+
+using namespace CocosDenshion;
 
 Monster::Monster() {}
 
@@ -144,6 +147,7 @@ void Monster::Update(float deltaTime)
 		item->GetIcon()->setPosition(mSprite->getPosition());
 		item->GetIcon()->setVisible(true);
 		item->GetIcon()->getPhysicsBody()->setContactTestBitmask(true);
+		SimpleAudioEngine::getInstance()->playEffect("audio/inventorySoundEffects/sellBuyItem.wav", false);
 	}
 }
 

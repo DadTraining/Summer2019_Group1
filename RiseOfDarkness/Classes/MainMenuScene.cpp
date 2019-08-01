@@ -2,10 +2,12 @@
 #include "ui/CocosGUI.h"
 #include "SelectScene.h"
 #include "ResourceManager.h"
+#include "SimpleAudioEngine.h"
+
 
 USING_NS_CC;
 using namespace ui;
-
+using namespace CocosDenshion;
 
 Scene* MainMenuScene::CreateScene()
 {
@@ -19,6 +21,8 @@ bool MainMenuScene::init()
 		return false;
 	}
 
+	
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("audio/mainMenu/menu.wav", true);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();

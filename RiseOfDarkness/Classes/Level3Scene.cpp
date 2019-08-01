@@ -5,7 +5,9 @@
 #include "BowMoblin.h"
 #include "MapScene.h"
 #include "HomeScene.h"
-
+#include "SimpleAudioEngine.h"
+#include "Level4Scene.h"
+using namespace CocosDenshion;
 USING_NS_CC;
 
 Scene* Level3Scene::CreateScene()
@@ -26,6 +28,8 @@ bool Level3Scene::init()
 	{
 		return false;
 	}
+
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic(true);
 
 	MainCharacter::GetInstance()->Refresh();
 
@@ -379,6 +383,7 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 	if ((a->getCollisionBitmask() == MainCharacter::SLASH_BITMASK && b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::SLASH_BITMASK))
 	{
+		SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 		if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
 		{
 			m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack());
@@ -409,6 +414,7 @@ bool Level3Scene::onContactBegin(PhysicsContact& contact)
 	if ((a->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK && b->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::MAIN_CHARACTER_BITMASK && b->getCollisionBitmask() == MainCharacter::PIERCE_BITMASK))
 	{
+		SimpleAudioEngine::getInstance()->playEffect("audio/hit/hit30.mp3", false);
 		MainCharacter::GetInstance()->GetDamage(MainCharacter::SPEARMOBLIN_DAMAGE);
 	}
 
