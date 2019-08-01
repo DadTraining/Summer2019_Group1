@@ -121,6 +121,11 @@ void MainCharacter::CreateMainCharacter()
 	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(13)]); //boot
 	mItems.push_back(inventory->database->items[inventory->database->GetIndexByID(99)]); //arrow
 
+	EquipedItem(0, inventory->database->items[inventory->database->GetIndexByID(26)]);
+	EquipedItem(1, inventory->database->items[inventory->database->GetIndexByID(17)]);
+	EquipedItem(2, inventory->database->items[inventory->database->GetIndexByID(1)]);
+	EquipedItem(3, inventory->database->items[inventory->database->GetIndexByID(13)]);
+
 	// CREATE SPRITE
 	mSprite = get->GetSpriteById(0);
 	mSprite->setScale(1.8);

@@ -11,7 +11,7 @@ USING_NS_CC;
 Scene* Level1Scene::CreateScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto layer = Level1Scene::create();
 
@@ -443,6 +443,22 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+	// BOWMOBLIN COLLIDE OBSTACLES
+	if ((a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		|| (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK))
+	{
+		if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[a->getGroup()]->SetPreventRun();
+			m_enemies[a->getGroup()]->ReverseDirection();
+		}
+		else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
+		{
+			m_enemies[b->getGroup()]->SetPreventRun();
+			m_enemies[b->getGroup()]->ReverseDirection();
+		}
+	}
+
 	// BOWMOBLIN ARROW COLLIDE OBSTACLES
 	if ((a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK && b->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK)
 		|| (a->getCollisionBitmask() == MainCharacter::OBSTACLE_BITMASK && b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_ARROW_BITMASK))
@@ -499,11 +515,11 @@ bool Level1Scene::onContactBegin(PhysicsContact& contact)
 	{
 		if (MainCharacter::GetInstance()->GetFlySlash()->GetSprite()->isVisible())
 		{
-			if (a->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			if (a->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
 			{
 				m_enemies[a->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
-			else if (b->getCollisionBitmask() == MainCharacter::SPEARMOBLIN_BITMASK)
+			else if (b->getCollisionBitmask() == MainCharacter::BOWMOBLIN_BITMASK)
 			{
 				m_enemies[b->getGroup()]->GetDamage(MainCharacter::GetInstance()->GetAttack() * 2);
 			}
