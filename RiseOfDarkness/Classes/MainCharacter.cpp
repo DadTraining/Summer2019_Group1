@@ -678,19 +678,19 @@ void MainCharacter::Evade()
 		{
 		case 1:
 			SetState(ROLL_BACK);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, 100)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(0, 100)));
 			break;
 		case 2:
 			SetState(ROLL_FRONT);
-			mSprite->runAction(MoveBy::create(0.9f, Vec2(0, -100)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(0, -100)));
 			break;
 		case 3:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(-100, 0)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(-100, 0)));
 			break;
 		case 4:
 			SetState(ROLL_LEFT);
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(100, 0)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(100, 0)));
 			break;
 		case 5:
 			if (currentState == BACK_IDLE || currentState == GO_UP || BACK_SHIELD)
@@ -701,7 +701,7 @@ void MainCharacter::Evade()
 			{
 				SetState(ROLL_LEFT);
 			}
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(-70.710678, 70.710678)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(-70.710678, 70.710678)));
 			break;
 		case 6:
 			if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SHIELD)
@@ -712,7 +712,7 @@ void MainCharacter::Evade()
 			{
 				SetState(ROLL_LEFT);
 			}
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(-70.710678, -70.710678)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(-70.710678, -70.710678)));
 			break;
 		case 7:
 			if (currentState == BACK_IDLE || currentState == GO_UP || currentState == BACK_SHIELD)
@@ -723,7 +723,7 @@ void MainCharacter::Evade()
 			{
 				SetState(ROLL_LEFT);
 			}
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(70.710678, 70.710678)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(70.710678, 70.710678)));
 			break;
 		case 8:
 			if (currentState == FRONT_IDLE || currentState == GO_DOWN || currentState == FRONT_SHIELD)
@@ -734,7 +734,7 @@ void MainCharacter::Evade()
 			{
 				SetState(ROLL_LEFT);
 			}
-			mSprite->runAction(MoveBy::create(1.0f, Vec2(70.710678, -70.710678)));
+			mSprite->runAction(MoveBy::create(0.5f, Vec2(70.710678, -70.710678)));
 		}
 		currentMP -= 10;
 	}
