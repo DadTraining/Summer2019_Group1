@@ -300,6 +300,14 @@ void Level3Scene::AddListener()
 
 	// STATUS
 	m_buttons[8]->addClickEventListener(CC_CALLBACK_1(Level3Scene::ClickShowInfor, this));
+
+	nextStage->addClickEventListener([&](Ref* event) {
+		CreateMonster();
+		auto gotoMap = CallFunc::create([] {
+			Director::getInstance()->replaceScene(Level4Scene::CreateScene());
+		});
+		runAction(gotoMap);
+	});
 }
 
 bool Level3Scene::OnTouchBegan(Touch* touch, Event* event)
