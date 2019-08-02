@@ -149,7 +149,7 @@ void GamePlay::CreateAllButton(Layer* layer)
 	resume->removeFromParent();
 	resume->setVisible(false);
 	resume->setPosition(pause->getPosition());
-	layer->addChild(resume, 4);
+	layer->addChild(resume, 8);
 	resume->setCameraMask(2);
 	m_buttons.push_back(resume);
 
@@ -342,9 +342,9 @@ void GamePlay::CreateAllButton(Layer* layer)
 	auto buttonOpenInventory = ui::Button::create("res/sprites/item/inventory.png");
 	buttonOpenInventory->retain();
 	layer->addChild(buttonOpenInventory, 4);
-	buttonOpenInventory->setAnchorPoint(Vec2(0.5, 0));
+	buttonOpenInventory->setAnchorPoint(Vec2(1, 1));
 	buttonOpenInventory->setEnabled(true);
-	buttonOpenInventory->setPosition(Vec2(mpButton->getPositionX() - mpButton->getBoundingBox().size.width - 20, 40));
+	buttonOpenInventory->setPosition(Vec2(pause->getPositionX(), defend->getPositionY() + 150));
 	m_buttons.push_back(buttonOpenInventory);
 	buttonOpenInventory->setCameraMask(2);
 	MainCharacter::GetInstance()->GetInventory()->SetSpritePosition(Vec2(visibleSize / 2));
